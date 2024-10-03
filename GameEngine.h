@@ -15,7 +15,8 @@ private:
     Map* selectedMap;                // The game map
     std::vector<Player*> playerList; // List of players
     Deck deck;                       // The deck of cards for the game
-
+    vector <Player*> eliminatedPlayers;
+    Player *currentPlayer;
 public:
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
@@ -40,6 +41,9 @@ public:
 
     // Prompts the user for the next action after startup
     void promptNextAction() const;
+    void reinforcementPhase();
+    void executeOrdersPhase();
+    void issueOrdersPhase();
 
     // Get the current game state as a string
     std::string getCurrentState() const;
