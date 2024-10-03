@@ -45,9 +45,14 @@ Continent::Continent(std::string name, int controlValue)
 
 Continent::~Continent(){};
 
+std::vector<std::string> Continent::getContinents_TerritoryNames() const{
+    return continents_TerritoryNames;
+}
 
 void Continent::addTerritory(Territory* territory) {
     continents_Territory.push_back(territory);
+    continents_TerritoryNames.push_back(territory->getName());
+
 }
 
 std::vector<Territory*> Continent::getTerritories() const {
@@ -174,11 +179,11 @@ std::vector<Territory*> Map::getTerritories() const {
         //    Territories Section
         else if (section == "[Territories]") {
             std::istringstream string(line);
-            std::string name, continent, adj;
+            std::string name, continentname, adj;
             int x, y;
 
             // Read input line from the file 
-            if (std::getline(string, name, ',') && string >> x && string.ignore() && string >> y && string.ignore() && std::getline(string, continent, ',')) {
+            if (std::getline(string, name, ',') && string >> x && string.ignore() && string >> y && string.ignore() && std::getline(string, continentname, ',')) {
                 std::vector<std::string> adjNames;
 
                 // Add adjacent Territory Names
@@ -187,9 +192,16 @@ std::vector<Territory*> Map::getTerritories() const {
                 }
 
                 // creat territory and add the territory to Map. 
-                Territory* territory = new Territory(name, x, y, continent, adjNames);
+                Territory* territory = new Territory(name, x, y, continentname, adjNames);
                 map->addTerritory(territory);
                 tempTerritories.push_back(territory);  //And temp store the territory.
+
+                for (Continent* continent : map->getContinents()) {
+                    if (continent->getName() == continentname) {
+                    continent->addTerritory(territory);
+                    break;  // Break since the territory is now added to the correct continent
+                    }
+                }
             }
         }
     }
@@ -275,32 +287,50 @@ bool Map::areContinentsConnected() const {
             return false;
         }
     }
-    std::cout << "continents are connected subgraphs" <<std::endl;
+    //std::cout << "continents are connected subgraphs" <<std::endl;
 
     return true;
 }
 
-bool Map::territoryBelongsToOneContinentsConnected() const {
-    for (Territory* territory : territories) {
+bool Map::territoryBelongsToOneContinentsConnected() const { 
+    for (Territory* territory1 : territories) {
         int continentCount = 0;
+
         for (const Continent* continent : continents) {
-            const std::vector<Territory*>& territoriesInContinent = continent->getTerritories();
-            if (std::find(territoriesInContinent.begin(), territoriesInContinent.end(), territory) != territoriesInContinent.end()) {
-                continentCount++;
+            // Retrieve list of territory names belonging to the continent
+            std::vector<Territory*> TerritoryList = continent->getTerritories();
+
+            // Check if the territory's name exists in the current continent
+            for (const Territory* territory2 : TerritoryList) {
+                if (territory1->getName()==territory2->getName()) {
+                    continentCount++;
+                }
+            }
+
+            // Exit early if a territory is already found in more than one continent
+            if (continentCount > 1) {
+                std::cout<< territory1->getName()<<std::endl;
+                return false;
             }
         }
 
-        // If a territory belongs to more than one continent, return false
+        // If a territory does not belong to exactly one continent, return false
         if (continentCount != 1) {
+            std::cout<< territory1->getName()<<continentCount<<std::endl;
             return false;
         }
     }
-    std::cout << "Each territory belongs to one and only one continent" <<std::endl;
-
-
+    
+    //std::cout << "Each territory belongs to one and only one continent" << std::endl;
     return true;
 }
 
+
 bool Map::validate() const {
-    return isConnectedGraph() && areContinentsConnected() && territoryBelongsToOneContinentsConnected();
+    bool a,b,c;
+    a=isConnectedGraph();
+    b=areContinentsConnected();
+    c=territoryBelongsToOneContinentsConnected();
+    // std::cout<< a<< b<<c <<std::endl;
+    return a&&b&&c;
 }
