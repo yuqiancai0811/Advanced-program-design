@@ -2,6 +2,12 @@
 #include "MapDriver.h"
 #include <iostream>
 
+
+void GameEngine::printWelcomeMessage() {
+    std::cout << "Welcome to the Warzone game!\n";
+    std::cout << "Type 'start' to start the game.\n";
+}
+
 // Constructor initializes the game state to "START"
 GameEngine::GameEngine() : currentState("START"), selectedMap(nullptr) {
     printWelcomeMessage();
@@ -33,6 +39,12 @@ GameEngine::~GameEngine() {
     // The `deck` is an object, so its destructor will be automatically called,
 }
 
+std::string GameEngine::getCurrentState(){
+    return currentState;
+}
+
+
+
 // Handles the startup phase of the game
 void GameEngine::handleStartup() {
 
@@ -60,7 +72,6 @@ void GameEngine::handleStartup() {
         
         
         bool mapValidated = selectedMap->validate(); 
-        mapValidated= true;
         
         
         if (mapValidated) {
@@ -95,88 +106,82 @@ void GameEngine::handleUserCommand(const std::string& command) {
     if (command == "start") {
         handleStartup();
     } else if (command == "play") {
-        playGame();
+        promptNextActionPlay();
     } else if (command == "end") {
         transitionTo("END");
     } else {
         std::cout << "Invalid command.\n";
     }
 }
-
-// Manages the gameplay phase (assigning reinforcement, issuing orders)
-void GameEngine::playGame() {
-    if (currentState == "PLAYERS_ADDED") {
-        std::cout << "Assigning reinforcements to players...\n";
-        transitionTo("ASSIGN_REINFORCEMENT");
-    }
-    // Additional game phases can be handled here
-}
-
-// Handles card drawing and playing for a player
-// void GameEngine::playCards(Player* player) {
-//     // Get Hand function not added.
-
-//     //Hand& hand = player->getHand();
-//     Hand hand= Hand();
-
-//     for (int i = 0; i < 3; ++i) {
-//         Card* drawnCard = deck.draw();
-//         hand.addCard(drawnCard);
-//         std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
-//     }
-
-//     // Play all cards in the hand
-//     while (!hand.isEmpty()) {
-//         hand.playFirstCard(deck);
-//     }
-// }
-
-// Helper function to transition between states
-void GameEngine::transitionTo(const std::string& newState) {
-    currentState = newState;
-    std::cout << "Game state changed to: " << currentState << std::endl;
-}
-
-// Returns the current game state as a string
-std::string GameEngine::getCurrentState() const {
-    return currentState;
-}
-
-// Prints the welcome message at the start of the game
-void GameEngine::printWelcomeMessage() const {
-    std::cout << "Welcome to the Warzone game!\n";
-    std::cout << "Type 'start' to start the game.\n";
-}
-
-// Game Phases
-void GameEngine::reinforcementPhase(){
-    std::cout << "Entering Reinforcement Phase...\n";
-}
-
-void GameEngine::issueOrdersPhase(){
-    std::cout << "Entering Issue Orders Phase...\n";
-}
-
-void GameEngine::executeOrdersPhase(){
-    std::cout << "Entering Execute Orders Phase...\n";
-}
+//adjust----
 
 // Main gameplay loop
-void GameEngine::promptNextActionPlay()  {
-    std::string currentState = "reinforcement";
+void GameEngine::promptNextActionPlay() {
+
+    std::cout<<"play fun"<<std::endl;
+    currentState = "reinforcement";  // Start from the reinforcement phase
 
     while (currentState != "win") {
+        // Handle the Reinforcement phase
         if (currentState == "reinforcement") {
-            reinforcementPhase();
-            currentState = "issue orders";
-        } else if (currentState == "issue orders") {
-            issueOrdersPhase();
-            currentState = "execute orders";
-        } else if (currentState == "execute orders") {
-            executeOrdersPhase();
-            currentState = "reinforcement";
+            reinforcementPhase();  // Assign reinforcements
+            currentState = "issue orders";  // Move to the issue orders phase
+        }
+        // Handle the Issue Orders phase
+        else if (currentState == "issue orders") {
+            issueOrdersPhase();  // Players issue orders
+            currentState = "execute orders";  // Move to the execute orders phase
+        }
+        // Handle the Execute Orders phase
+        else if (currentState == "execute orders") {
+            executeOrdersPhase();  // Execute orders
+            currentState = "reinforcement";  // After execution, go back to reinforcement for the next turn
         }
     }
     std::cout << "Game Over! You have won!\n";
 }
 
+// Reinforcement phase - logic from playGame()
+void GameEngine::reinforcementPhase() {
+    std::cout << "Entering Reinforcement Phase...\n";
+    
+    if (currentState == "PLAYERS_ADDED") {
+        std::cout << "Assigning reinforcements to players...\n";
+        transitionTo("ASSIGN_REINFORCEMENT");
+    }
+
+    // Add reinforcement logic for players here
+}
+
+// Issuing Orders phase
+void GameEngine::issueOrdersPhase() {
+    std::cout << "Entering Issue Orders Phase...\n";
+    // Implement the logic for issuing orders here
+}
+
+// Execute Orders phase - integrated logic for card drawing and playing
+void GameEngine::executeOrdersPhase() {
+    std::cout << "Entering Execute Orders Phase...\n";
+    
+    for (Player* player : playerList) {
+        Hand hand = Hand();  // Assuming you initialize a new hand or retrieve it from the player
+
+        // Each player draws 3 cards
+        for(int i = 0; i < 3; ++i) {
+            Card* drawnCard = deck.draw();  // Drawing from the deck
+            hand.addCard(drawnCard);
+            std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
+        }
+
+        // Play all cards in the hand
+        while (!hand.isEmpty()) {
+            hand.playFirstCard(deck);
+        }
+    }
+}
+
+// Transition to the next game state
+void GameEngine::transitionTo(const std::string& newState) {
+    currentState = newState;
+    std::cout << "Game state changed to: " << currentState << std::endl;
+}

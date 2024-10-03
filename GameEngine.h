@@ -37,7 +37,7 @@ public:
     void transitionTo(const std::string& newState);
 
     // Prints the initial welcome message
-    void printWelcomeMessage() const;
+    void printWelcomeMessage();
 
     // Prompts the user for the next action after startup
     void promptNextActionPlay();
@@ -46,6 +46,6 @@ public:
     void issueOrdersPhase();
 
     // Get the current game state as a string
-    std::string getCurrentState() const;
+    std::string getCurrentState();
 };
 #endif // GAMEENGINE_H
