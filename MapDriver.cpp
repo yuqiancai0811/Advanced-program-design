@@ -22,6 +22,7 @@ bool testLoadMaps(){
     for(const std::string& filename : filename){
         Map* selectedMap = selectedMap -> loadMapFromFile(filename);
         bool readResult =  (selectedMap == nullptr);
+        
         if (!readResult) {
             std::cout << "Map " << filename << " loaded successfully!\n";
         } else {
@@ -34,6 +35,21 @@ bool testLoadMaps(){
             std::cout << "Map " << filename << "validated successfully!\n";
         } else {
             std::cout << "Map " << filename << "Map validation failed. \n";
+        }
+
+        if(validateResult&&!readResult){
+            std::vector<Continent*> continentsList;
+            std::vector<Territory*> territoriesList;
+
+            continentsList=selectedMap ->getContinents();
+            for(Continent* continent : continentsList){
+                continent->printContinentInfo();
+            }
+
+            territoriesList=selectedMap ->getTerritories();
+            for(Territory* territory : territoriesList){
+                territory ->printTerritoryInfo();
+            }
         }
     }
 
