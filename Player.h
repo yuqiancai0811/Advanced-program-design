@@ -4,23 +4,30 @@
 #include <vector>
 #include <string>
 #include "Map.h"    // For Territory class
-#include "Orders.h" // For Order and OrderList classes
+#include "Orders.h" // For Order and orderList classes
 #include "Cards.h"  // For Hand, Deck, and Card classes
+
+using namespace std;
 
 class Player {
 private:
-    std::string playerName;  // Name of the player
-    // Use std::vector because its dynamic sizing, efficient access, and easy management
-    std::vector<Territory*> ownedTerritories;  // List of territories owned by the player
-    // std::vector<std::string> handOfCards;  // Hand of cards (simplified as strings)
-    // std::vector<std::string> orderList;  // Orders issued by the player
-    Hand playerHand;                          // Hand of cards for the player
-    orderList playerOrders;                   // List of orders issued by the player
-
+    string name;  // Player's name
+    vector<Territory*> ownedTerritories;  // List of territories owned by the player
+    Hand playerHand;  // The player's hand of cards
+    orderList playerOrders;  // The player's issued orders
 
 public:
-    // Constructor
-    Player(std::string name);
+    // Default constructor
+    Player();
+
+    // Parameterized constructor
+    Player(const string& name);
+
+    // Copy constructor
+    Player(const Player& other);
+
+    // Assignment operator
+    Player& operator=(const Player& other);
 
     // Destructor
     ~Player();
@@ -42,6 +49,10 @@ public:
     // Methods for issuing orders
     void issueOrder(Order* order);  // Issues an order and adds it to the player's order list
     orderList& getOrders();  // Returns the list of orders issued by the player
+
+
+    // Stream insertion operator
+    friend ostream& operator<<(ostream& os, const Player& player);
 
     // Print Player's info
     void printPlayerInfo() const;
