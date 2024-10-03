@@ -47,17 +47,6 @@ string Card::getType() const
 }
 
 // Play the card
-// void Card::play(Hand &hand, Deck &deck)
-// {
-//     // Remove the card from the hand
-//     hand.removeCard(*this);
-
-//     // Return the card to the deck
-//     deck.addCard(this);
-
-//     cout << "Played card of type: " << getType() << ". Card returned to the deck." << endl;
-// }
-// Play the card
 void Card::play(Hand &hand, Deck &deck)
 {
     // Check if the hand is not empty before playing the card
