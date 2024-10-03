@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>  // Needed for std::remove
 
-using namespace std;  // Allows using standard library names without std:: prefix
+using namespace std; 
 
 // Default constructor
 Player::Player() : name("Unnamed Player"), playerHand(Hand()), playerOrders(orderList()) {}
@@ -12,19 +12,19 @@ Player::Player(const string& name) : name(name), playerHand(Hand()), playerOrder
 
 // Copy constructor (deep copy)
 Player::Player(const Player& other) {
-    name = other.name;  // Copy player's name
-    ownedTerritories = other.ownedTerritories;  // Copy owned territories
-    playerHand = other.playerHand;  // Copy player's hand
-    playerOrders = other.playerOrders;  // Copy player's orders
+    name = other.name;  
+    ownedTerritories = other.ownedTerritories;  
+    playerHand = other.playerHand;  
+    playerOrders = other.playerOrders;  
 }
 
 // Assignment operator (deep copy)
 Player& Player::operator=(const Player& other) {
     if (this != &other) {
-        name = other.name;  // Copy player's name
-        ownedTerritories = other.ownedTerritories;  // Copy owned territories
-        playerHand = other.playerHand;  // Copy player's hand
-        playerOrders = other.playerOrders;  // Copy player's orders
+        name = other.name;  
+        ownedTerritories = other.ownedTerritories;  
+        playerHand = other.playerHand; 
+        playerOrders = other.playerOrders;  
     }
     return *this;
 }
