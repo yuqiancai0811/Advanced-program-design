@@ -273,6 +273,7 @@ bool Map::areContinentsConnected() const {
             return false;
         }
     }
+    std::cout << "continents are connected subgraphs" <<std::endl;
 
     return true;
 }
@@ -292,6 +293,8 @@ bool Map::territoryBelongsToOneContinentsConnected() const {
             return false;
         }
     }
+    std::cout << "Each territory belongs to one and only one continent" <<std::endl;
+
 
     return true;
 }
