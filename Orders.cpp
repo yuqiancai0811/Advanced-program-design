@@ -29,6 +29,17 @@ Order& Order::operator=(const Order& other) {
     return *this;
 }
 
+bool Order::validate() const {
+    return true;
+}
+
+void Order::execute() {
+    if (validate()) {
+        *effect = "Base order executed";
+        *executed = true;
+    }
+}
+
 std::string Order::toString() const {
     if (*executed && !name->empty()) {
         return "Order: " + *name + " is executed\n";
