@@ -1,7 +1,8 @@
 #include "GameEngine.h"
 #include "MapDriver.h"
 #include <iostream>
-
+#include <limits>
+//g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
 void GameEngine::printWelcomeMessage() {
     std::cout << "Welcome to the Warzone game!\n";
@@ -14,7 +15,6 @@ GameEngine::GameEngine() : currentState("START"), selectedMap(nullptr) {
 }
 
 // Destructor cleans up resources
-/// Destructor cleans up resources
 GameEngine::~GameEngine() {
     // Clean up currentPlayer, if dynamically allocated
     if (currentPlayer != nullptr) {
@@ -44,13 +44,11 @@ std::string GameEngine::getCurrentState(){
 }
 
 
-
 // Handles the startup phase of the game
 void GameEngine::handleStartup() {
 
     std::cout << "Game is starting, loading the map...\n";
     
-
     while (currentState == "START") {     //state1
         std::cout << "Please enter the name of the map you want to load: ";
         std::string mapName;
@@ -69,11 +67,9 @@ void GameEngine::handleStartup() {
     
     while (currentState == "MAP_LOADED") {     //state2
         std::cout << "Validating the map...\n";
-        
-        
+          
         bool mapValidated = selectedMap->validate(); 
-        
-        
+
         if (mapValidated) {
             std::cout << "Map validated successfully!\n";
             currentState = "ADD_Player";            //state3
@@ -117,46 +113,45 @@ void GameEngine::handleUserCommand(const std::string& command) {
 
 // Main gameplay loop
 void GameEngine::promptNextActionPlay() {
-
-    std::cout<<"play fun"<<std::endl;
     currentState = "reinforcement";  // Start from the reinforcement phase
-
     while (currentState != "win") {
         // Handle the Reinforcement phase
         if (currentState == "reinforcement") {
             reinforcementPhase();  // Assign reinforcements
-            currentState = "issue orders";  // Move to the issue orders phase
         }
         // Handle the Issue Orders phase
         else if (currentState == "issue orders") {
             issueOrdersPhase();  // Players issue orders
-            currentState = "execute orders";  // Move to the execute orders phase
         }
         // Handle the Execute Orders phase
         else if (currentState == "execute orders") {
             executeOrdersPhase();  // Execute orders
-            currentState = "reinforcement";  // After execution, go back to reinforcement for the next turn
         }
+
+        // Ask for confirmation before moving to the next phase
+        std::cout << "Press Enter to proceed to the next phase...\n";
+        std::string userInput;
+        std::getline(std::cin, userInput);  // Wait for user input (pressing Enter)
+
+        // If user just presses Enter, move to the next phase
     }
     std::cout << "Game Over! You have won!\n";
 }
 
+
 // Reinforcement phase - logic from playGame()
 void GameEngine::reinforcementPhase() {
     std::cout << "Entering Reinforcement Phase...\n";
-    
-    if (currentState == "PLAYERS_ADDED") {
-        std::cout << "Assigning reinforcements to players...\n";
-        transitionTo("ASSIGN_REINFORCEMENT");
-    }
-
-    // Add reinforcement logic for players here
+    // Transition to the next phase: Issue Orders
+    transitionTo("issue orders");
 }
+
 
 // Issuing Orders phase
 void GameEngine::issueOrdersPhase() {
     std::cout << "Entering Issue Orders Phase...\n";
-    // Implement the logic for issuing orders here
+    // Transition to the next phase: Execute Orders
+    transitionTo("execute orders");
 }
 
 // Execute Orders phase - integrated logic for card drawing and playing
@@ -165,17 +160,15 @@ void GameEngine::executeOrdersPhase() {
     
     for (Player* player : playerList) {
         Hand hand = Hand();  // Assuming you initialize a new hand or retrieve it from the player
-
         // Each player draws 3 cards
         for(int i = 0; i < 3; ++i) {
             Card* drawnCard = deck.draw();  // Drawing from the deck
             hand.addCard(drawnCard);
             std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
         }
-
         // Play all cards in the hand
         while (!hand.isEmpty()) {
-            hand.playFirstCard(deck);
+            //hand.playFirstCard(deck);
         }
     }
 }
