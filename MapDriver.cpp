@@ -45,16 +45,23 @@ int main() {
     
     std::vector<Continent*> continentsList;
     std::vector<Territory*> territoriesList;
+    std::vector<std::string>territoriesListName;
 
     continentsList=map ->getContinents();
     for(Continent* continent : continentsList){
         continent->printContinentInfo();
+        territoriesListName=continent->getContinents_TerritoryNames();
+        for(std::string name:territoriesListName){
+            std::cout<<name<< std::endl;
+        }
     }
 
     territoriesList=map ->getTerritories();
     for(Territory* territory : territoriesList){
         territory ->printTerritoryInfo();
     }
+
+    
 
     bool mapTestResult = testLoadMaps();
     std::cout << mapTestResult << std::endl;

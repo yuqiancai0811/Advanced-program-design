@@ -27,8 +27,8 @@ public:
     Order& operator=(const Order& other);
 
     // Virtual methods for validation and execution
-    virtual bool validate() const = 0;
-    virtual void execute() = 0;
+    virtual bool validate() const ;
+    virtual void execute() ;
 
     // ToString method
     virtual std::string toString() const;

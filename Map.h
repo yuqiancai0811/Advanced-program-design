@@ -55,6 +55,8 @@ class Continent {
 
     std::vector<Territory*> getTerritories() const;
     std::string getName() const;
+    std::vector<std::string> getContinents_TerritoryNames() const;
+
     int getControlValue() const;
     //Get functions;
 
