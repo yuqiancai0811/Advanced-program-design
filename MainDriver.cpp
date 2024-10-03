@@ -18,18 +18,7 @@ int main() {
     // test load USA.map, and print map detail.
     Map* map = map->loadMapFromFile("USA.map");
     
-    std::vector<Continent*> continentsList;
-    std::vector<Territory*> territoriesList;
-
-    continentsList=map ->getContinents();
-    for(Continent* continent : continentsList){
-        continent->printContinentInfo();
-    }
-
-    territoriesList=map ->getTerritories();
-    for(Territory* territory : territoriesList){
-        territory ->printTerritoryInfo();
-    }
+    
     
 
     // Part 2: Test creating players and demonstrating their features
