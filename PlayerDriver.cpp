@@ -50,7 +50,7 @@ void testPlayers() {
     delete territory3;
 }
 
-int main() {
-    testPlayers();  // Call the function that tests the Player functionality
-    return 0;
-}
+// int main() {
+//     testPlayers();  // Call the function that tests the Player functionality
+//     return 0;
+// }
