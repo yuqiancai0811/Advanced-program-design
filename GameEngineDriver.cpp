@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 #include <iostream>
 
-int main() {
+void testGameStates() {
     GameEngine gameEngine;
 
     std::string command;
@@ -11,6 +11,10 @@ int main() {
         std::cin >> command;
         gameEngine.handleUserCommand(command);
     }
+}
 
+// Main function that now calls the testGameStates function
+int main() {
+    testGameStates();
     return 0;
 }
