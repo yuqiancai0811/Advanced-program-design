@@ -3,7 +3,7 @@
 #include "Orders.h"
 #include <iostream>
 
-using namespace std; 
+using namespace std;  // This allows using standard library names without std:: prefix
 
 void testPlayers() {
     // Create some territories
@@ -21,18 +21,16 @@ void testPlayers() {
     player1.addTerritory(territory1);
     player1.addTerritory(territory2);
 
-    // Example of adding adjacent territories
     territory1->addAdjacentTerritory(territory2);
     territory2->addAdjacentTerritory(territory3);
 
-    // Test toDefend method
+    // Test toDefend and toAttack methods
     cout << "Territories to defend:\n";
     for (Territory* t : player1.toDefend()) {
         cout << t->getName() << " ";
     }
     cout << endl;
 
-    // Test toAttack method
     cout << "Territories to attack:\n";
     for (Territory* t : player1.toAttack()) {
         cout << t->getName() << " ";
@@ -40,8 +38,7 @@ void testPlayers() {
     cout << endl;
 
     // Test issuing orders
-    Order* myOrder = new deployOrder(); //use deployOrder for testing
-    player1.issueOrder(myOrder);
+    player1.issueOrder();  // Creates and issues a deployOrder
 
     // Print the player's orders
     cout << "Player 1 after issuing an order:" << endl;
@@ -51,10 +48,9 @@ void testPlayers() {
     delete territory1;
     delete territory2;
     delete territory3;
-    delete myOrder;
 }
 
 int main() {
-    testPlayers();  
+    testPlayers();  // Call the function that tests the Player functionality
     return 0;
 }

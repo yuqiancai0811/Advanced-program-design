@@ -29,9 +29,8 @@ Player& Player::operator=(const Player& other) {
     return *this;
 }
 
-// Destructor
 Player::~Player() {
-    // No dynamically allocated memory to clean up in this class
+    // No need to delete orders, as orderList's destructor handles it
 }
 
 // Getters
@@ -49,7 +48,7 @@ Hand& Player::getHand() {
 
 // Setters
 void Player::setName(const string& name) {
-    this->name = name;  
+    this->name = name;  // Set player's name
 }
 
 void Player::addTerritory(Territory* territory) {
@@ -69,22 +68,20 @@ vector<Territory*> Player::toDefend() const {
 vector<Territory*> Player::toAttack() const {
     vector<Territory*> attackTargets;
 
-    // Arbitrarily choose some adjacent territories that are not owned by the player
+    // Arbitrarily choose adjacent territories for attack
     for (Territory* territory : ownedTerritories) {
-        cout << "Territory: " << territory->getName() << " has adjacent territories: ";
         for (Territory* adj : territory->getAdjacentTerritories()) {
-            cout << adj->getName() << " ";
-            attackTargets.push_back(adj);  // Adding to attack targets
+            attackTargets.push_back(adj);
         }
-        cout << endl;
     }
-
     return attackTargets;
 }
 
-// Method to issue orders
-void Player::issueOrder(Order* order) {
-    playerOrders.addOrder(order);  // Add order to player's list
+// Method to issue orders (creates a new order internally)
+void Player::issueOrder() {
+    // Create a new Order
+    Order* newOrder = new deployOrder();  
+    playerOrders.addOrder(newOrder);  // Add the created order to the player's orders list
 }
 
 // Get the list of issued orders
