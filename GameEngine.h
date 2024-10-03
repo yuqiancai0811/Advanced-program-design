@@ -40,7 +40,7 @@ public:
     void printWelcomeMessage() const;
 
     // Prompts the user for the next action after startup
-    void promptNextAction() const;
+    void promptNextActionPlay();
     void reinforcementPhase();
     void executeOrdersPhase();
     void issueOrdersPhase();

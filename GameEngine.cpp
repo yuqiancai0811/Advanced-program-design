@@ -15,19 +15,16 @@ GameEngine::~GameEngine() {
         delete this->currentPlayer;
         currentPlayer = nullptr;
     }
-
     // Clean up selectedMap, if dynamically allocated
     if (selectedMap != nullptr) {
         delete this->selectedMap;
         selectedMap = nullptr;
     }
-
     // Clean up playerList
     for (Player* player : playerList) {
         delete player;
     }
     playerList.clear();  // Clear the vector to remove any remaining pointers
-
     // Clean up eliminatedPlayers
     for (Player* player : eliminatedPlayers) {
         delete player;
@@ -151,18 +148,35 @@ void GameEngine::printWelcomeMessage() const {
     std::cout << "Type 'start' to start the game.\n";
 }
 
-// Prompts the user for the next action after startup(play)
-void GameEngine::promptNextAction() const {
-    std::cout << "Next action: Enter 'play' to start gameplay or 'end' to end the game.\n";
-}
+// Game Phases
 void GameEngine::reinforcementPhase(){
-    std::cout<<"Entering Reinforcement state...";
+    std::cout << "Entering Reinforcement Phase...\n";
 }
 
-void executeOrdersPhase(){
-    std::cout<<"Entering excuteOrder state...";
-};
+void GameEngine::issueOrdersPhase(){
+    std::cout << "Entering Issue Orders Phase...\n";
+}
 
-void issueOrdersPhase(){
-    std::cout<<"Entering issueOrders state...";
-};
+void GameEngine::executeOrdersPhase(){
+    std::cout << "Entering Execute Orders Phase...\n";
+}
+
+// Main gameplay loop
+void GameEngine::promptNextActionPlay()  {
+    std::string currentState = "reinforcement";
+
+    while (currentState != "win") {
+        if (currentState == "reinforcement") {
+            reinforcementPhase();
+            currentState = "issue orders";
+        } else if (currentState == "issue orders") {
+            issueOrdersPhase();
+            currentState = "execute orders";
+        } else if (currentState == "execute orders") {
+            executeOrdersPhase();
+            currentState = "reinforcement";
+        }
+    }
+    std::cout << "Game Over! You have won!\n";
+}
+
