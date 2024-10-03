@@ -43,6 +43,8 @@ void Territory::printTerritoryInfo() const {
 Continent::Continent(std::string name, int controlValue)
     : name(name), controlValue(controlValue) {}
 
+Continent::~Continent(){};
+
 
 void Continent::addTerritory(Territory* territory) {
     continents_Territory.push_back(territory);
@@ -110,7 +112,7 @@ std::vector<Territory*> Map::getTerritories() const {
     return territories;
 }
 
-Map* loadMapFromFile(const std::string& filename) {
+ Map* Map::loadMapFromFile(const std::string& filename) {
     
     std::ifstream file(filename);
     if (!file.is_open()) {

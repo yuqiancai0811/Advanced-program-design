@@ -47,17 +47,35 @@ string Card::getType() const
 }
 
 // Play the card
+// void Card::play(Hand &hand, Deck &deck)
+// {
+//     // Remove the card from the hand
+//     hand.removeCard(*this);
+
+//     // Return the card to the deck
+//     deck.addCard(this);
+
+//     cout << "Played card of type: " << getType() << ". Card returned to the deck." << endl;
+// }
+// Play the card
 void Card::play(Hand &hand, Deck &deck)
 {
-    // Remove the card from the hand
-    hand.removeCard(*this);
+    // Check if the hand is not empty before playing the card
+    if (!hand.getHand().empty()) {
+        // Get the first card from the hand
+        Card *cardToPlay = hand.getHand().front();
 
-    // Return the card to the deck
-    deck.addCard(this);
+        // Remove the card from the hand
+        hand.removeCard(*cardToPlay);
 
-    cout << "Played card of type: " << getType() << ". Card returned to the deck." << endl;
+        // Return the card to the deck
+        deck.addCard(cardToPlay);
+
+        cout << "Played card of type: " << cardToPlay->getType() << ". Card returned to the deck." << endl;
+    } else {
+        cout << "Cannot play a card. Hand is empty." << endl;
+    }
 }
-
 
 
 // friend operator to access private members
@@ -104,8 +122,10 @@ Deck &Deck::operator=(const Deck &other)
 }
 
 // Destructor
-Deck::~Deck() {
-    for (Card* card : cards) {
+Deck::~Deck()
+{
+    for (Card *card : cards)
+    {
         delete card;
     }
 }
@@ -177,7 +197,17 @@ Hand &Hand::operator=(const Hand &other)
 
 // Destructor
 Hand::~Hand()
-{}
+{
+    for (Card *card : handCards)
+    {
+        delete card;
+    }
+}
+// Getter method to return all cards in the hand
+vector<Card *> Hand::getHand() const
+{
+    return handCards;
+}
 
 // Add a card to the hand
 void Hand::addCard(Card *card)
@@ -192,36 +222,10 @@ void Hand::removeCard(const Card &card)
                       { return c->getType() == card.getType(); });
 
     if (it != handCards.end())
-    {            
-      handCards.erase(it); // Remove the card pointer from the vector
+    {
+        handCards.erase(it); // Remove the card pointer from the vector
     }
 }
-
-// Method to play and remove the first card in hand
-// void Hand::playFirstCard(Deck &deck)
-// {
-//     if (!handCards.empty())
-//     {
-//         // Get the first card
-//         Card *cardToPlay = handCards.front();
-
-//         // Play the card (handles removal from hand and returning to deck)
-//         cardToPlay->play(*this, deck);
-//     }
-// }
-void Hand::playFirstCard(Deck& deck) {
-    if (!handCards.empty()) {
-        // Get the first card
-        Card* cardToPlay = handCards.front();
-
-        // Remove card from hand without deleting
-        handCards.erase(handCards.begin());
-
-        // Play the card (transfer it back to the deck)
-        cardToPlay->play(*this, deck);
-    }
-}
-
 
 // Method to check if the hand is empty
 bool Hand::isEmpty() const

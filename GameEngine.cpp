@@ -23,7 +23,7 @@ void GameEngine::handleStartup() {
     std::cout << "Enter the map file name: ";
     std::cin >> mapName;
 
-    selectedMap = MapDriver::loadMapFromFile(mapName);
+    selectedMap = selectedMap -> loadMapFromFile(mapName);
 
     if (selectedMap && selectedMap->validate()) {
         std::cout << "Map loaded and validated successfully!\n";
@@ -74,19 +74,23 @@ void GameEngine::playGame() {
 }
 
 // Handles card drawing and playing for a player
-void GameEngine::playCards(Player* player) {
-    Hand& hand = player->getHand();
-    for (int i = 0; i < 3; ++i) {
-        Card* drawnCard = deck.draw();
-        hand.addCard(drawnCard);
-        std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
-    }
+// void GameEngine::playCards(Player* player) {
+//     // Get Hand function not added.
 
-    // Play all cards in the hand
-    while (!hand.isEmpty()) {
-        hand.playFirstCard(deck);
-    }
-}
+//     //Hand& hand = player->getHand();
+//     Hand hand= Hand();
+
+//     for (int i = 0; i < 3; ++i) {
+//         Card* drawnCard = deck.draw();
+//         hand.addCard(drawnCard);
+//         std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
+//     }
+
+//     // Play all cards in the hand
+//     while (!hand.isEmpty()) {
+//         hand.playFirstCard(deck);
+//     }
+// }
 
 // Helper function to transition between states
 void GameEngine::transitionTo(const std::string& newState) {

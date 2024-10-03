@@ -110,6 +110,7 @@ public:
     Map* loadMapFromFile(const std::string& filename);
     
     bool validate() const;
+
 };
 
 #endif 

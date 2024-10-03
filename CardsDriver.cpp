@@ -11,19 +11,23 @@ void testCards() {
 
     // Draw cards from the deck and add them to the hand
     cout << "Drawing cards and adding them to the hand..." << endl;
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < 3; ++i) {
         // Draw a card from the deck
         Card *drawnCard = deck.draw();  // Now drawing a pointer to Card
         hand.addCard(drawnCard);        // Add the pointer to the hand
         cout << "Added card of type: " << drawnCard->getType() << " to hand." << endl;
     }
 
-    // Play each card in the hand
     cout << "\nPlaying cards in the hand..." << endl;
 
-    // Play all cards in the hand one by one using the playFirstCard method
+    // Play all cards in the hand one by one using the play method
     while (!hand.isEmpty()) {
-        hand.playFirstCard(deck);
+        // Get the first card in the hand
+        Card *firstCard = hand.getHand().front();
+        // Play the card
+        firstCard->play(hand, deck);
+        cout << deck << endl;
+        cout << hand << endl;
     }
 
     cout << "\nAll cards have been played and returned to the deck." << endl;
