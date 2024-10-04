@@ -49,5 +49,7 @@ public:
     void checkWinCondition();
     // Get the current game state as a string
     std::string getCurrentState();
+
+    void setcurrentState(std::string newGameState);
 };
 #endif // GAMEENGINE_H

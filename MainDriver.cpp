@@ -15,12 +15,6 @@ int main() {
     // Part 1: Test loading and validating maps
     testLoadMaps();   // test load USA.map and Europe.map, and print both loading result and validation result
 
-    // test load USA.map, and print map detail.
-    Map* map = map->loadMapFromFile("USA.map");
-    
-    
-    
-
     // Part 2: Test creating players and demonstrating their features
     testPlayers();
 

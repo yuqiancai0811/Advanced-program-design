@@ -14,6 +14,10 @@ GameEngine::GameEngine() : currentState("START"), selectedMap(nullptr) {
     printWelcomeMessage();
 }
 
+void GameEngine::setcurrentState(std::string newGameState){
+    currentState=newGameState;
+}
+
 // Destructor cleans up resources
 GameEngine::~GameEngine() {
     // Clean up currentPlayer, if dynamically allocated
@@ -49,7 +53,7 @@ void GameEngine::handleStartup() {
 
     std::cout << "Game is starting, loading the map...\n";
     
-    while (currentState == "START") {     //state1
+    while (getCurrentState() == "START") {     //state1
         std::cout << "Please enter the name of the map you want to load: ";
         std::string mapName;
         std::cin >> mapName;
@@ -58,7 +62,7 @@ void GameEngine::handleStartup() {
         bool result =  (selectedMap == nullptr);
         if (!result) {
             std::cout << "Map " << mapName << " loaded successfully!\n";
-            currentState = "MAP_LOADED";
+            setcurrentState("MAP_LOADED");
         } else {
             std::cout << "Failed to load the map. Please try again.\n";
         }
@@ -113,30 +117,44 @@ void GameEngine::handleUserCommand(const std::string& command) {
 
 // Main gameplay loop
 void GameEngine::promptNextActionPlay() {
-    currentState = "reinforcement";  // Start from the reinforcement phase
-    while (currentState != "win") {
+    
+    transitionTo("reinforcement");// Start from the reinforcement phase
+    //setcurrentState("reinforcement");// Start from the reinforcement phase
+    
+    while (getCurrentState() != "win") {
         // Handle the Reinforcement phase
-        if (currentState == "reinforcement") {
+        if (getCurrentState() == "reinforcement") {
             reinforcementPhase();  // Assign reinforcements
         }
         // Handle the Issue Orders phase
-        else if (currentState == "issue orders") {
+        else if (getCurrentState() == "issue orders") {
             issueOrdersPhase();  // Players issue orders
         }
         // Handle the Execute Orders phase
-        else if (currentState == "execute orders") {
+        else if (getCurrentState() == "execute orders") {
             executeOrdersPhase();  // Execute orders
+
+            std::cout << "Press Enter to 'end' to the end the game or enter 'continue' to continue playing ...\n";
+            std::string userInput;
+            std::getline(std::cin, userInput);
+
+            if(userInput=="end"){
+                transitionTo("win");
+            }
         }
 
+
         // If a player has won, transition to the win state
-        checkWinCondition();
+        //checkWinCondition();
         
-        // Ask for confirmation before moving to the next phase
-        if (currentState != "win") {
-            std::cout << "Press Enter to proceed to the next phase...\n";
-            std::string userInput;
-            std::getline(std::cin, userInput);  // Wait for user input (pressing Enter)
-        }
+        // // Ask for confirmation before moving to the next phase
+        // if (currentState != "win") {
+        //     std::cout << "Press Enter to proceed to the next phase...\n";
+        //     std::cin.ignore();
+        //     std::string userInput;
+        //     std::getline(std::cin, userInput);  // Wait for user input (pressing Enter)
+        // }
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
     std::cout << "Game Over! You have won!\n";
 }
@@ -144,18 +162,19 @@ void GameEngine::promptNextActionPlay() {
 // Reinforcement phase with looping mechanism
 void GameEngine::reinforcementPhase() {
     std::cout << "Entering Reinforcement Phase...\n";
-    bool done = false;
-    while (!done) {
-        std::cout << "Press Enter to finish the Reinforcement Phase or type any command for actions...\n";
-        std::string userInput;
-        std::getline(std::cin, userInput);
+    bool done1 = false;
+    
+    while (!done1) {
+        std::cout << "Enter 'next' to finish the Reinforcement Phase or type any command for actions...\n";
+        std::string userInput2;
+        std::getline(std::cin, userInput2);
         
-        if (userInput.empty()) {  // If user presses Enter without input, end the phase
-            done = true;
-        } else {
-            // Here you can handle any additional reinforcement actions
-            std::cout << "Reinforcement Action: " << userInput << std::endl;
-        }
+        if (userInput2=="next") {  // If user presses Enter without input, end the phase
+            done1 = true;}
+        else {
+             // Here you can handle any additional reinforcement actions
+             std::cout << "Reinforcement Action: " << userInput2 << std::endl;
+             }
     }
     transitionTo("issue orders");
 }
@@ -163,17 +182,18 @@ void GameEngine::reinforcementPhase() {
 // Issuing Orders phase with looping mechanism
 void GameEngine::issueOrdersPhase() {
     std::cout << "Entering Issue Orders Phase...\n";
-    bool done = false;
-    while (!done) {
-        std::cout << "Press Enter to finish the Issue Orders Phase or type any command for actions...\n";
-        std::string userInput;
-        std::getline(std::cin, userInput);
+    bool done2 = false;
+    while (!done2) {
+        std::cout << "Press 'next' to finish the Issue Orders Phase or type any command for actions...\n";
+
+        std::string userInput3;
+        std::getline(std::cin, userInput3);
         
-        if (userInput.empty()) {  // If user presses Enter without input, end the phase
-            done = true;
+        if (userInput3=="next") {  // If user presses Enter without input, end the phase
+            done2 = true;
         } else {
             // Here you can handle any additional issue order actions
-            std::cout << "Issue Order Action: " << userInput << std::endl;
+            std::cout << "Issue Order Action: " << userInput3 << std::endl;
         }
     }
     transitionTo("execute orders");
@@ -196,13 +216,11 @@ void GameEngine::executeOrdersPhase() {
         }
 
         // Play all cards in the hand
-        while (!hand.isEmpty()) {
-            // hand.playFirstCard(deck);  // Assuming this method is implemented as we discussed earlier
-        }
+        // while (!hand.isEmpty()) {
+        //     // hand.playFirstCard(deck);  // Assuming this method is implemented as we discussed earlier
+        // }
     }
 
-    // After all players have played, transition back to reinforcement or other phases
-    transitionTo("reinforcement");
 }
 
 // New function to check win condition
@@ -219,8 +237,8 @@ void GameEngine::checkWinCondition() {
 
 // Transition to the next game state
 void GameEngine::transitionTo(const std::string& newState) {
-    currentState = newState;
-    std::cout << "Game state changed to: " << currentState << std::endl;
+    setcurrentState(newState);
+    std::cout << "Game state changed to: " << getCurrentState() << std::endl;
 }
 
 
