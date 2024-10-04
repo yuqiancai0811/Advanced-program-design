@@ -11,6 +11,8 @@ void testOrdersLists();
 void testCards();
 void testGameStates();
 
+//g++ Map.cpp MapDriver.cpp Cards.cpp CardsDriver.cpp Orders.cpp OrderDriver.cpp Player.cpp PlayerDriver.cpp GameEngine.cpp GameEngineDriver.cpp MainDriver.cpp
+
 int main() {
     // Part 1: Test loading and validating maps
     testLoadMaps();   // test load USA.map and Europe.map, and print both loading result and validation result
