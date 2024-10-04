@@ -15,7 +15,7 @@ void testGameStates() {
 }
 
 // Main function that now calls the testGameStates function
-int main() {
-    testGameStates();
-    return 0;
-}
+// int main() {
+//     testGameStates();
+//     return 0;
+// }
