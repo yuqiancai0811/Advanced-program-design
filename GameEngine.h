@@ -45,6 +45,8 @@ public:
     void executeOrdersPhase();
     void issueOrdersPhase();
 
+    // Declaration for the checkWinCondition function
+    void checkWinCondition();
     // Get the current game state as a string
     std::string getCurrentState();
 };

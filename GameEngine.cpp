@@ -128,29 +128,54 @@ void GameEngine::promptNextActionPlay() {
             executeOrdersPhase();  // Execute orders
         }
 
+        // If a player has won, transition to the win state
+        checkWinCondition();
+        
         // Ask for confirmation before moving to the next phase
-        std::cout << "Press Enter to proceed to the next phase...\n";
-        std::string userInput;
-        std::getline(std::cin, userInput);  // Wait for user input (pressing Enter)
-
-        // If user just presses Enter, move to the next phase
+        if (currentState != "win") {
+            std::cout << "Press Enter to proceed to the next phase...\n";
+            std::string userInput;
+            std::getline(std::cin, userInput);  // Wait for user input (pressing Enter)
+        }
     }
     std::cout << "Game Over! You have won!\n";
 }
 
-
-// Reinforcement phase - logic from playGame()
+// Reinforcement phase with looping mechanism
 void GameEngine::reinforcementPhase() {
     std::cout << "Entering Reinforcement Phase...\n";
-    // Transition to the next phase: Issue Orders
+    bool done = false;
+    while (!done) {
+        std::cout << "Press Enter to finish the Reinforcement Phase or type any command for actions...\n";
+        std::string userInput;
+        std::getline(std::cin, userInput);
+        
+        if (userInput.empty()) {  // If user presses Enter without input, end the phase
+            done = true;
+        } else {
+            // Here you can handle any additional reinforcement actions
+            std::cout << "Reinforcement Action: " << userInput << std::endl;
+        }
+    }
     transitionTo("issue orders");
 }
 
-
-// Issuing Orders phase
+// Issuing Orders phase with looping mechanism
 void GameEngine::issueOrdersPhase() {
     std::cout << "Entering Issue Orders Phase...\n";
-    // Transition to the next phase: Execute Orders
+    bool done = false;
+    while (!done) {
+        std::cout << "Press Enter to finish the Issue Orders Phase or type any command for actions...\n";
+        std::string userInput;
+        std::getline(std::cin, userInput);
+        
+        if (userInput.empty()) {  // If user presses Enter without input, end the phase
+            done = true;
+        } else {
+            // Here you can handle any additional issue order actions
+            std::cout << "Issue Order Action: " << userInput << std::endl;
+        }
+    }
     transitionTo("execute orders");
 }
 
@@ -159,16 +184,35 @@ void GameEngine::executeOrdersPhase() {
     std::cout << "Entering Execute Orders Phase...\n";
     
     for (Player* player : playerList) {
-        Hand hand = Hand();  // Assuming you initialize a new hand or retrieve it from the player
+        std::cout << "Player " << player->getName() << " is drawing cards...\n";
+        
+        Hand hand;  // Initialize the player's hand
+
         // Each player draws 3 cards
-        for(int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             Card* drawnCard = deck.draw();  // Drawing from the deck
             hand.addCard(drawnCard);
             std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
         }
+
         // Play all cards in the hand
         while (!hand.isEmpty()) {
-            //hand.playFirstCard(deck);
+            // hand.playFirstCard(deck);  // Assuming this method is implemented as we discussed earlier
+        }
+    }
+
+    // After all players have played, transition back to reinforcement or other phases
+    transitionTo("reinforcement");
+}
+
+// New function to check win condition
+void GameEngine::checkWinCondition() {
+    for (Player* player : playerList) {
+        // Check if the player owns all territories (winning condition)
+        if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
+            std::cout << "Player " << player->getName() << " has won the game!\n";
+            transitionTo("win");  // Transition to the win state
+            break;
         }
     }
 }
@@ -178,3 +222,5 @@ void GameEngine::transitionTo(const std::string& newState) {
     currentState = newState;
     std::cout << "Game state changed to: " << currentState << std::endl;
 }
+
+
