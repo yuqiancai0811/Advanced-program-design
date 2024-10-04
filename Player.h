@@ -10,8 +10,8 @@
 class Player {
 private:
     std::string name;  // Player's name
-    std::vector<Territory*> ownedTerritories;  // List of territories owned by the player
-    Hand playerHand;  // The player's hand of cards
+    std::vector<Territory*> ownedTerritories;  // Player owns a collection of territories
+    Hand playerHand;  // Player owns a hand of Warzone cards
     orderList playerOrders;  // List of orders issued by the player
 
 public:
