@@ -37,9 +37,9 @@ void testCards() {
     cout << hand << endl;
 }
 
-int main() {
-    // Run the test for cards
-    testCards();
+// int main() {
+//     // Run the test for cards
+//     testCards();
 
-    return 0;
-}
+//     return 0;
+// }
