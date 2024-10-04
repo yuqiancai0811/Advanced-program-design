@@ -136,7 +136,7 @@ void GameEngine::promptNextActionPlay() {
 
             std::cout << "Press Enter to 'end' to the end the game or enter 'continue' to continue playing ...\n";
             std::string userInput;
-            std::getline(std::cin, userInput);
+            std::cin>> userInput;
 
             if(userInput=="end"){
                 transitionTo("win");
@@ -167,7 +167,7 @@ void GameEngine::reinforcementPhase() {
     while (!done1) {
         std::cout << "Enter 'next' to finish the Reinforcement Phase or type any command for actions...\n";
         std::string userInput2;
-        std::getline(std::cin, userInput2);
+        std::cin >> userInput2;
         
         if (userInput2=="next") {  // If user presses Enter without input, end the phase
             done1 = true;}
@@ -187,7 +187,7 @@ void GameEngine::issueOrdersPhase() {
         std::cout << "Press 'next' to finish the Issue Orders Phase or type any command for actions...\n";
 
         std::string userInput3;
-        std::getline(std::cin, userInput3);
+        std::cin>> userInput3;
         
         if (userInput3=="next") {  // If user presses Enter without input, end the phase
             done2 = true;

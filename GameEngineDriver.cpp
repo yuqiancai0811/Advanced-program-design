@@ -11,6 +11,7 @@ void testGameStates() {
         std::cin >> command;
         gameEngine.handleUserCommand(command);
     }
+    std::cout << "Exiting the game ";
 }
 
 // Main function that now calls the testGameStates function
