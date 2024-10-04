@@ -30,7 +30,8 @@ Player& Player::operator=(const Player& other) {
 }
 
 Player::~Player() {
-    // No need to delete orders, as orderList's destructor handles it
+    // When an object of Player is destroyed, the destructor for each member object 
+    // (like Hand and orderList) is automatically called 
 }
 
 // Getters
@@ -77,11 +78,11 @@ vector<Territory*> Player::toAttack() const {
     return attackTargets;
 }
 
-// Method to issue orders (creates a new order internally)
+// Method to issue orders 
 void Player::issueOrder() {
-    // Create a new Order
+    // Create a new Order (As not clearified in the instruction, here implement deployOrder for testing)
     Order* newOrder = new deployOrder();  
-    playerOrders.addOrder(newOrder);  // Add the created order to the player's orders list
+    playerOrders.addOrder(newOrder);  
 }
 
 // Get the list of issued orders
