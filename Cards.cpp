@@ -126,7 +126,7 @@ Card *Deck::draw()
         throw runtime_error("Deck is empty!");
     }
 
-    // Seed the random number generator with a fixed value
+    // Seed the random number generator with a real time value
     srand(time(0));
 
     // Shuffle the deck manually using a random index
