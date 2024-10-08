@@ -127,7 +127,7 @@ Card *Deck::draw()
     }
 
     // Seed the random number generator with a fixed value
-    srand(7);
+    srand(time(0));
 
     // Shuffle the deck manually using a random index
     for (size_t i = 0; i < cards.size() - 1; ++i)
