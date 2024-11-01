@@ -21,8 +21,10 @@ public:
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
 
+   
+
     // Handles the startup phase of the game
-    void handleStartup(); 
+    void startupPhase();
 
     // Processes user commands for starting the game
     void handleUserCommand(const std::string& command); 

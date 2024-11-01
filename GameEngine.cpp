@@ -4,6 +4,82 @@
 #include <limits>
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
+// Part 2: Game startup phase
+// Provide a startupPhase() method in the GameEngine class that implements a command-based user interaction
+// mechanism to start the game by allowing the user to proceed with the game startup phase:
+// 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
+// which results in the map being loaded in the game.
+// 2) use the validatemap command to validate the map (i.e. it is a connected graph, etc – see assignment 1).
+// 3) use the addplayer <playername> command to enter players in the game (2-6 players)
+// 4) use the gamestart command to
+// a) fairly distribute all the territories to the players
+// b) determine randomly the order of play of the players in the game
+// c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
+// d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+// e) switch the game to the play phase
+// This must be implemented as part of the pre-existing .cpp/.h file duo named GameEngine.cpp/GameEngine.h
+// You must deliver a driver as a free function named testStartupPhase() that demonstrates that 1-4 explained
+// above are implemented correctly, using either console input or file input of the commands (see Part 1). This driver
+// function must be in the GameEngineDriver.cpp file. 
+
+void GameEngine::startupPhase(){
+
+std::cout << "Please select the name of the map you want to load: ";
+        std::string mapName;
+        std::cin >> mapName;
+
+        selectedMap = selectedMap -> loadMapFromFile(mapName);
+        
+        bool result =  (selectedMap == nullptr);
+        if (!result) {
+            std::cout << "Map " << mapName << " loaded successfully!\n";
+            setcurrentState("MAP_LOADED");
+        } else {
+            std::cout << "Failed to load the map. Please try again.\n";
+        }
+
+while (currentState == "MAP_LOADED") {     //state2
+        std::cout << "Validating the map...\n";
+          
+        bool mapValidated = selectedMap->validate(); 
+
+        if (mapValidated) {
+            std::cout << "Map validated successfully!\n";
+            std::cout << "Change the Game state to Addplayer \n";
+            std::cout << "Add 2-6 players \n";
+            currentState = "ADD_Player";            //state3
+        } else {
+            std::cout << "Map validation failed. Please load a valid map.\n";
+            currentState = "START"; 
+        }
+    }
+
+    // Adding players
+    std::string playerName;
+    while (true) {
+        std::cout << "Enter player name (or 'done' to finish): ";
+        std::cin >> playerName;
+        if (playerName == "done") break;
+        playerList.push_back(new Player(playerName));
+        std::cout << "Player " << playerName << " added.\n";
+        
+        std::cout << "Total number of play\n" << playerList.size()<< endl;
+        for(Player* player : playerList){
+                std::cout << "Player: " << player->getName() << " \n";
+            }
+    }
+
+    if (!playerList.empty()) {
+        transitionTo("PLAYERS_ADDED");     //state4
+    } else {
+        std::cout << "No players added. Exiting...\n";
+        return;
+    }
+
+
+}
+
+
 void GameEngine::printWelcomeMessage() {
     std::cout << "Welcome to the Warzone game!\n";
     std::cout << "Type 'start' to start the game.\n";
@@ -48,63 +124,11 @@ std::string GameEngine::getCurrentState(){
 }
 
 
-// Handles the startup phase of the game
-void GameEngine::handleStartup() {
-
-    std::cout << "Game is starting, loading the map...\n";
-    
-    while (getCurrentState() == "START") {     //state1
-        std::cout << "Please enter the name of the map you want to load: ";
-        std::string mapName;
-        std::cin >> mapName;
-
-        selectedMap = selectedMap -> loadMapFromFile(mapName);
-        bool result =  (selectedMap == nullptr);
-        if (!result) {
-            std::cout << "Map " << mapName << " loaded successfully!\n";
-            setcurrentState("MAP_LOADED");
-        } else {
-            std::cout << "Failed to load the map. Please try again.\n";
-        }
-    }
-
-    
-    while (currentState == "MAP_LOADED") {     //state2
-        std::cout << "Validating the map...\n";
-          
-        bool mapValidated = selectedMap->validate(); 
-
-        if (mapValidated) {
-            std::cout << "Map validated successfully!\n";
-            currentState = "ADD_Player";            //state3
-        } else {
-            std::cout << "Map validation failed. Please load a valid map.\n";
-            currentState = "START"; 
-        }
-    }
-
-    // Adding players
-    std::string playerName;
-    while (true) {
-        std::cout << "Enter player name (or 'done' to finish): ";
-        std::cin >> playerName;
-        if (playerName == "done") break;
-        playerList.push_back(new Player(playerName));
-        std::cout << "Player " << playerName << " added.\n";
-    }
-
-    if (!playerList.empty()) {
-        transitionTo("PLAYERS_ADDED");     //state4
-    } else {
-        std::cout << "No players added. Exiting...\n";
-        return;
-    }
-}
 
 // Processes user commands
 void GameEngine::handleUserCommand(const std::string& command) {
     if (command == "start") {
-        handleStartup();
+        startupPhase();
     } else if (command == "play") {
         promptNextActionPlay();
     } else if (command == "end") {
