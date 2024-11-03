@@ -13,6 +13,7 @@ private:
     std::vector<Territory*> ownedTerritories;  // Player owns a collection of territories
     Hand playerHand;  // Player owns a hand of Warzone cards
     orderList playerOrders;  // List of orders issued by the player
+    int numberOfReinforcement;
 
 public:
     // Default constructor
@@ -29,6 +30,8 @@ public:
 
     // Destructor
     ~Player();
+
+    void setNumberOfReinforcement(int number);
 
     // Getters
     std::string getName() const;

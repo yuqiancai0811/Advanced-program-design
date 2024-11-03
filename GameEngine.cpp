@@ -2,6 +2,12 @@
 #include "MapDriver.h"
 #include <iostream>
 #include <limits>
+#include <map>
+#include <queue>
+#include <cstdlib>   // std::rand, std::srand
+#include <ctime>     // std::time
+#include <iostream>
+
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
 // Part 2: Game startup phase
@@ -14,9 +20,14 @@
 // 4) use the gamestart command to
 // a) fairly distribute all the territories to the players
 // b) determine randomly the order of play of the players in the game
+
+
+
 // c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
+
 // d) let each player draw 2 initial cards from the deck using the deck’s draw() method
 // e) switch the game to the play phase
+
 // This must be implemented as part of the pre-existing .cpp/.h file duo named GameEngine.cpp/GameEngine.h
 // You must deliver a driver as a free function named testStartupPhase() that demonstrates that 1-4 explained
 // above are implemented correctly, using either console input or file input of the commands (see Part 1). This driver
@@ -57,9 +68,10 @@ while (currentState == "MAP_LOADED") {     //state2
     // Adding players
     std::string playerName;
     while (true) {
+        if (playerList.size()==6){break;}
         std::cout << "Enter player name (or 'done' to finish): ";
         std::cin >> playerName;
-        if (playerName == "done") break;
+        if (playerName == "done") {if(playerList.size()>2){break;} else std::cout << "Need at least 2 players.\n";}
         playerList.push_back(new Player(playerName));
         std::cout << "Player " << playerName << " added.\n";
         
@@ -78,6 +90,107 @@ while (currentState == "MAP_LOADED") {     //state2
 
 
 }
+//fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
+void GameEngine::AssignTerritories(){
+    int numPlayers = playerList.size();
+    int numTerritories = selectedMap->getTerritories().size();
+    int targetSize = numTerritories / numPlayers;
+    int extra = numTerritories % numPlayers;
+    std::vector<Territory*> territories = selectedMap->getTerritories();
+
+    std::map <std::string, bool> assigned;
+    int playerIndex = 0;
+
+    for (Territory* territory : territories){
+        
+        if (assigned[territory->getName()]) continue;
+        
+
+            std::queue<Territory*> q;
+            q.push(territory);
+            int territoriesAssignedToCurrentPlayer = 0;
+
+
+            while (!q.empty() && territoriesAssignedToCurrentPlayer < targetSize + (extra > 0 ? 1 : 0)) {
+                //if extra if bigger than 0, then take 1 give to play
+                
+                Territory* current = q.front();
+                
+                q.pop();
+                if (assigned[territory->getName()]) continue;
+                playerList[playerIndex]->addTerritory(current);
+                current->setOwner(playerList[playerIndex]->getName());
+                //asign current territory to player and set territory owner to play
+
+
+                assigned[current->getName()] = true;
+                territoriesAssignedToCurrentPlayer++;
+                
+                for (Territory* neighbor : current->getAdjacentTerritories()) {
+                    
+                    if ( !assigned[neighbor->getName()]) {q.push(neighbor);}
+                    else continue;
+                }
+            
+        }
+
+        if (extra > 0) extra--;
+        playerIndex = (playerIndex + 1) % numPlayers;
+
+
+    }
+        
+}
+
+
+//determine randomly the order of play of the players in the game
+void GameEngine::randomizeOrderOfPlay() {
+    // using random number
+     std::srand(static_cast<unsigned int>(std::time(0)));
+     std::vector<Player*> playerListCopy(playerList);
+
+
+    while (!playerListCopy.empty()) {
+        // random create playerList.size() - 1 number
+        int index = std::rand() % playerListCopy.size();
+        
+        playerOder.push_back(playerListCopy[index]);
+        playerList.erase(playerListCopy.begin() + index);
+    }
+
+    std::cout << "Order of play:\n";
+    for (Player* player : playerOder) {
+        std::cout << player->getName() << " ";
+    }
+    std::cout << std::endl;
+}
+
+void GameEngine::gamestart(){
+    AssignTerritories();        //fairly distribute all the territories to the players
+    randomizeOrderOfPlay();     //determine randomly the order of play of the players in the game
+
+
+    //let each player draw 2 initial cards from the deck using the deck’s draw() method
+    for(Player* player : playerOder){
+        player->getHand().addCard(deck.draw());
+        player->getHand().addCard(deck.draw());
+    }
+
+
+
+    //give 50 initial army units to the players, which are placed in their respective reinforcement pool
+    for(Player* player : playerOder){
+        player->setNumberOfReinforcement(50);
+    }
+
+
+
+
+    //switch the game to the play phase
+    currentState = "Play";
+
+}
+
 
 
 void GameEngine::printWelcomeMessage() {
@@ -130,7 +243,7 @@ void GameEngine::handleUserCommand(const std::string& command) {
     if (command == "start") {
         startupPhase();
     } else if (command == "play") {
-        promptNextActionPlay();
+        gamestart();
     } else if (command == "end") {
         transitionTo("END");
     } else {

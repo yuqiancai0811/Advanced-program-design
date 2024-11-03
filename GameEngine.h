@@ -17,6 +17,10 @@ private:
     Deck deck;                       // The deck of cards for the game
     vector <Player*> eliminatedPlayers;
     Player *currentPlayer;
+    vector <Player*> playerOder;
+    Deck deck;
+
+
 public:
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
@@ -25,6 +29,8 @@ public:
 
     // Handles the startup phase of the game
     void startupPhase();
+
+    void gamestart();
 
     // Processes user commands for starting the game
     void handleUserCommand(const std::string& command); 
@@ -53,5 +59,9 @@ public:
     std::string getCurrentState();
 
     void setcurrentState(std::string newGameState);
+
+    void AssignTerritories(){}
+
+    void randomizeOrderOfPlay(){}
 };
 #endif // GAMEENGINE_H
