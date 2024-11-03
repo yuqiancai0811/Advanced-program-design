@@ -87,6 +87,8 @@ while (currentState == "MAP_LOADED") {     //state2
 }
 //fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
 void GameEngine::AssignTerritories(){
+
+    std::cout << "Debug: AssignTerritories is runing.\n";
     int numPlayers = playerList.size();
     int numTerritories = selectedMap->getTerritories().size();
     int targetSize = numTerritories / numPlayers;
@@ -140,29 +142,43 @@ void GameEngine::AssignTerritories(){
 
 //determine randomly the order of play of the players in the game
 void GameEngine::randomizeOrderOfPlay() {
+
+    std::cout << "Debug: randomizeOrderOfPlay is runing.\n";
     // using random number
      std::srand(static_cast<unsigned int>(std::time(0)));
      std::vector<Player*> playerListCopy(playerList);
-
+    std::cout << "Debug: randomizeOrderOfPlay is runing.\n";
 
     while (!playerListCopy.empty()) {
         // random create playerList.size() - 1 number
         int index = std::rand() % playerListCopy.size();
-        
         playerOder.push_back(playerListCopy[index]);
-        playerList.erase(playerListCopy.begin() + index);
+        playerListCopy.erase(playerListCopy.begin() + index);
     }
 
     std::cout << "Order of play:\n";
     for (Player* player : playerOder) {
-        std::cout << player->getName() << " ";
+        if (player) { 
+            std::cout << player->getName() << " ";
+        } else {
+            std::cout << "(null player) ";
+        }
     }
     std::cout << std::endl;
 }
 
-void GameEngine::gamestart(){
-    AssignTerritories();        //fairly distribute all the territories to the players
-    randomizeOrderOfPlay();     //determine randomly the order of play of the players in the game
+void GameEngine::gamestart( GameEngine &game){
+    game.AssignTerritories();        //fairly distribute all the territories to the players
+
+    for(Player* player:playerList){
+        std::vector<Territory*> ownedTerritory;
+        ownedTerritory= (player->getOwnedTerritories());
+        for(Territory* terr:ownedTerritory){
+            terr->printTerritoryInfo();
+            std::cout << "Owner of this Territory: "<<terr->getOwner() <<endl;
+        }
+    }
+    game.randomizeOrderOfPlay();     //determine randomly the order of play of the players in the game
 
 
     //let each player draw 2 initial cards from the deck using the deck’s draw() method
@@ -234,11 +250,11 @@ std::string GameEngine::getCurrentState(){
 
 
 // Processes user commands
-void GameEngine::handleUserCommand(const std::string& command) {
+void GameEngine::handleUserCommand(const std::string& command, GameEngine &game) {
     if (command == "start") {
-        startupPhase();
+        game.startupPhase();
     } else if (command == "play") {
-        gamestart();
+        game.gamestart(game);
     } else if (command == "end") {
         transitionTo("END");
     } else {

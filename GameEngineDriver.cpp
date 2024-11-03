@@ -2,31 +2,19 @@
 #include <iostream>
 
 void testGameStates() {
-    GameEngine gameEngine;
-
-
-
-    std::string command;
-    while (gameEngine.getCurrentState() != "END") {
-        std::cout << "Current game state: " << gameEngine.getCurrentState() << std::endl;
-        std::cout << "Enter command (start/play/end): ";
-        std::cin >> command;
-        gameEngine.handleUserCommand(command);
-    }
-    std::cout << "Exiting the game ";
 }
 
 void testStartupPhase() {
-    GameEngine gameEngine;
+    GameEngine game;
 
 
 
     std::string command;
-    while (gameEngine.getCurrentState() != "END") {
-        std::cout << "Current game state: " << gameEngine.getCurrentState() << std::endl;
+    while (game.getCurrentState() != "END") {
+        std::cout << "Current game state: " << game.getCurrentState() << std::endl;
         std::cout << "Enter command (start/play/end): ";
         std::cin >> command;
-        gameEngine.handleUserCommand(command);
+        game.handleUserCommand(command,game);
     }
     std::cout << "Exiting the game ";
     

@@ -18,7 +18,6 @@ private:
     vector <Player*> eliminatedPlayers;
     Player *currentPlayer;
     vector <Player*> playerOder;
-    Deck deck;
 
 
 public:
@@ -30,10 +29,10 @@ public:
     // Handles the startup phase of the game
     void startupPhase();
 
-    void gamestart();
+    void gamestart(GameEngine &game);
 
     // Processes user commands for starting the game
-    void handleUserCommand(const std::string& command); 
+    void handleUserCommand(const std::string& command, GameEngine &game); 
 
     // Handles the gameplay phase (assigning reinforcement, issuing orders, executing orders)
     void playGame();
@@ -60,8 +59,8 @@ public:
 
     void setcurrentState(std::string newGameState);
 
-    void AssignTerritories(){}
+    void AssignTerritories();
 
-    void randomizeOrderOfPlay(){}
+    void randomizeOrderOfPlay();
 };
 #endif // GAMEENGINE_H
