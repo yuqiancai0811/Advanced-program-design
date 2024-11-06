@@ -3,6 +3,8 @@
 #include <random>
 #include <cstdlib>
 
+using namespace std;
+
 // Define static constants for CardType
 const string CardType::BOMB = "Bomb";
 const string CardType::REINFORCEMENT = "Reinforcement";
@@ -75,14 +77,19 @@ ostream &operator<<(ostream &out, const Card &card)
 }
 
 // Deck implementation
-// Default constructor initializes a deck with all card types
+// Default constructor initializes a deck with all card types 6 times
 Deck::Deck()
 {
-    cards.push_back(new Card(CardType::BOMB));
-    cards.push_back(new Card(CardType::REINFORCEMENT));
-    cards.push_back(new Card(CardType::BLOCKADE));
-    cards.push_back(new Card(CardType::AIRLIFT));
-    cards.push_back(new Card(CardType::DIPLOMACY));
+   vector<string> types = {
+            CardType::BOMB, CardType::REINFORCEMENT, CardType::BLOCKADE,
+            CardType::AIRLIFT, CardType::DIPLOMACY
+        };
+
+        for (const auto& type : types) {
+            for (int i = 0; i < 6; ++i) {
+                cards.push_back(new Card(type));
+            }
+        }
 }
 
 // Copy constructor
@@ -126,15 +133,9 @@ Card *Deck::draw()
         throw runtime_error("Deck is empty!");
     }
 
-    // Seed the random number generator with a real time value
-    srand(time(0));
-
-    // Shuffle the deck manually using a random index
-    for (size_t i = 0; i < cards.size() - 1; ++i)
-    {
-        size_t j = i + rand() / (RAND_MAX / (cards.size() - i) + 1);
-        swap(cards[i], cards[j]);
-    }
+    //Method that shuffles the deck of cards
+    mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
+    shuffle(begin(cards), end(cards), rng);
 
     // Draw the last card
     Card *drawnCard = cards.back();
