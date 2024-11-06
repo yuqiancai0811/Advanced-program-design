@@ -66,9 +66,12 @@ while (currentState == "MAP_LOADED") {     //state2
         if (playerList.size()==6){break;}
         std::cout << "Enter player name (or 'done' to finish): ";
         std::cin >> playerName;
-        if (playerName == "done") {if(playerList.size()>2){break;} else std::cout << "Need at least 2 players.\n";}
-        playerList.push_back(new Player(playerName));
-        std::cout << "Player " << playerName << " added.\n";
+        if (playerName == "done") {if(playerList.size()>=2){break;} else std::cout << "Need at least 2 players.\n";}
+        
+        else
+            {playerList.push_back(new Player(playerName));
+            std::cout << "Player " << playerName << " added.\n";}
+        
         
         std::cout << "Total number of play\n" << playerList.size()<< endl;
         for(Player* player : playerList){
@@ -86,57 +89,55 @@ while (currentState == "MAP_LOADED") {     //state2
 
 }
 //fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
-void GameEngine::AssignTerritories(){
-
-    std::cout << "Debug: AssignTerritories is runing.\n";
+void GameEngine::AssignTerritories() {
+    std::cout << "Debug: AssignTerritories is running.\n";
+    
     int numPlayers = playerList.size();
     int numTerritories = selectedMap->getTerritories().size();
     int targetSize = numTerritories / numPlayers;
     int extra = numTerritories % numPlayers;
     std::vector<Territory*> territories = selectedMap->getTerritories();
 
-    std::map <std::string, bool> assigned;
+    std::map<std::string, bool> assigned;
     int playerIndex = 0;
+    int territoriesAssignedToCurrentPlayer = 0;
 
-    for (Territory* territory : territories){
-        
-        if (assigned[territory->getName()]) continue;
-        
+    for (Territory* territory : territories) {
+        if (assigned[territory->getName()]) continue; // Skip if already assigned
 
-            std::queue<Territory*> q;
-            q.push(territory);
-            int territoriesAssignedToCurrentPlayer = 0;
+        std::vector<Territory*> q;
+        q.push_back(territory);
 
+        while (!q.empty() && territoriesAssignedToCurrentPlayer < targetSize + (extra > 0 ? 1 : 0)) {
+            Territory* current = q.front();
+            q.erase(q.begin());
 
-            while (!q.empty() && territoriesAssignedToCurrentPlayer < targetSize + (extra > 0 ? 1 : 0)) {
-                //if extra if bigger than 0, then take 1 give to play
-                
-                Territory* current = q.front();
-                
-                q.pop();
-                if (assigned[territory->getName()]) continue;
-                playerList[playerIndex]->addTerritory(current);
-                current->setOwner(playerList[playerIndex]->getName());
-                //asign current territory to player and set territory owner to play
-
-
+            if (!assigned[current->getName()]) {
+                assignTerritoryToPlayer(current, playerList[playerIndex]);
                 assigned[current->getName()] = true;
                 territoriesAssignedToCurrentPlayer++;
-                
-                for (Territory* neighbor : current->getAdjacentTerritories()) {
-                    
-                    if ( !assigned[neighbor->getName()]) {q.push(neighbor);}
-                    else continue;
+            }
+
+            // Add unassigned neighbors to queue
+            for (Territory* neighbor : current->getAdjacentTerritories()) {
+                if (!assigned[neighbor->getName()]) {
+                    q.push_back(neighbor);
                 }
-            
+            }
         }
 
-        if (extra > 0) extra--;
-        playerIndex = (playerIndex + 1) % numPlayers;
-
-
+        // Move to the next player if current player’s quota is filled
+        if (territoriesAssignedToCurrentPlayer == targetSize + (extra > 0 ? 1 : 0)) {
+            if (extra > 0) extra--;
+            playerIndex = (playerIndex + 1) % numPlayers;
+            territoriesAssignedToCurrentPlayer = 0;
+        }
     }
-        
+}
+
+void GameEngine::assignTerritoryToPlayer(Territory* territory, Player* player) {
+    player->addTerritory(territory);
+    territory->setOwner(player->getName());
 }
 
 
@@ -185,11 +186,14 @@ void GameEngine::gamestart( GameEngine &game){
     for(Player* player : playerOder){
         player->getHand().addCard(deck.draw());
         player->getHand().addCard(deck.draw());
+        // need to fix since right now each deck only have 5 card
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
 
 
     //give 50 initial army units to the players, which are placed in their respective reinforcement pool
+    //Tempaly add the data to the player class!
     for(Player* player : playerOder){
         player->setNumberOfReinforcement(50);
     }

@@ -29,6 +29,8 @@ public:
     // Handles the startup phase of the game
     void startupPhase();
 
+    void assignTerritoryToPlayer(Territory* territory, Player* player);
+
     void gamestart(GameEngine &game);
 
     // Processes user commands for starting the game
