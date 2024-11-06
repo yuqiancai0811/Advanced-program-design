@@ -49,6 +49,8 @@ class Deck
 public:
     // Constructors
     Deck();
+    // Constructors build deck with number of player
+    Deck(int a);
 
     Deck(const Deck &other);
 
