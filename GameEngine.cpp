@@ -7,6 +7,7 @@
 #include <cstdlib>   // std::rand, std::srand
 #include <ctime>     // std::time
 #include <iostream>
+#include <algorithm>  // For std::max
 
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
@@ -401,3 +402,77 @@ Implements the main game loop following the official rules of the Warzone game.
 - Issuing Orders Phase
 - Orders Execution Phase
 */
+// In GameEngine.cpp
+void GameEngine::mainGameLoop() {
+    std::cout << "Starting Main Game Loop...\n";
+    transitionTo("reinforcement");  // Start from the reinforcement phase
+    bool gameOver = false;          // Flag to track if the game has ended
+
+    while (!gameOver) {
+        if (currentState == "reinforcement") {
+            reinforcementPhase();
+        } else if (currentState == "issue orders") {
+            issueOrdersPhase();
+        } else if (currentState == "execute orders") {
+            executeOrdersPhase();
+        }
+
+        // Directly check the win condition within the loop
+        for (Player* player : playerList) {
+            if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
+                std::cout << player->getName() << " has won the game!\n";
+                winner = player;           // Set the winner
+                transitionTo("win");       // Transition to the win state
+                gameOver = true;           // Set the gameOver flag to break the loop
+                break;                     // Exit the for loop since we found a winner
+            }
+        }
+    }
+
+    std::cout << "Game Over! " << winner->getName() << " has won the game!\n";
+}
+
+/* reinforcementPhase()
+1) Players are given a number of army units that depends on the number of territories they own, 
+(# of territories owned divided by 3, rounded down).
+
+2) If a player owns all territories on a continent, they receive additional army units equal to that continent’s control bonus.
+3) Add the calculated army units to the player's reinforcement pool each turn.
+*/
+void GameEngine::reinforcementPhase() {
+    std::cout << "Starting Reinforcement Phase...\n";
+
+    // Iterate over each player in the game
+    for (Player* player : playerList) {
+        // Calculate base reinforcement based on territories owned
+        int territoriesOwned = player->getOwnedTerritories().size();
+        int baseReinforcements = std::max(3, territoriesOwned / 3);  // At least 3 units or territoriesOwned / 3
+
+        // Add continent bonuses if the player controls entire continents
+        for (Continent* continent : selectedMap->getContinents()) {
+            bool ownsEntireContinent = true;
+
+            // Check if the player owns all territories in this continent
+            for (Territory* territory : continent->getTerritories()) {
+                if (territory->getOwner() != player->getName()) {
+                    ownsEntireContinent = false;
+                    break;
+                }
+            }
+
+            // If the player owns the entire continent, add the continent's control value as a bonus
+            if (ownsEntireContinent) {
+                baseReinforcements += continent->getControlValue();
+            }
+        }
+
+        // Set the reinforcement pool for the player
+        player->setNumberOfReinforcement(baseReinforcements);
+        
+        // Output the reinforcement info for each player
+        std::cout << player->getName() << " receives " << baseReinforcements << " reinforcement units.\n";
+    }
+
+    // Transition to the next phase
+    transitionTo("issue orders");
+}

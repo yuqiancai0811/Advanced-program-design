@@ -64,5 +64,33 @@ public:
     void AssignTerritories();
 
     void randomizeOrderOfPlay();
+
+    /* -------------- Part 3 ------------------*/
+    Player* winner;                  // Pointer to the player who won the game
+    // Game phases
+    void reinforcementPhase();        // Reinforcement phase of the game
+    void issueOrdersPhase();          // Issuing orders phase of the game
+    void executeOrdersPhase();        // Execution of orders phase
+
+    // Main game loop
+    void mainGameLoop();              // Main game loop that handles phase transitions and checks win condition
+
+    // Set and Get current game state
+    void setCurrentState(const std::string& newGameState); // Sets the current game state
+    std::string getCurrentState() const;                   // Gets the current game state
+
+    // Game initialization and setup
+    void startupPhase();              // Handles the startup phase commands and game setup
+    void gamestart(GameEngine &game); // Handles the game start operations after setup is complete
+
+    // Command processing
+    void handleUserCommand(const std::string& command, GameEngine &game);  // Processes user commands
+
+    // Additional game setup and management
+    void AssignTerritories();         // Assigns territories to players
+    void randomizeOrderOfPlay();      // Randomly determines the order of play for players
+
+    // Print and display
+    void printWelcomeMessage();       // Prints the welcome message when the game starts
 };
 #endif // GAMEENGINE_H
