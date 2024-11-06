@@ -390,3 +390,10 @@ void GameEngine::transitionTo(const std::string& newState) {
 }
 
 
+/*
+Implements the main game loop following the official rules of the Warzone game.
+3 phases:
+- Reinforcement Phase
+- Issuing Orders Phase
+- Orders Execution Phase
+*/
