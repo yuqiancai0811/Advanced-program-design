@@ -23,6 +23,10 @@ void Territory::addAdjacentTerritory(Territory* territory) {
     adjacentTerritories.push_back(territory);
 }
 
+void Territory::setOwner(const std::string& owner1){
+    owner=owner1;
+}
+
 std::string Territory::getName() const {return name;};
 std::string Territory::getOwner() const {return owner;};
 std::string Territory::getContinent() const {return continent;};

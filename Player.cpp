@@ -60,6 +60,9 @@ void Player::removeTerritory(Territory* territory) {
     ownedTerritories.erase(remove(ownedTerritories.begin(), ownedTerritories.end(), territory), ownedTerritories.end());
 }
 
+void Player::setNumberOfReinforcement(int number){numberOfReinforcement=number;}
+// a new setter!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 // Method to decide where to defend
 vector<Territory*> Player::toDefend() const {
     return ownedTerritories;  // Return the player's owned territories
