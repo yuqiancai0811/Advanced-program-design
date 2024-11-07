@@ -9,22 +9,40 @@
 #include "Orders.h"
 #include "Cards.h"
 
+#include "CommandProcessor.h"
+
+// Enum to represent game states    222
+enum class GameState {
+    start,
+    mapLoaded,
+    mapValidated,
+    playersAdded,
+    assignReinforcement,
+    issueOrders,
+    executeOrders,
+    win,
+    quit
+};
+
 class GameEngine {
 private:
-    std::string currentState;        // The current game state (managed as a string)
+    std::string currentState;        // The current game state (managed as a string)///////
+    CommandProcessor* commandProcessor;///
+
     Map* selectedMap;                // The game map
     std::vector<Player*> playerList; // List of players
     Deck deck;                       // The deck of cards for the game
     vector <Player*> eliminatedPlayers;
     Player *currentPlayer;
     vector <Player*> playerOder;
-
+    GameState currentState; ///////////2
 
 public:
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
-
+    GameEngine(GameState initialState = GameState::start); /////
    
+    void setCommandProcessor(CommandProcessor* processor);///
 
     // Handles the startup phase of the game
     void startupPhase();
@@ -44,6 +62,10 @@ public:
 
     // Helper function to transition between states
     void transitionTo(const std::string& newState);
+
+    /////2
+    void transitionTo(GameState newState);
+
 
     // Prints the initial welcome message
     void printWelcomeMessage();
