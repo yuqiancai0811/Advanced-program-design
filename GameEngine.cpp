@@ -8,7 +8,7 @@
 #include <ctime>     // std::time
 #include <iostream>
 #include <algorithm>  // For std::max
-
+#include "CommandProcessor.h"///
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
 // Part 2: Game startup phase
@@ -28,6 +28,12 @@
 // You must deliver a driver as a free function named testStartupPhase() that demonstrates that 1-4 explained
 // above are implemented correctly, using either console input or file input of the commands (see Part 1). This driver
 // function must be in the GameEngineDriver.cpp file. 
+GameEngine::GameEngine() : commandProcessor(nullptr) {
+}///
+void GameEngine::setCommandProcessor(CommandProcessor* processor) {
+commandProcessor = processor;
+}///
+
 
 void GameEngine::startupPhase(){
 
