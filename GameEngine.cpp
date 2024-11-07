@@ -396,6 +396,7 @@ void GameEngine::transitionTo(const std::string& newState) {
 
 
 /*
+------------------------------ Part 3 mainGameLoop -----------------------------
 Implements the main game loop following the official rules of the Warzone game.
 3 phases:
 - Reinforcement Phase
@@ -404,16 +405,15 @@ Implements the main game loop following the official rules of the Warzone game.
 */
 // In GameEngine.cpp
 void GameEngine::mainGameLoop() {
-    std::cout << "Starting Main Game Loop...\n";
-    transitionTo("reinforcement");  // Start from the reinforcement phase
-    bool gameOver = false;          // Flag to track if the game has ended
+    transitionTo(GameState::assignReinforcement);  // Start from the reinforcement phase
+    bool gameOver = false;  // Flag to track if the game has ended
 
     while (!gameOver) {
-        if (currentState == "reinforcement") {
+        if (currentState == GameState::assignReinforcement) {
             reinforcementPhase();
-        } else if (currentState == "issue orders") {
+        } else if (currentState == GameState::issueOrders) {
             issueOrdersPhase();
-        } else if (currentState == "execute orders") {
+        } else if (currentState == GameState::executeOrders) {
             executeOrdersPhase();
         }
 
@@ -422,7 +422,7 @@ void GameEngine::mainGameLoop() {
             if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
                 std::cout << player->getName() << " has won the game!\n";
                 winner = player;           // Set the winner
-                transitionTo("win");       // Transition to the win state
+                transitionTo(GameState::win);  // Transition to the win state
                 gameOver = true;           // Set the gameOver flag to break the loop
                 break;                     // Exit the for loop since we found a winner
             }
@@ -432,10 +432,10 @@ void GameEngine::mainGameLoop() {
     std::cout << "Game Over! " << winner->getName() << " has won the game!\n";
 }
 
-/* reinforcementPhase()
+/* 
+------------------------------ Part 3 reinforcementPhase() -----------------------------
 1) Players are given a number of army units that depends on the number of territories they own, 
 (# of territories owned divided by 3, rounded down).
-
 2) If a player owns all territories on a continent, they receive additional army units equal to that continent’s control bonus.
 3) Add the calculated army units to the player's reinforcement pool each turn.
 */
@@ -472,7 +472,43 @@ void GameEngine::reinforcementPhase() {
         // Output the reinforcement info for each player
         std::cout << player->getName() << " receives " << baseReinforcements << " reinforcement units.\n";
     }
-
     // Transition to the next phase
     transitionTo("issue orders");
 }
+
+/* 
+------------------------------ Part 3 issueOrdersPhase() -----------------------------
+1) Players issue orders and place them in their order list through a call to the Player::issueOrder() method.
+2) This method is called in round-robin fashion across all players by the game engine.
+   -> Round-robin means each player takes turns issuing one order at a time.
+3) This phase ends when all players have signified that they don’t have any more orders to issue for this turn. 
+4) It will call a function/method named issueOrdersPhase() in the game engine.
+*/
+void GameEngine::issueOrdersPhase() {
+    std::cout << "Starting Issue Orders Phase...\n";
+    bool ordersPending;
+    // The do-while loop allows each player to issue orders in a round-robin manner.
+    do {
+        ordersPending = false;
+        for (Player* player : playerList) {
+            if (player->hasMoreOrders()) {  // Check if the player has more orders to issue
+                player->issueOrder();       // Call issueOrder for the player
+                ordersPending = true;       // Set flag to true if any player issues an order
+            }
+        }
+    } while (ordersPending);  // Continue round-robin until no orders are pending
+
+    // Transition to the next phase after issuing orders
+    transitionTo(GameState::executeOrders);
+}
+/* 
+------------------------------ Part 3 executeOrdersPhase() -----------------------------
+1) Once all the players have signified in the same turn that they are not issuing one more order,
+the game engine proceeds to execute the top order on the list of orders of each player in a round-robin fashion
+2) Once all the players’ orders have been executed, the main game loop goes back to the reinforcement phase.
+3) When the game engine asks the player to give them their next order, the player returns the next order in their order list. 
+Once the game engine receives the order, it calls execute() on the order, which should first validate the order, 
+then enact the order (see Part 4: orders execution implementation) and record a narrative of its effect stored in the order object. 
+The game engine should execute all the deploy orders before it executes any other kind of order. 
+This goes on in round-robin fashion across the players until all the players’ orders have been executed.
+*/
