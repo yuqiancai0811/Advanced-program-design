@@ -485,8 +485,26 @@ void GameEngine::reinforcementPhase() {
 
 /* 
 ------------------------------ Part 3 issueOrdersPhase() -----------------------------
-1) Players are given a number of army units that depends on the number of territories they own, 
-(# of territories owned divided by 3, rounded down).
-2) If a player owns all territories on a continent, they receive additional army units equal to that continent’s control bonus.
-3) Add the calculated army units to the player's reinforcement pool each turn.
+1) Players issue orders and place them in their order list through a call to the Player::issueOrder() method.
+2) This method is called in round-robin fashion across all players by the game engine.
+   -> Round-robin means each player takes turns issuing one order at a time.
+3) This phase ends when all players have signified that they don’t have any more orders to issue for this turn. 
+4) It will call a function/method named issueOrdersPhase() in the game engine.
 */
+void GameEngine::issueOrdersPhase() {
+    std::cout << "Starting Issue Orders Phase...\n";
+    bool ordersPending;
+    // The do-while loop allows each player to issue orders in a round-robin manner.
+    do {
+        ordersPending = false;
+        for (Player* player : playerList) {
+            if (player->hasMoreOrders()) {  // Check if the player has more orders to issue
+                player->issueOrder();       // Call issueOrder for the player
+                ordersPending = true;       // Set flag to true if any player issues an order
+            }
+        }
+    } while (ordersPending);  // Continue round-robin until no orders are pending
+
+    // Transition to the next phase after issuing orders
+    transitionTo(GameState::executeOrders);
+}
