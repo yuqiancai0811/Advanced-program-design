@@ -8,7 +8,7 @@ using std::endl;
 // Test function to simulate command processing from user input
 void testCommandProcessor() {
     // Initialize the GameEngine and CommandProcessor with the initial game state
-    GameEngine* gameEngine = new GameEngine(GameState::start);
+    GameEngine* gameEngine = new GameEngine(GameEngine::start);
     CommandProcessor* processor = new CommandProcessor(gameEngine);
 
     // Link the GameEngine and CommandProcessor
@@ -151,7 +151,7 @@ void testCommandProcessorConsole() {
 
 // Test function for command processing from a file input
 void testCommandProcessorFile(const string& fileName) {
-    cout << "File Input Test" << endl;
+    cout << "---------------File Input Test----------------" << endl;
     GameEngine* gameEngine = new GameEngine(GameState::start);
     FileCommandProcessorAdapter* processor = new FileCommandProcessorAdapter(gameEngine, fileName);
 

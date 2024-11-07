@@ -80,6 +80,7 @@ Command* CommandProcessor::getCommand() {
     return cmd;
 }
 
+
 bool CommandProcessor::validateCommand(const Command* cmd) const {
     const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
     for (const auto& validCmd : validCommands) {

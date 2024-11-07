@@ -49,6 +49,8 @@ public:
     bool validateCommand(const Command* cmd) const;  // Validates the command
 
     friend ostream& operator<<(ostream& os, const CommandProcessor& processor);  // Overloads << operator
+
+        void setCommandProcessor(CommandProcessor* processor) {}
 };
 
 // FileLineReader class to read commands from a file
