@@ -178,6 +178,21 @@ void orderList::showAllOrders() const {
     }
 }
 
+/*--------------- Helper function for executeOrdersPhase() in Part3 -----------------*/
+bool orderList::hasMoreOrders() const {
+    return !orders.empty();
+}
+
+Order* orderList::getNextOrder() {
+    if (!orders.empty()) {
+        Order* nextOrder = orders.front();
+        orders.erase(orders.begin());
+        return nextOrder;
+    }
+    return nullptr;
+}
+/*-------------------------------------------------------------------------------*/
+
 std::ostream& operator<<(std::ostream& os, const orderList& ordersList) {
     for (const auto& order : ordersList.orders) {
         os << *order;

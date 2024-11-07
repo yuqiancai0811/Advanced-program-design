@@ -95,6 +95,12 @@ public:
     void moveOrder(int oldIndex, int newIndex);
     void showAllOrders() const;
 
+    // Check if there are more orders
+    bool hasMoreOrders() const;
+
+    // Get and remove the next order
+    Order* getNextOrder();
+
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& os, const orderList& ordersList);
 };

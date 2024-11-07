@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include "MapDriver.h"
+#include "Orders.h"
 #include <iostream>
 #include <limits>
 #include <map>
@@ -318,69 +319,70 @@ void GameEngine::promptNextActionPlay() {
     std::cout << "Game Over! You have won!\n";
 }
 
-// Reinforcement phase with looping mechanism
-void GameEngine::reinforcementPhase() {
-    std::cout << "Entering Reinforcement Phase...\n";
-    bool done1 = false;
+/* --------------------- Codes for Part1 ----------------------*/
+// // Reinforcement phase with looping mechanism
+// void GameEngine::reinforcementPhase() {
+//     std::cout << "Entering Reinforcement Phase...\n";
+//     bool done1 = false;
     
-    while (!done1) {
-        std::cout << "Enter 'next' to finish the Reinforcement Phase or type any command for actions...\n";
-        std::string userInput2;
-        std::cin >> userInput2;
+//     while (!done1) {
+//         std::cout << "Enter 'next' to finish the Reinforcement Phase or type any command for actions...\n";
+//         std::string userInput2;
+//         std::cin >> userInput2;
         
-        if (userInput2=="next") {  // If user presses Enter without input, end the phase
-            done1 = true;}
-        else {
-             // Here you can handle any additional reinforcement actions
-             std::cout << "Reinforcement Action: " << userInput2 << std::endl;
-             }
-    }
-    transitionTo("issue orders");
-}
+//         if (userInput2=="next") {  // If user presses Enter without input, end the phase
+//             done1 = true;}
+//         else {
+//              // Here you can handle any additional reinforcement actions
+//              std::cout << "Reinforcement Action: " << userInput2 << std::endl;
+//              }
+//     }
+//     transitionTo("issue orders");
+// }
 
-// Issuing Orders phase with looping mechanism
-void GameEngine::issueOrdersPhase() {
-    std::cout << "Entering Issue Orders Phase...\n";
-    bool done2 = false;
-    while (!done2) {
-        std::cout << "Press 'next' to finish the Issue Orders Phase or type any command for actions...\n";
+// // Issuing Orders phase with looping mechanism
+// void GameEngine::issueOrdersPhase() {
+//     std::cout << "Entering Issue Orders Phase...\n";
+//     bool done2 = false;
+//     while (!done2) {
+//         std::cout << "Press 'next' to finish the Issue Orders Phase or type any command for actions...\n";
 
-        std::string userInput3;
-        std::cin>> userInput3;
+//         std::string userInput3;
+//         std::cin>> userInput3;
         
-        if (userInput3=="next") {  // If user presses Enter without input, end the phase
-            done2 = true;
-        } else {
-            // Here you can handle any additional issue order actions
-            std::cout << "Issue Order Action: " << userInput3 << std::endl;
-        }
-    }
-    transitionTo("execute orders");
-}
+//         if (userInput3=="next") {  // If user presses Enter without input, end the phase
+//             done2 = true;
+//         } else {
+//             // Here you can handle any additional issue order actions
+//             std::cout << "Issue Order Action: " << userInput3 << std::endl;
+//         }
+//     }
+//     transitionTo("execute orders");
+// }
 
-// Execute Orders phase - integrated logic for card drawing and playing
-void GameEngine::executeOrdersPhase() {
-    std::cout << "Entering Execute Orders Phase...\n";
+// // Execute Orders phase - integrated logic for card drawing and playing
+// void GameEngine::executeOrdersPhase() {
+//     std::cout << "Entering Execute Orders Phase...\n";
     
-    for (Player* player : playerList) {
-        std::cout << "Player " << player->getName() << " is drawing cards...\n";
+//     for (Player* player : playerList) {
+//         std::cout << "Player " << player->getName() << " is drawing cards...\n";
         
-        Hand hand;  // Initialize the player's hand
+//         Hand hand;  // Initialize the player's hand
 
-        // Each player draws 3 cards
-        for (int i = 0; i < 3; ++i) {
-            Card* drawnCard = deck.draw();  // Drawing from the deck
-            hand.addCard(drawnCard);
-            std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
-        }
+//         // Each player draws 3 cards
+//         for (int i = 0; i < 3; ++i) {
+//             Card* drawnCard = deck.draw();  // Drawing from the deck
+//             hand.addCard(drawnCard);
+//             std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
+//         }
 
-        // Play all cards in the hand
-        // while (!hand.isEmpty()) {
-        //     // hand.playFirstCard(deck);  // Assuming this method is implemented as we discussed earlier
-        // }
-    }
+//         // Play all cards in the hand
+//         // while (!hand.isEmpty()) {
+//         //     // hand.playFirstCard(deck);  // Assuming this method is implemented as we discussed earlier
+//         // }
+//     }
 
-}
+// }
 
 // New function to check win condition
 void GameEngine::checkWinCondition() {
@@ -518,3 +520,30 @@ then enact the order (see Part 4: orders execution implementation) and record a 
 The game engine should execute all the deploy orders before it executes any other kind of order. 
 This goes on in round-robin fashion across the players until all the players’ orders have been executed.
 */
+void GameEngine::executeOrdersPhase() {
+    std::cout << "Starting Order Execution Phase...\n";
+    
+    bool ordersRemaining;  // Flag to track if there are any remaining orders
+    do {
+        ordersRemaining = false;  // Assume no orders are left initially
+
+        // Loop through each player to execute one order per player in round-robin
+        for (Player* player : playerList) {
+            orderList& orders = player->getOrders();  // Get the player's order list
+
+            // Check if the player has any orders to execute
+            if (orders.hasMoreOrders()) {
+                // Execute the top order in the player's list
+                Order* currentOrder = orders.getNextOrder();
+                if (currentOrder != nullptr) {
+                    currentOrder->execute();  // Execute the order
+                    std::cout << player->getName() << " executed order: " << currentOrder->toString() << "\n";
+                    delete currentOrder;  // Clean up the order after execution
+                }
+                ordersRemaining = true;  // At least one player had an order
+            }
+        }
+    } while (ordersRemaining);  // Continue until no players have orders remaining
+
+    std::cout << "Order Execution Phase Complete.\n";
+}
