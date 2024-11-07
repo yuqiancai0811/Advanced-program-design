@@ -478,7 +478,6 @@ void GameEngine::reinforcementPhase() {
         // Output the reinforcement info for each player
         std::cout << player->getName() << " receives " << baseReinforcements << " reinforcement units.\n";
     }
-
     // Transition to the next phase
     transitionTo("issue orders");
 }
@@ -508,3 +507,14 @@ void GameEngine::issueOrdersPhase() {
     // Transition to the next phase after issuing orders
     transitionTo(GameState::executeOrders);
 }
+/* 
+------------------------------ Part 3 executeOrdersPhase() -----------------------------
+1) Once all the players have signified in the same turn that they are not issuing one more order,
+the game engine proceeds to execute the top order on the list of orders of each player in a round-robin fashion
+2) Once all the players’ orders have been executed, the main game loop goes back to the reinforcement phase.
+3) When the game engine asks the player to give them their next order, the player returns the next order in their order list. 
+Once the game engine receives the order, it calls execute() on the order, which should first validate the order, 
+then enact the order (see Part 4: orders execution implementation) and record a narrative of its effect stored in the order object. 
+The game engine should execute all the deploy orders before it executes any other kind of order. 
+This goes on in round-robin fashion across the players until all the players’ orders have been executed.
+*/
