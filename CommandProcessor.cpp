@@ -1,159 +1,148 @@
-#ifndef COMMANDPROCESSOR_H
-#define COMMANDPROCESSOR_H
-
-#include "GameEngine.h"
+#include "CommandProcessor.h"
 #include <iostream>
-#include <fstream>
-#include <vector>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
-// Command class representing a command and its effect
-class Command {
-private:
-    string command;
-    string effect;
+// Implementation of Command class constructors and methods
 
-public:
-    Command() = default;
-    explicit Command(const string& cmd) : command(cmd) {}
-    Command(const Command& other) : command(other.command), effect(other.effect) {}
+Command::Command() : command(""), effect("") {}
 
-    Command& operator=(const Command& other) {
-        if (this != &other) {
-            command = other.command;
-            effect = other.effect;
-        }
-        return *this;
+Command::Command(const string& cmd) : command(cmd), effect("") {}
+
+Command::Command(const Command& other) : command(other.command), effect(other.effect) {}
+
+Command& Command::operator=(const Command& other) {
+    if (this != &other) {
+        command = other.command;
+        effect = other.effect;
     }
+    return *this;
+}
 
-    string getCommand() const { return command; }
-    string getEffect() const { return effect; }
-    void setEffect(const string& eff) { effect = eff; }
+string Command::getCommand() const {
+    return command;
+}
 
-    friend ostream& operator<<(ostream& os, const Command& cmd) {
-        os << "Command: " << cmd.command << " | Effect: " << cmd.effect;
-        return os;
+string Command::getEffect() const {
+    return effect;
+}
+
+void Command::setEffect(const string& eff) {
+    effect = eff;
+}
+
+void Command::saveEffect(const string& eff) {
+    effect = eff;
+}
+
+ostream& operator<<(ostream& os, const Command& cmd) {
+    os << "Command: " << cmd.command << " | Effect: " << cmd.effect;
+    return os;
+}
+
+// Implementation of CommandProcessor class
+
+CommandProcessor::CommandProcessor(GameEngine* engine) : gameEngine(engine) {}
+
+CommandProcessor::~CommandProcessor() {
+    for (Command* cmd : commands) {
+        delete cmd;
     }
-};
+    commands.clear();
+}
 
-// CommandProcessor class for reading and processing commands
-class CommandProcessor {
-private:
-    vector<Command*> commands;
-    GameEngine* gameEngine;
+void CommandProcessor::setGameEngine(GameEngine* engine) {
+    gameEngine = engine;
+}
 
-protected:
-    // Reads a command from the user input
-    virtual string readCommand() {
-        cout << "Enter command: ";
-        string cmd;
-        getline(cin, cmd);
-        return cmd;
+string CommandProcessor::readCommand() {
+    string cmd;
+    cout << "Enter command: ";
+    getline(cin, cmd);
+    return cmd;
+}
+
+void CommandProcessor::storeCommand(Command* cmd) {
+    commands.push_back(cmd);
+}
+
+Command* CommandProcessor::getCommand() {
+    string cmdStr = readCommand();
+    Command* cmd = new Command(cmdStr);
+    if (validateCommand(cmd)) {
+        storeCommand(cmd);
+    } else {
+        cmd->setEffect("Invalid command");
+        cout << "Error: Invalid command entered: " << cmdStr << endl;
     }
+    return cmd;
+}
 
-    // Stores a command object in the commands list
-    void storeCommand(Command* cmd) {
-        commands.push_back(cmd);
-    }
 
-public:
-    explicit CommandProcessor(GameEngine* engine = nullptr) : gameEngine(engine) {}
-    virtual ~CommandProcessor() {
-        for (Command* cmd : commands) {
-            delete cmd;
-        }
-    }
-
-    // Retrieves a command and validates it
-    Command* getCommand() {
-        string cmdStr = readCommand();
-        Command* cmd = new Command(cmdStr);
-        if (validateCommand(cmd)) {
-            storeCommand(cmd);
-        } else {
-            cmd->setEffect("Invalid command");
-            cout << "Error: Invalid command entered: " << cmdStr << endl;
-        }
-        return cmd;
-    }
-
-    // Validates the command
-    bool validateCommand(const Command* cmd) const {
-        return !cmd->getCommand().empty();  // Simple validation; can be extended
-    }
-
-    friend ostream& operator<<(ostream& os, const CommandProcessor& processor) {
-        os << "CommandProcessor containing commands:\n";
-        for (const Command* cmd : processor.commands) {
-            os << *cmd << "\n";
-        }
-        return os;
-    }
-};
-
-// FileLineReader class for reading commands from a file line-by-line
-class FileLineReader {
-private:
-    ifstream file;
-
-public:
-    explicit FileLineReader(const string& fileName) : file(fileName) {
-        if (!file.is_open()) {
-            cerr << "Error: Unable to open file: " << fileName << endl;
+bool CommandProcessor::validateCommand(const Command* cmd) const {
+    const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
+    for (const auto& validCmd : validCommands) {
+        if (cmd->getCommand() == validCmd) {
+            return true;
         }
     }
+    cout << "Invalid command: " << cmd->getCommand() << endl;
+    return false;
+}
 
-    ~FileLineReader() {
-        if (file.is_open()) {
-            file.close();
-        }
+ostream& operator<<(ostream& os, const CommandProcessor& processor) {
+    os << "CommandProcessor containing commands:\n";
+    for (const Command* cmd : processor.commands) {
+        os << *cmd << "\n";
     }
+    return os;
+}
 
-    // Reads a single line from the file
-    string readLine() {
-        string line;
-        if (getline(file, line)) {
-            return line;
-        }
-        return "";  // Returns an empty string if EOF or error
+// Implementation of FileLineReader class
+
+FileLineReader::FileLineReader(const string& fileName) : file(fileName) {
+    if (!file.is_open()) {
+        cerr << "Error: Unable to open file: " << fileName << endl;
     }
-};
+}
 
-// FileCommandProcessorAdapter class adapts FileLineReader to CommandProcessor
-class FileCommandProcessorAdapter : public CommandProcessor {
-private:
-    FileLineReader* fileReader;
-
-protected:
-    // Overrides readCommand to read from a file instead of console
-    string readCommand() override {
-        string cmd = fileReader->readLine();
-        if (cmd.empty()) {
-            cout << "Note: End of file reached or empty line encountered." << endl;
-        } else {
-            cout << "Command read from file: " << cmd << endl;
-        }
-        return cmd;
+FileLineReader::~FileLineReader() {
+    if (file.is_open()) {
+        file.close();
     }
+}
 
-public:
-    explicit FileCommandProcessorAdapter(const string& fileName)
-        : CommandProcessor(), fileReader(new FileLineReader(fileName)) {}
-
-    ~FileCommandProcessorAdapter() override {
-        delete fileReader;
+string FileLineReader::readLine() {
+    string line;
+    if (getline(file, line)) {
+        return line;
     }
+    return ""; // Return an empty string if EOF or error
+}
 
-    // Disables copy constructor and assignment operator to prevent copying
-    FileCommandProcessorAdapter(const FileCommandProcessorAdapter& other) = delete;
-    FileCommandProcessorAdapter& operator=(const FileCommandProcessorAdapter& other) = delete;
+// Implementation of FileCommandProcessorAdapter class
 
-    friend ostream& operator<<(ostream& os, const FileCommandProcessorAdapter& adapter) {
-        os << "FileCommandProcessorAdapter with attached file reader";
-        return os;
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(GameEngine* engine, const std::string& fileName)
+    : CommandProcessor(engine), fileReader(new FileLineReader(fileName)) {}
+
+
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter() {
+    delete fileReader;
+}
+
+string FileCommandProcessorAdapter::readCommand() {
+    string cmd = fileReader->readLine();
+    if (cmd.empty()) {
+        cout << "Note: End of file reached or empty line encountered." << endl;
+    } else {
+        cout << "Command read from file: " << cmd << endl;
     }
-};
+    return cmd;
+}
 
-#endif // COMMANDPROCESSOR_H
+ostream& operator<<(ostream& os, const FileCommandProcessorAdapter& adapter) {
+    os << "FileCommandProcessorAdapter with attached file reader";
+    return os;
+}

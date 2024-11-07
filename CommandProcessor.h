@@ -12,154 +12,75 @@ using namespace std;
 // Command class to encapsulate command data and effects
 class Command {
 private:
-    string command;
-    string effect;
+    string command;  // The command string
+    string effect;   // The effect/result of the command
 
 public:
-    Command() : command(""), effect("") {}
-    Command(const string& cmd) : command(cmd), effect("") {}
-    Command(const Command& other) : command(other.command), effect(other.effect) {}
+    Command();                        // Default constructor
+    Command(const string& cmd);       // Constructor with command input
+    Command(const Command& other);    // Copy constructor
 
-    std::string getCommand() const { return command; }  
-    void saveEffect(const std::string& eff) { effect = eff; } 
+    string getCommand() const;        // Getter for the command string
+    void saveEffect(const string& eff);  // Sets the effect of the command
 
-    Command& operator=(const Command& other) {
-        if (this != &other) {
-            command = other.command;
-            effect = other.effect;
-        }
-        return *this;
-    }
+    Command& operator=(const Command& other);  // Assignment operator overload
+    string getEffect() const;                  // Getter for the effect
+    void setEffect(const string& eff);         // Sets the effect
 
-    string getEffect() const { return effect; }  
-    void setEffect(const string& eff) { effect = eff; }
-
-    friend ostream& operator<<(ostream& os, const Command& cmd) {
-        os << "Command: " << cmd.command << ", Effect: " << cmd.effect;
-        return os;
-    }
+    friend ostream& operator<<(ostream& os, const Command& cmd); // Overloads << operator
 };
 
 // CommandProcessor class to process and validate commands
 class CommandProcessor {
 private:
-    vector<Command*> commands;  
-    GameEngine* gameEngine;     
+    vector<Command*> commands;  // List of command pointers
+    GameEngine* gameEngine;     // Pointer to the GameEngine for context
 
 protected:
-    virtual string readCommand() {
-        string cmd;
-        cout << "Enter command: ";
-        getline(cin, cmd);
-        return cmd;
-    }
-
-
-    void storeCommand(Command* cmd) { commands.push_back(cmd); }
+    virtual string readCommand();      // Reads a command from console input
+    void storeCommand(Command* cmd);   // Stores a command in the command list
 
 public:
-    CommandProcessor();
-    void setGameEngine(GameEngine* engine);//
+    CommandProcessor(GameEngine* engine = nullptr);  // Constructor with GameEngine pointer
+    virtual ~CommandProcessor();                     // Destructor to clean up the command list
 
-    CommandProcessor(GameEngine* engine = nullptr) : gameEngine(engine) {}
-    virtual ~CommandProcessor() {
-        for (auto cmd : commands) {
-            delete cmd;
-        }
-        commands.clear();
-    }
+    void setGameEngine(GameEngine* engine);          // Sets the GameEngine context for command validation
+    Command* getCommand();                           // Retrieves a command and validates it
+    bool validateCommand(const Command* cmd) const;  // Validates the command
 
- 
-    Command* getCommand() {
-        string cmdStr = readCommand();
-        Command* cmd = new Command(cmdStr);
-        if (validateCommand(cmd)) {
-            storeCommand(cmd);
-        } else {
-            cmd->setEffect("Invalid command");
-            cout << "Error: Invalid command entered: " << cmdStr << endl;
-        }
-        return cmd;
-    }
+    friend ostream& operator<<(ostream& os, const CommandProcessor& processor);  // Overloads << operator
 
- 
-    bool validateCommand(const Command* cmd) const {
-        const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
-        for (const auto& validCmd : validCommands) {
-            if (cmd->getCommand() == validCmd) {
-                return true;
-            }
-        }
-        cout << "Invalid command: " << cmd->getCommand() << endl;
-        return false;
-    }
-
-    friend ostream& operator<<(ostream& os, const CommandProcessor& processor) {
-        os << "CommandProcessor with " << processor.commands.size() << " commands.";
-        return os;
-    }
+        void setCommandProcessor(CommandProcessor* processor) {}
 };
 
 // FileLineReader class to read commands from a file
 class FileLineReader {
 private:
-    ifstream file;
+    ifstream file;  // Input file stream
 
 public:
-    explicit FileLineReader(const string& fileName) : file(fileName) {
-        if (!file.is_open()) {
-            cerr << "Error: Cannot open file " << fileName << endl;
-        }
-    }
-
-    ~FileLineReader() {
-        if (file.is_open()) {
-            file.close();
-        }
-    }
-
-    // Reads a line from the file
-    string readLine() {
-        string line;
-        if (getline(file, line)) {
-            return line;
-        }
-        return "";  // Return an empty string if end of file or error
-    }
+    explicit FileLineReader(const string& fileName);  // Constructor with filename
+    ~FileLineReader();                                // Destructor to close the file
+    string readLine();                                // Reads a line from the file
 };
 
 // FileCommandProcessorAdapter class to adapt file reading to command processing
 class FileCommandProcessorAdapter : public CommandProcessor {
 private:
-    FileLineReader* fileReader;
+    FileLineReader* fileReader;  // FileLineReader pointer for reading commands from a file
 
 protected:
-    // Reads a command from the file
-    string readCommand() override {
-        if (fileReader) {
-            return fileReader->readLine();
-        }
-        return "";
-    }
+    string readCommand() override;  // Reads a command from the file instead of console
 
 public:
-     explicit FileCommandProcessorAdapter(GameEngine* engine, const string& fileName)
-    : CommandProcessor(engine), fileReader(new FileLineReader(fileName)) {}
-
-
-    ~FileCommandProcessorAdapter() override {
-        delete fileReader;
-        fileReader = nullptr;
-    }
+    explicit FileCommandProcessorAdapter(GameEngine* engine, const string& fileName);  // Constructor
+    ~FileCommandProcessorAdapter() override;                                          // Destructor
 
     // Delete copy constructor and assignment operator to prevent copying
     FileCommandProcessorAdapter(const FileCommandProcessorAdapter& other) = delete;
     FileCommandProcessorAdapter& operator=(const FileCommandProcessorAdapter& other) = delete;
 
-    friend ostream& operator<<(ostream& os, const FileCommandProcessorAdapter& adapter) {
-        os << "FileCommandProcessorAdapter reading from file.";
-        return os;
-    }
+    friend ostream& operator<<(ostream& os, const FileCommandProcessorAdapter& adapter);  // Overloads << operator
 };
 
 #endif // COMMANDPROCESSOR_H
