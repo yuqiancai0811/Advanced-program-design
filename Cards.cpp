@@ -92,6 +92,20 @@ Deck::Deck()
         }
 }
 
+Deck::Deck(int a)
+{
+   vector<string> types = {
+            CardType::BOMB, CardType::REINFORCEMENT, CardType::BLOCKADE,
+            CardType::AIRLIFT, CardType::DIPLOMACY
+        };
+
+        for (const auto& type : types) {
+            for (int i = 0; i < a; ++i) {
+                cards.push_back(new Card(type));
+            }
+        }
+}
+
 // Copy constructor
 Deck::Deck(const Deck &other)
 {
