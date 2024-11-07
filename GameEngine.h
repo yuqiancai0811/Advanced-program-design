@@ -99,7 +99,7 @@ public:
 
     // Set and Get current game state
     void setCurrentState(const std::string& newGameState); // Sets the current game state
-    std::string getCurrentState() const;                   // Gets the current game state
+    // std::string getCurrentState() const;                   // Gets the current game state
 
     // Game initialization and setup
     void startupPhase();              // Handles the startup phase commands and game setup

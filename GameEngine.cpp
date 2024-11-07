@@ -402,6 +402,7 @@ void GameEngine::transitionTo(const std::string& newState) {
 
 
 /*
+------------------------------ Part 3 mainGameLoop -----------------------------
 Implements the main game loop following the official rules of the Warzone game.
 3 phases:
 - Reinforcement Phase
@@ -410,16 +411,15 @@ Implements the main game loop following the official rules of the Warzone game.
 */
 // In GameEngine.cpp
 void GameEngine::mainGameLoop() {
-    std::cout << "Starting Main Game Loop...\n";
-    transitionTo("reinforcement");  // Start from the reinforcement phase
-    bool gameOver = false;          // Flag to track if the game has ended
+    transitionTo(GameState::assignReinforcement);  // Start from the reinforcement phase
+    bool gameOver = false;  // Flag to track if the game has ended
 
     while (!gameOver) {
-        if (currentState == "reinforcement") {
+        if (currentState == GameState::assignReinforcement) {
             reinforcementPhase();
-        } else if (currentState == "issue orders") {
+        } else if (currentState == GameState::issueOrders) {
             issueOrdersPhase();
-        } else if (currentState == "execute orders") {
+        } else if (currentState == GameState::executeOrders) {
             executeOrdersPhase();
         }
 
@@ -428,7 +428,7 @@ void GameEngine::mainGameLoop() {
             if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
                 std::cout << player->getName() << " has won the game!\n";
                 winner = player;           // Set the winner
-                transitionTo("win");       // Transition to the win state
+                transitionTo(GameState::win);  // Transition to the win state
                 gameOver = true;           // Set the gameOver flag to break the loop
                 break;                     // Exit the for loop since we found a winner
             }
@@ -438,10 +438,10 @@ void GameEngine::mainGameLoop() {
     std::cout << "Game Over! " << winner->getName() << " has won the game!\n";
 }
 
-/* reinforcementPhase()
+/* 
+------------------------------ Part 3 reinforcementPhase() -----------------------------
 1) Players are given a number of army units that depends on the number of territories they own, 
 (# of territories owned divided by 3, rounded down).
-
 2) If a player owns all territories on a continent, they receive additional army units equal to that continent’s control bonus.
 3) Add the calculated army units to the player's reinforcement pool each turn.
 */
@@ -482,3 +482,11 @@ void GameEngine::reinforcementPhase() {
     // Transition to the next phase
     transitionTo("issue orders");
 }
+
+/* 
+------------------------------ Part 3 issueOrdersPhase() -----------------------------
+1) Players are given a number of army units that depends on the number of territories they own, 
+(# of territories owned divided by 3, rounded down).
+2) If a player owns all territories on a continent, they receive additional army units equal to that continent’s control bonus.
+3) Add the calculated army units to the player's reinforcement pool each turn.
+*/
