@@ -12,6 +12,13 @@
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
 
+/*-------------------- Phases for Part 3 -------------------------*/
+extern const std::string START;
+extern const std::string ASSIGN_REINFORCEMENT;
+extern const std::string ISSUE_ORDERS;
+extern const std::string EXECUTE_ORDERS;
+extern const std::string WIN;
+/*---------------------------------------------------------------*/
 
 class GameEngine : public Subject, public ILoggable{
 private:
@@ -113,19 +120,13 @@ public:
 
     // Main game loop
     void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
+     /* -------------- End of P3 ------------------*/
 
     // Set and Get current game state
     void setCurrentState(const std::string& newGameState); // Sets the current game state
-    // std::string getCurrentState() const;                   // Gets the current game state
-
-    // Game initialization and setup
-    
-    
 
     // Command processing
     void handleUserCommand(const std::string& command, GameEngine &game);  // Processes user commands
-
-    
 
     // Print and display
     void printWelcomeMessage();       // Prints the welcome message when the game starts

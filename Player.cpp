@@ -93,77 +93,7 @@ vector<Territory*> Player::toAttack() const {
     return attackTargets;
 }
 
-/*--------------------------- Update method for A2_Part3 ------------------------*/
-// void Player::issueOrder() {
-//     // Step 1: Deploy Orders
-//     if (numberOfReinforcement > 0) {
-//         // Get the first territory to defend
-//         std::vector<Territory*> defendList = toDefend();
-//         if (!defendList.empty()) {
-//             Territory* territoryToDefend = defendList.front();
-//             int unitsToDeploy = std::min(numberOfReinforcement, 5);  // Example: deploy up to 5 units at a time
-//             numberOfReinforcement -= unitsToDeploy;
-            
-//             // Create and add deploy order
-//             Order* deployOrder = new deployOrder();
-//             playerOrders.addOrder(deployOrder);
-//             std::cout << name << " issues a Deploy Order to " << territoryToDefend->getName() << " with " << unitsToDeploy << " units.\n";
-//             return;
-//         }
-//     }
-
-//     // Step 2: Advance Orders for Defense
-//     std::vector<Territory*> defendList = toDefend();
-//     for (Territory* defendTerritory : defendList) {
-//         for (Territory* sourceTerritory : ownedTerritories) {
-//             if (sourceTerritory != defendTerritory && sourceTerritory->getArmies() > 1) {
-//                 // Issue an advance order to move troops to defend territory
-//                 Order* advanceOrder = new advanceOrder();
-//                 playerOrders.addOrder(advanceOrder);
-//                 std::cout << name << " issues an Advance Order to defend " << defendTerritory->getName() << " from " << sourceTerritory->getName() << ".\n";
-//                 return;
-//             }
-//         }
-//     }
-
-//     // Step 3: Advance Orders for Attack
-//     std::vector<Territory*> attackList = toAttack();
-//     for (Territory* attackTerritory : attackList) {
-//         for (Territory* sourceTerritory : ownedTerritories) {
-//             auto adjacentTerritories = sourceTerritory->getAdjacentTerritories();
-//             if (std::find(adjacentTerritories.begin(), adjacentTerritories.end(), attackTerritory) != adjacentTerritories.end() && sourceTerritory->getArmies() > 1) {
-//                 // Issue an advance order to move troops to attack
-//                 Order* advanceOrder = new advanceOrder();
-//                 playerOrders.addOrder(advanceOrder);
-//                 std::cout << name << " issues an Advance Order to attack " << attackTerritory->getName() << " from " << sourceTerritory->getName() << ".\n";
-//                 return;
-//             }
-//         }
-//     }
-
-//     // Step 4: Use Cards to Issue Orders
-//     if (!playerHand.getHand().empty()) {
-//         Card* card = playerHand.getHand().front();
-//         playerHand.removeCard(*card);  // Remove the card from hand after using
-//         Order* specialOrder = nullptr;
-
-//         if (card->getType() == "Bomb") {
-//             specialOrder = new bombOrder();
-//         } else if (card->getType() == "Airlift") {
-//             specialOrder = new airliftOrder();
-//         } else if (card->getType() == "Blockade") {
-//             specialOrder = new blockadeOrder();
-//         } else if (card->getType() == "Diplomacy") {
-//             specialOrder = new negotiateOrder();
-//         }
-
-//         if (specialOrder) {
-//             playerOrders.addOrder(specialOrder);
-//             std::cout << name << " issues a " << card->getType() << " Order using a card.\n";
-//         }
-//         delete card;  // Clean up used card
-//     }
-// }
+/*--------------------------- Update methods for A2_Part3 ------------------------*/
 void Player::issueOrder() {
     // Step 1: Deploy Reinforcements if available
     if (numberOfReinforcement > 0) {
@@ -267,6 +197,7 @@ bool Player::hasMoreOrders() const {
     // If none of the conditions are met, return false
     return false;
 }
+/*--------------------------- End of Update methods for A2_Part3 ------------------------*/
 
 // Get the list of issued orders
 orderList& Player::getOrders() {
