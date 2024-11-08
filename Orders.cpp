@@ -1,9 +1,11 @@
 #include "Orders.h"
+using namespace std;
+
 
 #include "Player.h"
 
 // Order class methods
-Order::Order() : effect(new std::string), executed(new bool(false)), name(new std::string) {}
+Order::Order() : effect(new string), executed(new bool(false)), name(new string) {}
 
 Order::~Order() {
     delete effect;
@@ -12,9 +14,9 @@ Order::~Order() {
 }
 
 Order::Order(const Order& other) {
-    effect = new std::string(*other.effect);
+    effect = new string(*other.effect);
     executed = new bool(*other.executed);
-    name = new std::string(*other.name);
+    name = new string(*other.name);
 }
 
 Order& Order::operator=(const Order& other) {
@@ -24,9 +26,9 @@ Order& Order::operator=(const Order& other) {
     delete executed;
     delete name;
 
-    effect = new std::string(*other.effect);
+    effect = new string(*other.effect);
     executed = new bool(*other.executed);
-    name = new std::string(*other.name);
+    name = new string(*other.name);
 
     return *this;
 }
@@ -40,9 +42,10 @@ void Order::execute() {
         *effect = "Base order executed";
         *executed = true;
     }
+     Notify(this); // Part 5: trigger the writing of the entry in the log file 
 }
 
-std::string Order::toString() const {
+string Order::toString() const {
     if (*executed && !name->empty()) {
         return "Order: " + *name + " is executed\n";
     } else if (!*executed && !name->empty()) {
@@ -52,12 +55,21 @@ std::string Order::toString() const {
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const Order& order) {
+ostream& operator<<(ostream& os, const Order& order) {
     os << "Order: " << *order.name << (*order.executed ? " (Executed)" : " (Not executed)") << "\n";
     os << "Effect: " << *order.effect << "\n";
     return os;
 }
-
+// Part5: Implementing the stringToLog() function from ILoggable
+string Order::stringToLog() const {
+      if (*executed && !name->empty()) {
+        return "Order: " + *name + " is executed\n";
+    } else if (!*executed && !name->empty()) {
+        return "Order: " + *name + " is not executed\n";
+    } else {
+        return "Order: Null\n";
+    }
+}
 // Subclass implementations
 deployOrder::deployOrder(int armies, Territory* target, Player* player) {
     *name = "deployOrder";
@@ -166,6 +178,8 @@ orderList::~orderList() {
 
 void orderList::addOrder(Order* order) {
     orders.push_back(order);
+    Notify(this); // Part 5: trigger the writing of the entry in the log file 
+
 }
 
 void orderList::removeOrder(int index) {
@@ -178,19 +192,45 @@ void orderList::removeOrder(int index) {
 void orderList::moveOrder(int oldIndex, int newIndex) {
     if (oldIndex >= 0 && oldIndex < orders.size() &&
         newIndex >= 0 && newIndex < orders.size()) {
-        std::swap(orders[oldIndex], orders[newIndex]);
+        swap(orders[oldIndex], orders[newIndex]);
     }
 }
 
 void orderList::showAllOrders() const {
     for (const auto& order : orders) {
-        std::cout << order->toString();
+        cout << order->toString();
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const orderList& ordersList) {
+/*--------------- Helper function for executeOrdersPhase() in Part3 -----------------*/
+bool orderList::hasMoreOrders() const {
+    return !orders.empty();
+}
+
+Order* orderList::getNextOrder() {
+    if (!orders.empty()) {
+        Order* nextOrder = orders.front();
+        orders.erase(orders.begin());
+        return nextOrder;
+    }
+    return nullptr;
+}
+/*-------------------------------------------------------------------------------*/
+
+ostream& operator<<(ostream& os, const orderList& ordersList) {
     for (const auto& order : ordersList.orders) {
         os << *order;
     }
     return os;
+}
+
+// Part5: IImplementing the stringToLog() function from ILoggable
+string orderList::stringToLog() const {
+    string log = "OrderList: Total orders = " + to_string(orders.size()) + "\n";
+
+    for (size_t i = 0; i < orders.size(); ++i) {
+        log += " - Order " + to_string(i + 1) + ": " + orders[i]->toString() + "\n";
+    }
+
+    return log;
 }

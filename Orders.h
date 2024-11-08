@@ -5,23 +5,27 @@
 #include <string>
 #include <vector>
 #include <algorithm> // for std::find
+#include "LoggingObserver.h"
 
 
 using namespace std;
 class Player;
 class Territory;
 
+
+
+
 // Base class for all orders
-class Order {
-private:
+class Order : public Subject, public ILoggable
+{
+protected:
+    std::string *effect;
+    bool *executed;
     int id;
 
-protected:
-    std::string* effect;
-    bool* executed;
 
 public:
-    std::string* name;
+    std::string *name;
 
     // Constructor
     Order();
@@ -30,24 +34,29 @@ public:
     virtual ~Order();
 
     // Copy constructor
-    Order(const Order& other);
+    Order(const Order &other);
 
     // Assignment operator
-    Order& operator=(const Order& other);
+    Order &operator=(const Order &other);
 
     // Virtual methods for validation and execution
-    virtual bool validate() const ;
-    virtual void execute() ;
+    virtual bool validate() const;
+    virtual void execute();
 
     // ToString method
     virtual std::string toString() const;
 
     // Stream insertion operator
-    friend std::ostream& operator<<(std::ostream& os, const Order& order);
+    friend std::ostream &operator<<(std::ostream &os, const Order &order);
+
+    //Part5: Override the stringToLog function from ILoggable
+    string stringToLog() const override;
 };
 
 // Derived classes for specific order types
-class deployOrder : public Order {
+
+class deployOrder : public Order
+{
 
 private:
     int armies;
@@ -63,35 +72,40 @@ public:
     void execute() override;
 };
 
-class advanceOrder : public Order {
+class advanceOrder : public Order
+{
 public:
     advanceOrder();
     bool validate() const override;
     void execute() override;
 };
 
-class bombOrder : public Order {
+class bombOrder : public Order
+{
 public:
     bombOrder();
     bool validate() const override;
     void execute() override;
 };
 
-class blockadeOrder : public Order {
+class blockadeOrder : public Order
+{
 public:
     blockadeOrder();
     bool validate() const override;
     void execute() override;
 };
 
-class airliftOrder : public Order {
+class airliftOrder : public Order
+{
 public:
     airliftOrder();
     bool validate() const override;
     void execute() override;
 };
 
-class negotiateOrder : public Order {
+class negotiateOrder : public Order
+{
 public:
     negotiateOrder();
     bool validate() const override;
@@ -99,22 +113,32 @@ public:
 };
 
 // Class to manage a list of orders
-class orderList {
+class orderList : public Subject, public ILoggable
+{
 private:
-    std::vector<Order*> orders;
+    std::vector<Order *> orders;
 
 public:
     // Destructor
     ~orderList();
 
     // Methods to add, remove, move, and display orders
-    void addOrder(Order* order);
+    void addOrder(Order *order);
     void removeOrder(int index);
     void moveOrder(int oldIndex, int newIndex);
     void showAllOrders() const;
 
+    // Check if there are more orders
+    bool hasMoreOrders() const;
+
+    // Get and remove the next order
+    Order *getNextOrder();
+
     // Stream insertion operator
-    friend std::ostream& operator<<(std::ostream& os, const orderList& ordersList);
+    friend std::ostream &operator<<(std::ostream &os, const orderList &ordersList);
+    
+     //Part5: Override the stringToLog function from ILoggable
+    string stringToLog() const override;
 };
 
 #endif // ORDERS_H

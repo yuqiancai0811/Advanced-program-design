@@ -19,6 +19,18 @@ void testStartupPhase() {
     std::cout << "Exiting the game ";
     
 }
+/* ------------------- testMainGameLoop() for Part3 -------------------*/
+void testMainGameLoop() {
+    GameEngine gameEngine;
+    
+    gameEngine.transition(START);  // Start the game
+
+    gameEngine.startupPhase();  // Distributes territories, assigns reinforcements, etc.
+
+    std::cout << "\n=== Main Game Loop ===\n";
+    gameEngine.mainGameLoop();
+}
+/*----------------------------------------------------------------*/
 
 // Main function that now calls the testStartupPhase function
 int main() {

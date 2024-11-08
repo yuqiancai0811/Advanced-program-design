@@ -31,8 +31,6 @@ public:
     // Destructor
     ~Player();
 
-    void setNumberOfReinforcement(int number);
-
     // Getters
     std::string getName() const;
     std::vector<Territory*> getOwnedTerritories() const;
