@@ -37,15 +37,8 @@ public:
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
 
-    // Handles the startup phase of the game
-    void startupPhase();
 
     
-
-    void gamestart(GameEngine &game);
-
-    // Processes user commands for starting the game
-    void handleUserCommand(const std::string& command, GameEngine &game); 
 
     // Handles the gameplay phase (assigning reinforcement, issuing orders, executing orders)
     void playGame();
@@ -59,14 +52,8 @@ public:
     // void transitionTo(GameEngine newState);
 
 
-    // Prints the initial welcome message
-    void printWelcomeMessage();
-
     // Prompts the user for the next action after startup
     void promptNextActionPlay();
-    void reinforcementPhase();
-    void executeOrdersPhase();
-    void issueOrdersPhase();
 
     // Declaration for the checkWinCondition function
     void checkWinCondition();

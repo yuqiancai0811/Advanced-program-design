@@ -7,21 +7,12 @@
 #include <list>
 using namespace std;
 
-
-
-// Subject class
-class Subject 
+// Iloggable class
+class ILoggable
 {
-private:
-    list<Observer *> *_observers;
 public:
-    Subject();
-    ~Subject();
-    virtual void Attach(Observer *o);
-    virtual void Detach(Observer *o);
-    void Notify(ILoggable *loggable);
+    virtual string stringToLog() const = 0;
 };
-
 // Observer Class
 class Observer
 {
@@ -45,11 +36,16 @@ private:
     ofstream logFile;
 };
 
-// Iloggable class
-class ILoggable
+// Subject class
+class Subject 
 {
+private:
+    list<Observer *> *_observers;
 public:
-    virtual ~ILoggable();
-    virtual string stringToLog() const = 0;
+    Subject();
+    ~Subject();
+    virtual void Attach(Observer *o);
+    virtual void Detach(Observer *o);
+    void Notify(ILoggable *loggable);
 };
 #endif // LOGGING_OBSERVER_H

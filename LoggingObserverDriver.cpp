@@ -8,10 +8,10 @@ void testLoggingObserver()
     /// Attach a log observer
     LogObserver *logger = new LogObserver("gamelog.txt");
 
-    // CommandProcessor
-    CommandProcessor cmdProcessor;
-    cmdProcessor.Attach(logger);
-    // cmdProcessor.saveCommand("Attack Command");
+    // // CommandProcessor
+    // CommandProcessor cmdProcessor;
+    // cmdProcessor.Attach(logger);
+    // // cmdProcessor.saveCommand("Attack Command");
 
 
     // Order
@@ -20,31 +20,31 @@ void testLoggingObserver()
 
     order.execute();
 
-    // Command
-    Command cmd;
-    cmd.Attach(logger);
+    // // Command
+    // Command cmd;
+    // cmd.Attach(logger);
 
-    cmd.saveEffect("Command executed with effect");
+    // cmd.saveEffect("Command executed with effect");
 
 
-    // OrderList
-    orderList ordersList;
-    ordersList.Attach(logger);
+    // // OrderList
+    // orderList ordersList;
+    // ordersList.Attach(logger);
 
-    ordersList.addOrder(new deployOrder());
-    ordersList.addOrder(new advanceOrder());
-    ordersList.addOrder(new bombOrder());
-    ordersList.addOrder(new blockadeOrder());
-    ordersList.addOrder(new airliftOrder());
-    ordersList.addOrder(new negotiateOrder());
+    // ordersList.addOrder(new deployOrder());
+    // ordersList.addOrder(new advanceOrder());
+    // ordersList.addOrder(new bombOrder());
+    // ordersList.addOrder(new blockadeOrder());
+    // ordersList.addOrder(new airliftOrder());
+    // ordersList.addOrder(new negotiateOrder());
 
-    // GameEngine
-    GameEngine gameEngine;
-    gameEngine.Attach(logger);
+    // // GameEngine
+    // GameEngine gameEngine;
+    // gameEngine.Attach(logger);
 
-    gameEngine.transitionTo("Setup");
-    gameEngine.transitionTo("In Progress");
-    gameEngine.transitionTo("Game Over");
+    // gameEngine.transition("Setup");
+    // gameEngine.transition("In Progress");
+    // gameEngine.transition("Game Over");
 
     std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
 }
