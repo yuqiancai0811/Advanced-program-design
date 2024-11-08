@@ -17,30 +17,17 @@ using namespace std;
 
 /*-------------------- Phases for Part 3 -------------------------*/
 const std::string START = "start";
+const std::string MAPLODADED = "map_loaded";
+const std::string PLAYERSADDED = "players_added";
+const std::string MAPVALIDATED = "map_validated";
 const std::string ASSIGN_REINFORCEMENT = "assignReinforcement";
 const std::string ISSUE_ORDERS = "issueOrders";
 const std::string EXECUTE_ORDERS = "executeOrders";
 const std::string WIN = "win";
 /*---------------------------------------------------------------*/
 
-// Part 2: Game startup phase
-// Provide a startupPhase() method in the GameEngine class that implements a command-based user interaction
-// mechanism to start the game by allowing the user to proceed with the game startup phase:
-// 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
-// which results in the map being loaded in the game.
-// 2) use the validatemap command to validate the map (i.e. it is a connected graph, etc – see assignment 1).
-// 3) use the addplayer <playername> command to enter players in the game (2-6 players)
-// 4) use the gamestart command to
-// a) fairly distribute all the territories to the players
-// b) determine randomly the order of play of the players in the game
-// c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
-// d) let each player draw 2 initial cards from the deck using the deck’s draw() method
-// e) switch the game to the play phase
-// This must be implemented as part of the pre-existing .cpp/.h file duo named GameEngine.cpp/GameEngine.h
-// You must deliver a driver as a free function named testStartupPhase() that demonstrates that 1-4 explained
-// above are implemented correctly, using either console input or file input of the commands (see Part 1). This driver
-// function must be in the GameEngineDriver.cpp file. 
-
+/*--------------------------------------------------------  Phases for Part 2 -------------------------------------------------------------*/
+//By Lucas
 void GameEngine::startupPhase(){
 
 cout << "Please select the name of the map you want to load: ";
@@ -52,24 +39,25 @@ cout << "Please select the name of the map you want to load: ";
         bool result =  (selectedMap == nullptr);
         if (!result) {
             cout << "Map " << mapName << " loaded successfully!\n";
-            setcurrentState("MAP_LOADED");
+            setcurrentState(MAPLODADED);
         } else {
             cout << "Failed to load the map. Please try again.\n";
         }
 
-while (currentState == "MAP_LOADED") {     //state2
+while (currentState == MAPLODADED) {     //state2
         cout << "Validating the map...\n";
           
         bool mapValidated = selectedMap->validate(); 
 
         if (mapValidated) {
             cout << "Map validated successfully!\n";
+            transition(MAPVALIDATED);
             cout << "Change the Game state to Addplayer \n";
             cout << "Add 2-6 players \n";
-            currentState = "ADD_Player";            //state3
+            //state3
         } else {
             cout << "Map validation failed. Please load a valid map.\n";
-            currentState = "START"; 
+            transition(START);
         }
     }
 
@@ -79,7 +67,12 @@ while (currentState == "MAP_LOADED") {     //state2
         if (playerList.size()==6){break;}
         cout << "Enter player name (or 'done' to finish): ";
         cin >> playerName;
-        if (playerName == "done") {if(playerList.size()>=2){break;} else cout << "Need at least 2 players.\n";}
+        if (playerName == "done") 
+            {if(playerList.size()>=2)
+                { deck=Deck(playerList.size());
+                transition(PLAYERSADDED);
+                break;} 
+            else cout << "Need at least 2 players.\n";}
         
         else
             {playerList.push_back(new Player(playerName));
@@ -91,14 +84,6 @@ while (currentState == "MAP_LOADED") {     //state2
                 cout << "Player: " << player->getName() << " \n";
             }
     }
-
-    if (!playerList.empty()) {
-        transition("PLAYERS_ADDED");     //state4
-    } else {
-        cout << "No players added. Exiting...\n";
-        return;
-    }
-
 
 }
 //fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
@@ -199,10 +184,7 @@ void GameEngine::gamestart( GameEngine &game){
     for(Player* player : playerOder){
         player->getHand().addCard(deck.draw());
         player->getHand().addCard(deck.draw());
-        // need to fix since right now each deck only have 5 card
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
-
 
 
     //give 50 initial army units to the players, which are placed in their respective reinforcement pool
@@ -211,20 +193,13 @@ void GameEngine::gamestart( GameEngine &game){
         player->setNumberOfReinforcement(50);
     }
 
-
-
-
     //switch the game to the play phase
     currentState = "Play";
 
 }
 
-<<<<<<< HEAD
 /*-------------------------------------------------------- End of Phases for Part 2 -------------------------------------------------------------*/
-// By lucasS
-=======
 
->>>>>>> 3a94b2a1b3a5eba0c0a6953f774e8b6011bc4a18
 
 void GameEngine::printWelcomeMessage() {
     cout << "Welcome to the Warzone game!\n";
