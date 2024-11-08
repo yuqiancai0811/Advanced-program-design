@@ -93,7 +93,7 @@ vector<Territory*> Player::toAttack() const {
     return attackTargets;
 }
 
-/*--------------------------- Update method for A2_Part3 ------------------------*/
+/*--------------------------- Update methods for A2_Part3 ------------------------*/
 void Player::issueOrder() {
     // Step 1: Deploy Reinforcements if available
     if (numberOfReinforcement > 0) {
@@ -197,6 +197,7 @@ bool Player::hasMoreOrders() const {
     // If none of the conditions are met, return false
     return false;
 }
+/*--------------------------- End of Update methods for A2_Part3 ------------------------*/
 
 // Get the list of issued orders
 orderList& Player::getOrders() {

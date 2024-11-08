@@ -23,10 +23,24 @@ const std::string EXECUTE_ORDERS = "executeOrders";
 const std::string WIN = "win";
 /*---------------------------------------------------------------*/
 
+// Part 2: Game startup phase
+// Provide a startupPhase() method in the GameEngine class that implements a command-based user interaction
+// mechanism to start the game by allowing the user to proceed with the game startup phase:
+// 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
+// which results in the map being loaded in the game.
+// 2) use the validatemap command to validate the map (i.e. it is a connected graph, etc – see assignment 1).
+// 3) use the addplayer <playername> command to enter players in the game (2-6 players)
+// 4) use the gamestart command to
+// a) fairly distribute all the territories to the players
+// b) determine randomly the order of play of the players in the game
+// c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
+// d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+// e) switch the game to the play phase
+// This must be implemented as part of the pre-existing .cpp/.h file duo named GameEngine.cpp/GameEngine.h
+// You must deliver a driver as a free function named testStartupPhase() that demonstrates that 1-4 explained
+// above are implemented correctly, using either console input or file input of the commands (see Part 1). This driver
+// function must be in the GameEngineDriver.cpp file. 
 
-
-                        // Part 2: Game startup phase
-/*-------------------------------------------------------- Phases for Part 2 -------------------------------------------------------------*/
 void GameEngine::startupPhase(){
 
 cout << "Please select the name of the map you want to load: ";
@@ -65,7 +79,7 @@ while (currentState == "MAP_LOADED") {     //state2
         if (playerList.size()==6){break;}
         cout << "Enter player name (or 'done' to finish): ";
         cin >> playerName;
-        if (playerName == "done") {if(playerList.size()>=2){ deck= Deck(playerList.size());} else cout << "Need at least 2 players.\n";}
+        if (playerName == "done") {if(playerList.size()>=2){break;} else cout << "Need at least 2 players.\n";}
         
         else
             {playerList.push_back(new Player(playerName));
@@ -185,7 +199,10 @@ void GameEngine::gamestart( GameEngine &game){
     for(Player* player : playerOder){
         player->getHand().addCard(deck.draw());
         player->getHand().addCard(deck.draw());
+        // need to fix since right now each deck only have 5 card
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
+
 
 
     //give 50 initial army units to the players, which are placed in their respective reinforcement pool
@@ -194,12 +211,14 @@ void GameEngine::gamestart( GameEngine &game){
         player->setNumberOfReinforcement(50);
     }
 
+
+
+
     //switch the game to the play phase
     currentState = "Play";
 
 }
 
-/*-------------------------------------------------------- End of Phases for Part 2 -------------------------------------------------------------*/
 
 
 void GameEngine::printWelcomeMessage() {
@@ -593,3 +612,4 @@ void GameEngine::executeOrdersPhase() {
     // Transition back to the reinforcement phase after execution is complete
     transition(ASSIGN_REINFORCEMENT);
 }
+/*------------------------------- End of Methods for P3 ----------------------------------------*/

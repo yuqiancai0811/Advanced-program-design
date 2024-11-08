@@ -117,19 +117,13 @@ public:
 
     // Main game loop
     void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
+     /* -------------- End of P3 ------------------*/
 
     // Set and Get current game state
     void setCurrentState(const std::string& newGameState); // Sets the current game state
-    // std::string getCurrentState() const;                   // Gets the current game state
-
-    // Game initialization and setup
-    
-    
 
     // Command processing
     void handleUserCommand(const std::string& command, GameEngine &game);  // Processes user commands
-
-    
 
     // Print and display
     void printWelcomeMessage();       // Prints the welcome message when the game starts
