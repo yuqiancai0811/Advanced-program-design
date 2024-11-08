@@ -410,7 +410,7 @@ void GameEngine::mainGameLoop() {
     }
 }
 
-/* ---- After win. if choose replay, not sure if I should implement resetGame.... ----*/
+/* ---- After win. if choose replay, not sure if I should implement resetGame.... --- */
 void GameEngine::resetGame() {
     // Reset the winner
     winner = nullptr;
