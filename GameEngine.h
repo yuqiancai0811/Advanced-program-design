@@ -80,9 +80,10 @@ public:
     void issueOrdersPhase();          // Issuing orders phase of the game
     void executeOrdersPhase();        // Execution of orders phase
     void resetGame(); //Not sure if it's part of MainLoop...
+    void removeEliminatedPlayers(); //Helper function for mainGameLoop
 
     // Main game loop
-    void mainGameLoop();              // Main game loop that handles phase transitions and checks win condition
+    void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
 
     // Set and Get current game state
     void setCurrentState(const std::string& newGameState); // Sets the current game state
