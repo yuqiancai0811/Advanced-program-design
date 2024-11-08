@@ -349,41 +349,98 @@ string GameEngine::stringToLog() const {
 }
 
 /*
------------------------------- Part 3 mainGameLoop -----------------------------
+------------------------------ Part 3 mainGameLoop() ----------------------------
 Implements the main game loop following the official rules of the Warzone game.
 3 phases:
 - Reinforcement Phase
 - Issuing Orders Phase
 - Orders Execution Phase
 */
-// In GameEngine.cpp
 void GameEngine::mainGameLoop() {
+    std::cout << "Starting the main game loop..." << std::endl;
     transition(ASSIGN_REINFORCEMENT);  // Start from the reinforcement phase
-    bool gameOver = false;             // Flag to track if the game has ended
+    bool gameOver = false;
 
     while (!gameOver) {
+        // Reinforcement Phase
         if (currentState == ASSIGN_REINFORCEMENT) {
+            std::cout << "Entering Reinforcement Phase..." << std::endl;
             reinforcementPhase();
-        } else if (currentState == ISSUE_ORDERS) {
+        }
+        // Issuing Orders Phase
+        else if (currentState == ISSUE_ORDERS) {
+            std::cout << "Entering Issuing Orders Phase..." << std::endl;
             issueOrdersPhase();
-        } else if (currentState == EXECUTE_ORDERS) {
+        }
+        // Orders Execution Phase
+        else if (currentState == EXECUTE_ORDERS) {
+            std::cout << "Entering Orders Execution Phase..." << std::endl;
             executeOrdersPhase();
         }
 
-        // Directly check the win condition within the loop
+        // Check Win Condition
         for (Player* player : playerList) {
             if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-                std::cout << player->getName() << " has won the game!\n";
-                winner = player;             // Set the winner
-                transition(WIN);             // Transition to the win state
-                gameOver = true;             // Set the gameOver flag to break the loop
-                break;                       // Exit the for loop since we found a winner
+                std::cout << "Player " << player->getName() << " controls all territories! They win the game!" << std::endl;
+                winner = player;
+                transition(WIN);  // Transition to win state
+                break;
+            }
+        }
+
+        // Handle the WIN state
+        if (currentState == WIN) {
+            std::cout << "Game Over! Do you want to replay or quit? (replay/quit): ";
+            std::string userInput;
+            std::cin >> userInput;
+
+            if (userInput == "replay") {
+                std::cout << "Restarting the game..." << std::endl;
+
+                // Reset everything for a new game
+                resetGame();
+                transition("START");  // Go back to the start state
+                startupPhase();       // Restart the startup phase
+                transition(ASSIGN_REINFORCEMENT);  // Transition to the play phase
+            } else if (userInput == "quit") {
+                std::cout << "Quitting the game. Thanks for playing!" << std::endl;
+                gameOver = true;
             }
         }
     }
-
-    std::cout << "Game Over! " << winner->getName() << " has won the game!\n";
 }
+
+/* ---- After win. if choose replay, not sure if I should implement resetGame.... ----*/
+void GameEngine::resetGame() {
+    // Reset the winner
+    winner = nullptr;
+
+    // Clear player list
+    for (Player* player : playerList) {
+        delete player;  // Free dynamically allocated memory
+    }
+    playerList.clear();
+
+    // Clear eliminated players
+    for (Player* player : eliminatedPlayers) {
+        delete player;  // Free dynamically allocated memory
+    }
+    eliminatedPlayers.clear();
+
+    // Reset the map
+    if (selectedMap != nullptr) {
+        delete selectedMap;  // Free dynamically allocated memory for the map
+        selectedMap = nullptr;
+    }
+
+    // Reset other game-related data
+    playerOder.clear();  // Clear the player order vector
+    currentState = "START";  // Reset the state to START
+
+    // Optionally reset the deck or other components if needed
+    deck = Deck();  // Reinitialize the deck with default cards
+}
+
 
 /* 
 ------------------------------ Part 3 reinforcementPhase() -----------------------------

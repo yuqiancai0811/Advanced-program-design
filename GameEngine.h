@@ -79,6 +79,7 @@ public:
     void reinforcementPhase();        // Reinforcement phase of the game
     void issueOrdersPhase();          // Issuing orders phase of the game
     void executeOrdersPhase();        // Execution of orders phase
+    void resetGame(); //Not sure if it's part of MainLoop...
 
     // Main game loop
     void mainGameLoop();              // Main game loop that handles phase transitions and checks win condition

@@ -19,7 +19,7 @@ void testStartupPhase() {
     std::cout << "Exiting the game ";
     
 }
-
+/* ------------------- testMainGameLoop() for Part3 -------------------*/
 // Main function that now calls the testStartupPhase function
 int main() {
      testStartupPhase();
