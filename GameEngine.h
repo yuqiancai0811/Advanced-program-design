@@ -47,10 +47,10 @@ public:
     void playCards(Player* player);
 
     // Helper function to transition between states
-    void transitionTo(const std::string& newState);
+    void transition(const std::string& newState);
 
-    /////2
-    void transitionTo(GameEngine newState);
+    // /////2
+    // void transitionTo(GameEngine newState);
 
 
     // Prints the initial welcome message
