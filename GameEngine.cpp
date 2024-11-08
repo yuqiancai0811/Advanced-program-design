@@ -16,6 +16,7 @@ using namespace std;
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
 /*-------------------- Phases for Part 3 -------------------------*/
+const std::string START = "start";
 const std::string ASSIGN_REINFORCEMENT = "assignReinforcement";
 const std::string ISSUE_ORDERS = "issueOrders";
 const std::string EXECUTE_ORDERS = "executeOrders";
@@ -413,7 +414,7 @@ void GameEngine::mainGameLoop() {
 
                 // Reset everything for a new game
                 resetGame();
-                transition("START");  // Go back to the start state
+                transition(START);  // Go back to the start state
                 startupPhase();       // Restart the startup phase
                 transition(ASSIGN_REINFORCEMENT);  // Transition to the play phase
             } else if (userInput == "quit") {
@@ -464,7 +465,7 @@ void GameEngine::resetGame() {
 
     // Reset other game-related data
     playerOder.clear();  // Clear the player order vector
-    currentState = "START";  // Reset the state to START
+    currentState = START;  // Reset the state to START
 
     // Optionally reset the deck or other components if needed
     deck = Deck();  // Reinitialize the deck with default cards

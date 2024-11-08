@@ -12,6 +12,13 @@
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
 
+/*-------------------- Phases for Part 3 -------------------------*/
+extern const std::string START;
+extern const std::string ASSIGN_REINFORCEMENT;
+extern const std::string ISSUE_ORDERS;
+extern const std::string EXECUTE_ORDERS;
+extern const std::string WIN;
+/*---------------------------------------------------------------*/
 
 class GameEngine : public Subject, public ILoggable{
 private:
