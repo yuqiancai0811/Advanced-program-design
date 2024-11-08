@@ -78,7 +78,7 @@ while (currentState == "MAP_LOADED") {     //state2
         if (playerList.size()==6){break;}
         cout << "Enter player name (or 'done' to finish): ";
         cin >> playerName;
-        if (playerName == "done") {if(playerList.size()>=2){break;} else cout << "Need at least 2 players.\n";}
+        if (playerName == "done") {if(playerList.size()>=2){ deck= Deck(playerList.size());} else cout << "Need at least 2 players.\n";}
         
         else
             {playerList.push_back(new Player(playerName));
@@ -198,8 +198,6 @@ void GameEngine::gamestart( GameEngine &game){
     for(Player* player : playerOder){
         player->getHand().addCard(deck.draw());
         player->getHand().addCard(deck.draw());
-        // need to fix since right now each deck only have 5 card
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 
 
