@@ -4,9 +4,18 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm> // for std::find
+
+
+using namespace std;
+class Player;
+class Territory;
 
 // Base class for all orders
 class Order {
+private:
+    int id;
+
 protected:
     std::string* effect;
     bool* executed;
@@ -39,8 +48,17 @@ public:
 
 // Derived classes for specific order types
 class deployOrder : public Order {
+
+private:
+    int armies;
+    Territory* target;
+    Player* player;
+
 public:
-    deployOrder();
+    deployOrder(int armies, Territory* target, Player* player);
+    deployOrder(const deployOrder& other);
+    ~deployOrder();
+
     bool validate() const override;
     void execute() override;
 };

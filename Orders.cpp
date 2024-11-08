@@ -1,5 +1,7 @@
 #include "Orders.h"
 
+#include "Player.h"
+
 // Order class methods
 Order::Order() : effect(new std::string), executed(new bool(false)), name(new std::string) {}
 
@@ -57,18 +59,26 @@ std::ostream& operator<<(std::ostream& os, const Order& order) {
 }
 
 // Subclass implementations
-deployOrder::deployOrder() {
+deployOrder::deployOrder(int armies, Territory* target, Player* player) {
     *name = "deployOrder";
+    this->armies=armies;
+    this->target=target;
+    this->player=player;
 }
 
 bool deployOrder::validate() const {
-    return true;
+    if(std::find(player->getOwnedTerritories().begin(),player->getOwnedTerritories().end(),target) != player->getOwnedTerritories().end()) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void deployOrder::execute() {
     if (validate()) {
-        *effect = "Deploy troops";
-        *executed = true;
+       player->setNumberOfReinforcement(player->getNumberOfReinforcement() - armies);
+        target->setArmies(target->getArmies() + armies);
     }
 }
 
