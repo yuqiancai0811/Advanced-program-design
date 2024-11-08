@@ -40,7 +40,7 @@ public:
     // Handles the startup phase of the game
     void startupPhase();
 
-    void assignTerritoryToPlayer(Territory* territory, Player* player);
+    
 
     void gamestart(GameEngine &game);
 
@@ -53,8 +53,7 @@ public:
     // Function to draw and play cards
     void playCards(Player* player);
 
-    // Helper function to transition between states
-    void transition(const std::string& newState);
+    
 
     // /////2
     // void transitionTo(GameEngine newState);
@@ -71,14 +70,41 @@ public:
 
     // Declaration for the checkWinCondition function
     void checkWinCondition();
+    
+
+
+    /*  --------------  Game state part ------------------*/
     // Get the current game state as a string
     std::string getCurrentState();
-
     void setcurrentState(std::string newGameState);
+    // Helper function to transition between states
+    void transition(const std::string& newState);
+    
 
-    void AssignTerritories();
 
-    void randomizeOrderOfPlay();
+
+    /* Assignment 2 -------------- Part 2 ------------------*/
+    // Additional game setup and management
+    void AssignTerritories();         // Assigns territories to players
+    void assignTerritoryToPlayer(Territory* territory, Player* player);
+
+    void randomizeOrderOfPlay();      // Randomly determines the order of play for players
+    
+    void startupPhase();              // Handles the startup phase commands and game setup
+    // 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
+    // which results in the map being loaded in the game.
+    // 2) use the validatemap command to validate the map (i.e. it is a connected graph, etc – see assignment 1).
+    // 3) use the addplayer <playername> command to enter players in the game (2-6 players)
+
+    void gamestart(GameEngine &game); // Handles the game start operations after setup is complete
+    // a) fairly distribute all the territories to the players
+    // b) determine randomly the order of play of the players in the game
+    // c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
+    // d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+
+
+
+
 
     /* -------------- Part 3 ------------------*/
     Player* winner;                  // Pointer to the player who won the game
@@ -97,15 +123,13 @@ public:
     // std::string getCurrentState() const;                   // Gets the current game state
 
     // Game initialization and setup
-    void startupPhase();              // Handles the startup phase commands and game setup
-    void gamestart(GameEngine &game); // Handles the game start operations after setup is complete
+    
+    
 
     // Command processing
     void handleUserCommand(const std::string& command, GameEngine &game);  // Processes user commands
 
-    // Additional game setup and management
-    void AssignTerritories();         // Assigns territories to players
-    void randomizeOrderOfPlay();      // Randomly determines the order of play for players
+    
 
     // Print and display
     void printWelcomeMessage();       // Prints the welcome message when the game starts
