@@ -1,49 +1,56 @@
 #include "LoggingObserver.h"
-#include "Map.h"
-#include "Player.h"
 #include "Orders.h"
-#include "Cards.h"
 #include "GameEngine.h"
 #include "CommandProcessor.h"
 
 void testLoggingObserver()
 {
-    // initilize a game log file
-   // LogObserver logger("gamelog.txt");
-    // effectively using the Observer patterns’ Notify(Subject) method on:
+    /// Attach a log observer
+    LogObserver *logger = new LogObserver("gamelog.txt");
 
-    // CommandProcessor::saveCommand()
-    //   CommandProcessor cmdProcessor();
-    // cmdProcessor.Attach(&logger);
-
-    // Order::execute()
-    //   Order order;
-    //order.Attach(&logger);
-
-    // Command::saveEffect()
-    // Command cmd;
-    // cmd.Attach(&logger);
-
-
-    // OrderList::addOrder()
-
-
-    // and GameEngine::transition()
-    //  Create subjects and add the logger as an observer
-
-
-  
-
-    // Trigger log events
+    // CommandProcessor
+    CommandProcessor cmdProcessor;
+    cmdProcessor.Attach(logger);
     // cmdProcessor.saveCommand("Attack Command");
-    // cmd.saveEffect("Command executed with effect");
-    // order.execute();
 
-    // std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
+
+    // Order
+    Order order;
+    order.Attach(logger);
+
+    order.execute();
+
+    // Command
+    Command cmd;
+    cmd.Attach(logger);
+
+    cmd.saveEffect("Command executed with effect");
+
+
+    // OrderList
+    orderList ordersList;
+    ordersList.Attach(logger);
+
+    ordersList.addOrder(new deployOrder());
+    ordersList.addOrder(new advanceOrder());
+    ordersList.addOrder(new bombOrder());
+    ordersList.addOrder(new blockadeOrder());
+    ordersList.addOrder(new airliftOrder());
+    ordersList.addOrder(new negotiateOrder());
+
+    // GameEngine
+    GameEngine gameEngine;
+    gameEngine.Attach(logger);
+
+    gameEngine.transitionTo("Setup");
+    gameEngine.transitionTo("In Progress");
+    gameEngine.transitionTo("Game Over");
+
+    std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
 }
 
-// int main()
-// {
-//     testLoggingObserver();
-//     return 0;
-// }
+int main()
+{
+    testLoggingObserver();
+    return 0;
+}

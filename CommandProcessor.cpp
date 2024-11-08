@@ -35,11 +35,17 @@ void Command::setEffect(const string& eff) {
 
 void Command::saveEffect(const string& eff) {
     effect = eff;
+    Notify(this); // Part 5: trigger the writing of the entry in the log file 
 }
 
 ostream& operator<<(ostream& os, const Command& cmd) {
     os << "Command: " << cmd.command << " | Effect: " << cmd.effect;
     return os;
+}
+
+// Part5: Implementing the stringToLog() function from ILoggable
+string Command::stringToLog() const {
+    return "Command: " + command + ", Effect: " + effect;
 }
 
 // Implementation of CommandProcessor class
@@ -63,16 +69,16 @@ string CommandProcessor::readCommand() {
     getline(cin, cmd);
     return cmd;
 }
-
-void CommandProcessor::storeCommand(Command* cmd) {
+void CommandProcessor::saveCommand(Command* cmd) {
     commands.push_back(cmd);
+     Notify(this); // Part 5: trigger the writing of the entry in the log file 
 }
 
 Command* CommandProcessor::getCommand() {
     string cmdStr = readCommand();
     Command* cmd = new Command(cmdStr);
     if (validateCommand(cmd)) {
-        storeCommand(cmd);
+        saveCommand(cmd);
     } else {
         cmd->setEffect("Invalid command");
         cout << "Error: Invalid command entered: " << cmdStr << endl;
@@ -99,6 +105,19 @@ ostream& operator<<(ostream& os, const CommandProcessor& processor) {
     }
     return os;
 }
+// Part5: Implementing the stringToLog() function from ILoggable
+string CommandProcessor::stringToLog() const {
+     if (commands.empty()) {
+        return "CommandProcessor: No commands processed yet.";
+    }
+
+    string log = "CommandProcessor: Commands processed:\n";
+    for (const Command* cmd : commands) {
+        log += " - " + cmd->stringToLog() + "\n";
+    }
+    return log;
+}
+
 
 // Implementation of FileLineReader class
 

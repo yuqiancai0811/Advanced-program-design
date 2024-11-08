@@ -46,7 +46,3 @@ void Subject::Notify(ILoggable* loggable){
   for (list<Observer*>::iterator i = _observers->begin(); i != _observers->end(); ++i)
 	(*i)->Update(loggable); 
 };
-
-//ILoggable Method
-//The stringToLog() function should be implemented in each class 
-//that inherits from ILoggable, tailored to provide meaningful information for logging

@@ -10,9 +10,10 @@
 #include "Cards.h"
 
 #include "CommandProcessor.h"
+#include "LoggingObserver.h"
 
 
-class GameEngine {
+class GameEngine : public Subject, public ILoggable{
 private:
    
     CommandProcessor* commandProcessor;///
@@ -23,7 +24,7 @@ private:
     vector <Player*> eliminatedPlayers;
     Player *currentPlayer;
     vector <Player*> playerOder;
-
+    string currentState;  // The current state of the game added by Yuqian Cai 
 
 public:
     GameEngine();  // Constructor to initialize the game
@@ -99,5 +100,8 @@ public:
 
     // Print and display
     void printWelcomeMessage();       // Prints the welcome message when the game starts
+
+    //Part5: Override the stringToLog function from ILoggable
+    string stringToLog() const override;
 };
 #endif // GAMEENGINE_H

@@ -5,11 +5,14 @@
 #include <limits>
 #include <map>
 #include <queue>
-#include <cstdlib>   // std::rand, std::srand
-#include <ctime>     // std::time
+#include <cstdlib>   // rand, srand
+#include <ctime>     // time
 #include <iostream>
-#include <algorithm>  // For std::max
-#include "CommandProcessor.h"///
+#include <algorithm>  // For max
+#include "CommandProcessor.h"
+
+using namespace std;
+///
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
 // Part 2: Game startup phase
@@ -32,59 +35,59 @@
 
 void GameEngine::startupPhase(){
 
-std::cout << "Please select the name of the map you want to load: ";
-        std::string mapName;
-        std::cin >> mapName;
+cout << "Please select the name of the map you want to load: ";
+        string mapName;
+        cin >> mapName;
 
         selectedMap = selectedMap -> loadMapFromFile(mapName);
         
         bool result =  (selectedMap == nullptr);
         if (!result) {
-            std::cout << "Map " << mapName << " loaded successfully!\n";
+            cout << "Map " << mapName << " loaded successfully!\n";
             setcurrentState("MAP_LOADED");
         } else {
-            std::cout << "Failed to load the map. Please try again.\n";
+            cout << "Failed to load the map. Please try again.\n";
         }
 
 while (currentState == "MAP_LOADED") {     //state2
-        std::cout << "Validating the map...\n";
+        cout << "Validating the map...\n";
           
         bool mapValidated = selectedMap->validate(); 
 
         if (mapValidated) {
-            std::cout << "Map validated successfully!\n";
-            std::cout << "Change the Game state to Addplayer \n";
-            std::cout << "Add 2-6 players \n";
+            cout << "Map validated successfully!\n";
+            cout << "Change the Game state to Addplayer \n";
+            cout << "Add 2-6 players \n";
             currentState = "ADD_Player";            //state3
         } else {
-            std::cout << "Map validation failed. Please load a valid map.\n";
+            cout << "Map validation failed. Please load a valid map.\n";
             currentState = "START"; 
         }
     }
 
     // Adding players
-    std::string playerName;
+    string playerName;
     while (true) {
         if (playerList.size()==6){break;}
-        std::cout << "Enter player name (or 'done' to finish): ";
-        std::cin >> playerName;
-        if (playerName == "done") {if(playerList.size()>=2){break;} else std::cout << "Need at least 2 players.\n";}
+        cout << "Enter player name (or 'done' to finish): ";
+        cin >> playerName;
+        if (playerName == "done") {if(playerList.size()>=2){break;} else cout << "Need at least 2 players.\n";}
         
         else
             {playerList.push_back(new Player(playerName));
-            std::cout << "Player " << playerName << " added.\n";}
+            cout << "Player " << playerName << " added.\n";}
         
         
-        std::cout << "Total number of play\n" << playerList.size()<< endl;
+        cout << "Total number of play\n" << playerList.size()<< endl;
         for(Player* player : playerList){
-                std::cout << "Player: " << player->getName() << " \n";
+                cout << "Player: " << player->getName() << " \n";
             }
     }
 
     if (!playerList.empty()) {
         transitionTo("PLAYERS_ADDED");     //state4
     } else {
-        std::cout << "No players added. Exiting...\n";
+        cout << "No players added. Exiting...\n";
         return;
     }
 
@@ -92,22 +95,22 @@ while (currentState == "MAP_LOADED") {     //state2
 }
 //fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
 void GameEngine::AssignTerritories() {
-    std::cout << "Debug: AssignTerritories is running.\n";
+    cout << "Debug: AssignTerritories is running.\n";
     
     int numPlayers = playerList.size();
     int numTerritories = selectedMap->getTerritories().size();
     int targetSize = numTerritories / numPlayers;
     int extra = numTerritories % numPlayers;
-    std::vector<Territory*> territories = selectedMap->getTerritories();
+    vector<Territory*> territories = selectedMap->getTerritories();
 
-    std::map<std::string, bool> assigned;
+    map<string, bool> assigned;
     int playerIndex = 0;
     int territoriesAssignedToCurrentPlayer = 0;
 
     for (Territory* territory : territories) {
         if (assigned[territory->getName()]) continue; // Skip if already assigned
 
-        std::vector<Territory*> q;
+        vector<Territory*> q;
         q.push_back(territory);
 
         while (!q.empty() && territoriesAssignedToCurrentPlayer < targetSize + (extra > 0 ? 1 : 0)) {
@@ -146,39 +149,39 @@ void GameEngine::assignTerritoryToPlayer(Territory* territory, Player* player) {
 //determine randomly the order of play of the players in the game
 void GameEngine::randomizeOrderOfPlay() {
 
-    std::cout << "Debug: randomizeOrderOfPlay is runing.\n";
+    cout << "Debug: randomizeOrderOfPlay is runing.\n";
     // using random number
-     std::srand(static_cast<unsigned int>(std::time(0)));
-     std::vector<Player*> playerListCopy(playerList);
-    std::cout << "Debug: randomizeOrderOfPlay is runing.\n";
+     srand(static_cast<unsigned int>(time(0)));
+     vector<Player*> playerListCopy(playerList);
+    cout << "Debug: randomizeOrderOfPlay is runing.\n";
 
     while (!playerListCopy.empty()) {
         // random create playerList.size() - 1 number
-        int index = std::rand() % playerListCopy.size();
+        int index = rand() % playerListCopy.size();
         playerOder.push_back(playerListCopy[index]);
         playerListCopy.erase(playerListCopy.begin() + index);
     }
 
-    std::cout << "Order of play:\n";
+    cout << "Order of play:\n";
     for (Player* player : playerOder) {
         if (player) { 
-            std::cout << player->getName() << " ";
+            cout << player->getName() << " ";
         } else {
-            std::cout << "(null player) ";
+            cout << "(null player) ";
         }
     }
-    std::cout << std::endl;
+    cout << endl;
 }
 
 void GameEngine::gamestart( GameEngine &game){
     game.AssignTerritories();        //fairly distribute all the territories to the players
 
     for(Player* player:playerList){
-        std::vector<Territory*> ownedTerritory;
+        vector<Territory*> ownedTerritory;
         ownedTerritory= (player->getOwnedTerritories());
         for(Territory* terr:ownedTerritory){
             terr->printTerritoryInfo();
-            std::cout << "Owner of this Territory: "<<terr->getOwner() <<endl;
+            cout << "Owner of this Territory: "<<terr->getOwner() <<endl;
         }
     }
     game.randomizeOrderOfPlay();     //determine randomly the order of play of the players in the game
@@ -211,8 +214,8 @@ void GameEngine::gamestart( GameEngine &game){
 
 
 void GameEngine::printWelcomeMessage() {
-    std::cout << "Welcome to the Warzone game!\n";
-    std::cout << "Type 'start' to start the game.\n";
+    cout << "Welcome to the Warzone game!\n";
+    cout << "Type 'start' to start the game.\n";
 }
 
 // Constructor initializes the game state to "START"
@@ -220,7 +223,7 @@ GameEngine::GameEngine() : currentState("START"), selectedMap(nullptr) {
     printWelcomeMessage();
 }
 
-void GameEngine::setcurrentState(std::string newGameState){
+void GameEngine::setcurrentState(string newGameState){
     currentState=newGameState;
 }
 
@@ -249,14 +252,14 @@ GameEngine::~GameEngine() {
     // The `deck` is an object, so its destructor will be automatically called,
 }
 
-std::string GameEngine::getCurrentState(){
+string GameEngine::getCurrentState(){
     return currentState;
 }
 
 
 
 // Processes user commands
-void GameEngine::handleUserCommand(const std::string& command, GameEngine &game) {
+void GameEngine::handleUserCommand(const string& command, GameEngine &game) {
     if (command == "start") {
         game.startupPhase();
     } else if (command == "play") {
@@ -264,7 +267,7 @@ void GameEngine::handleUserCommand(const std::string& command, GameEngine &game)
     } else if (command == "end") {
         transitionTo("END");
     } else {
-        std::cout << "Invalid command.\n";
+        cout << "Invalid command.\n";
     }
 }
 //adjust----
@@ -288,9 +291,9 @@ void GameEngine::promptNextActionPlay() {
         else if (getCurrentState() == "execute orders") {
             executeOrdersPhase();  // Execute orders
 
-            std::cout << "Press Enter to 'end' to the end the game or enter 'continue' to continue playing ...\n";
-            std::string userInput;
-            std::cin>> userInput;
+            cout << "Press Enter to 'end' to the end the game or enter 'continue' to continue playing ...\n";
+            string userInput;
+            cin>> userInput;
 
             if(userInput=="end"){
                 transitionTo("win");
@@ -303,32 +306,32 @@ void GameEngine::promptNextActionPlay() {
         
         // // Ask for confirmation before moving to the next phase
         // if (currentState != "win") {
-        //     std::cout << "Press Enter to proceed to the next phase...\n";
-        //     std::cin.ignore();
-        //     std::string userInput;
-        //     std::getline(std::cin, userInput);  // Wait for user input (pressing Enter)
+        //     cout << "Press Enter to proceed to the next phase...\n";
+        //     cin.ignore();
+        //     string userInput;
+        //     getline(cin, userInput);  // Wait for user input (pressing Enter)
         // }
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
-    std::cout << "Game Over! You have won!\n";
+    cout << "Game Over! You have won!\n";
 }
 
 /* --------------------- Codes for Part1 ----------------------*/
 // // Reinforcement phase with looping mechanism
 // void GameEngine::reinforcementPhase() {
-//     std::cout << "Entering Reinforcement Phase...\n";
+//     cout << "Entering Reinforcement Phase...\n";
 //     bool done1 = false;
     
 //     while (!done1) {
-//         std::cout << "Enter 'next' to finish the Reinforcement Phase or type any command for actions...\n";
-//         std::string userInput2;
-//         std::cin >> userInput2;
+//         cout << "Enter 'next' to finish the Reinforcement Phase or type any command for actions...\n";
+//         string userInput2;
+//         cin >> userInput2;
         
 //         if (userInput2=="next") {  // If user presses Enter without input, end the phase
 //             done1 = true;}
 //         else {
 //              // Here you can handle any additional reinforcement actions
-//              std::cout << "Reinforcement Action: " << userInput2 << std::endl;
+//              cout << "Reinforcement Action: " << userInput2 << endl;
 //              }
 //     }
 //     transitionTo("issue orders");
@@ -336,19 +339,19 @@ void GameEngine::promptNextActionPlay() {
 
 // // Issuing Orders phase with looping mechanism
 // void GameEngine::issueOrdersPhase() {
-//     std::cout << "Entering Issue Orders Phase...\n";
+//     cout << "Entering Issue Orders Phase...\n";
 //     bool done2 = false;
 //     while (!done2) {
-//         std::cout << "Press 'next' to finish the Issue Orders Phase or type any command for actions...\n";
+//         cout << "Press 'next' to finish the Issue Orders Phase or type any command for actions...\n";
 
-//         std::string userInput3;
-//         std::cin>> userInput3;
+//         string userInput3;
+//         cin>> userInput3;
         
 //         if (userInput3=="next") {  // If user presses Enter without input, end the phase
 //             done2 = true;
 //         } else {
 //             // Here you can handle any additional issue order actions
-//             std::cout << "Issue Order Action: " << userInput3 << std::endl;
+//             cout << "Issue Order Action: " << userInput3 << endl;
 //         }
 //     }
 //     transitionTo("execute orders");
@@ -356,10 +359,10 @@ void GameEngine::promptNextActionPlay() {
 
 // // Execute Orders phase - integrated logic for card drawing and playing
 // void GameEngine::executeOrdersPhase() {
-//     std::cout << "Entering Execute Orders Phase...\n";
+//     cout << "Entering Execute Orders Phase...\n";
     
 //     for (Player* player : playerList) {
-//         std::cout << "Player " << player->getName() << " is drawing cards...\n";
+//         cout << "Player " << player->getName() << " is drawing cards...\n";
         
 //         Hand hand;  // Initialize the player's hand
 
@@ -367,7 +370,7 @@ void GameEngine::promptNextActionPlay() {
 //         for (int i = 0; i < 3; ++i) {
 //             Card* drawnCard = deck.draw();  // Drawing from the deck
 //             hand.addCard(drawnCard);
-//             std::cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << std::endl;
+//             cout << "Player " << player->getName() << " drew a card: " << drawnCard->getType() << endl;
 //         }
 
 //         // Play all cards in the hand
@@ -383,7 +386,7 @@ void GameEngine::checkWinCondition() {
     for (Player* player : playerList) {
         // Check if the player owns all territories (winning condition)
         if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-            std::cout << "Player " << player->getName() << " has won the game!\n";
+            cout << "Player " << player->getName() << " has won the game!\n";
             transitionTo("win");  // Transition to the win state
             break;
         }
@@ -391,11 +394,17 @@ void GameEngine::checkWinCondition() {
 }
 
 // Transition to the next game state
-void GameEngine::transitionTo(const std::string& newState) {
+void GameEngine::transitionTo(const string& newState) {
     setcurrentState(newState);
-    std::cout << "Game state changed to: " << getCurrentState() << std::endl;
+    cout << "Game state changed to: " << getCurrentState() << endl;
+    currentState=getCurrentState();//added by Yuqian Cai
+     Notify(this); // Part 5: trigger the writing of the entry in the log file 
 }
 
+// Part5: Implementing the stringToLog() function from ILoggable
+string GameEngine::stringToLog() const {
+    return "GameEngine: State transitions to '" + currentState + "'";
+}
 
 /*
 ------------------------------ Part 3 mainGameLoop -----------------------------
@@ -422,7 +431,7 @@ void GameEngine::mainGameLoop() {
         // Directly check the win condition within the loop
         for (Player* player : playerList) {
             if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-                std::cout << player->getName() << " has won the game!\n";
+                cout << player->getName() << " has won the game!\n";
                 winner = player;           // Set the winner
                 transitionTo(GameState::win);  // Transition to the win state
                 gameOver = true;           // Set the gameOver flag to break the loop
@@ -431,7 +440,7 @@ void GameEngine::mainGameLoop() {
         }
     }
 
-    std::cout << "Game Over! " << winner->getName() << " has won the game!\n";
+    cout << "Game Over! " << winner->getName() << " has won the game!\n";
 }
 
 /* 
@@ -442,13 +451,13 @@ void GameEngine::mainGameLoop() {
 3) Add the calculated army units to the player's reinforcement pool each turn.
 */
 void GameEngine::reinforcementPhase() {
-    std::cout << "Starting Reinforcement Phase...\n";
+    cout << "Starting Reinforcement Phase...\n";
 
     // Iterate over each player in the game
     for (Player* player : playerList) {
         // Calculate base reinforcement based on territories owned
         int territoriesOwned = player->getOwnedTerritories().size();
-        int baseReinforcements = std::max(3, territoriesOwned / 3);  // At least 3 units or territoriesOwned / 3
+        int baseReinforcements = max(3, territoriesOwned / 3);  // At least 3 units or territoriesOwned / 3
 
         // Add continent bonuses if the player controls entire continents
         for (Continent* continent : selectedMap->getContinents()) {
@@ -472,7 +481,7 @@ void GameEngine::reinforcementPhase() {
         player->setNumberOfReinforcement(baseReinforcements);
         
         // Output the reinforcement info for each player
-        std::cout << player->getName() << " receives " << baseReinforcements << " reinforcement units.\n";
+        cout << player->getName() << " receives " << baseReinforcements << " reinforcement units.\n";
     }
     // Transition to the next phase
     transitionTo("issue orders");
@@ -487,7 +496,7 @@ void GameEngine::reinforcementPhase() {
 4) It will call a function/method named issueOrdersPhase() in the game engine.
 */
 void GameEngine::issueOrdersPhase() {
-    std::cout << "Starting Issue Orders Phase...\n";
+    cout << "Starting Issue Orders Phase...\n";
     bool ordersPending;
     // The do-while loop allows each player to issue orders in a round-robin manner.
     do {
@@ -515,7 +524,7 @@ The game engine should execute all the deploy orders before it executes any othe
 This goes on in round-robin fashion across the players until all the players’ orders have been executed.
 */
 void GameEngine::executeOrdersPhase() {
-    std::cout << "Starting Order Execution Phase...\n";
+    cout << "Starting Order Execution Phase...\n";
     
     bool ordersRemaining;  // Flag to track if there are any remaining orders
     do {
@@ -531,7 +540,7 @@ void GameEngine::executeOrdersPhase() {
                 Order* currentOrder = orders.getNextOrder();
                 if (currentOrder != nullptr) {
                     currentOrder->execute();  // Execute the order
-                    std::cout << player->getName() << " executed order: " << currentOrder->toString() << "\n";
+                    cout << player->getName() << " executed order: " << currentOrder->toString() << "\n";
                     delete currentOrder;  // Clean up the order after execution
                 }
                 ordersRemaining = true;  // At least one player had an order
@@ -539,5 +548,5 @@ void GameEngine::executeOrdersPhase() {
         }
     } while (ordersRemaining);  // Continue until no players have orders remaining
 
-    std::cout << "Order Execution Phase Complete.\n";
+    cout << "Order Execution Phase Complete.\n";
 }
