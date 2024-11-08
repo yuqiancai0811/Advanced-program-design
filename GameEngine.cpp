@@ -199,7 +199,7 @@ void GameEngine::gamestart( GameEngine &game){
 }
 
 /*-------------------------------------------------------- End of Phases for Part 2 -------------------------------------------------------------*/
-
+// By lucasS
 
 void GameEngine::printWelcomeMessage() {
     cout << "Welcome to the Warzone game!\n";

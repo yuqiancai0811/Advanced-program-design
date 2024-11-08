@@ -77,6 +77,7 @@ public:
 
 
     /* Assignment 2 -------------- Part 2 ------------------*/
+    // By lucasS
     // Additional game setup and management
     void AssignTerritories();         // Assigns territories to players
     void assignTerritoryToPlayer(Territory* territory, Player* player);
@@ -94,6 +95,8 @@ public:
     // b) determine randomly the order of play of the players in the game
     // c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
     // d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+
+    /* End  -------------- Part 2 ------------------*/
 
 
 
