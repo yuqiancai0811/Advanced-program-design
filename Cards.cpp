@@ -152,7 +152,8 @@ Card *Deck::draw()
     }
 
     // Method that shuffles the deck of cards
-    mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
+    unsigned seed = static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    std::mt19937 rng(seed);
     shuffle(begin(cards), end(cards), rng);
 
     // Draw the last card
