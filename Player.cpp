@@ -162,15 +162,35 @@ void Player::issueOrder() {
         playerHand.removeCard(*card); // Remove the card from hand after using
         Order* specialOrder = nullptr;
 
-        if (card->getType() == "Bomb") {
-            specialOrder = new ::bombOrder(attackList.front(), this);
-        } else if (card->getType() == "Airlift") {
-            specialOrder = new ::airliftOrder(5, ownedTerritories.front(), defendList.front(), this);
-        } else if (card->getType() == "Blockade") {
-            specialOrder = new ::blockadeOrder();
-        } else if (card->getType() == "Diplomacy") {
-            specialOrder = new ::negotiateOrder();
+    if (card->getType() == "Bomb") {
+        if (!attackList.empty()) {
+            specialOrder = new bombOrder(attackList.front(), this);
+            std::cout << name << " issues a Bomb Order on " << attackList.front()->getName() << ".\n";
         }
+    } else if (card->getType() == "Airlift") {
+        if (!ownedTerritories.empty() && !defendList.empty()) {
+            specialOrder = new airliftOrder(5, ownedTerritories.front(), defendList.front(), this);
+            std::cout << name << " issues an Airlift Order to move armies to " << defendList.front()->getName() << ".\n";
+        }
+    } else if (card->getType() == "Blockade") {
+        if (!defendList.empty()) {
+            Player* neutralPlayer = new Player("Neutral");  // Create a neutral player instance
+            specialOrder = new blockadeOrder(5, this, neutralPlayer, defendList.front());
+            std::cout << name << " issues a Blockade Order on " << defendList.front()->getName() 
+                      << " with " << neutralPlayer->getName() << " as the neutral player.\n";
+        }
+    } else if (card->getType() == "Diplomacy") {
+        // Select an enemy player from the attackList if available
+        Player* enemyPlayer = nullptr;
+        if (!attackList.empty()) {
+            enemyPlayer = attackList.front()->getOwnerPlayer();  // Assuming getOwnerPlayer() returns the player who owns the territory
+        }
+
+        if (enemyPlayer && enemyPlayer != this) {  // Ensure we have a valid enemy player
+            specialOrder = new negotiateOrder(this, enemyPlayer);
+            std::cout << name << " issues a Diplomacy Order with " << enemyPlayer->getName() << ".\n";
+        }
+    }
 
         if (specialOrder) {
             playerOrders.addOrder(specialOrder);
