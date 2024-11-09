@@ -260,49 +260,6 @@ void GameEngine::handleUserCommand(const string& command, GameEngine &game) {
 }
 //adjust----
 
-// Main gameplay loop
-void GameEngine::promptNextActionPlay() {
-    
-    transition("reinforcement");// Start from the reinforcement phase
-    //setcurrentState("reinforcement");// Start from the reinforcement phase
-    
-    while (getCurrentState() != "win") {
-        // Handle the Reinforcement phase
-        if (getCurrentState() == "reinforcement") {
-            reinforcementPhase();  // Assign reinforcements
-        }
-        // Handle the Issue Orders phase
-        else if (getCurrentState() == "issue orders") {
-            issueOrdersPhase();  // Players issue orders
-        }
-        // Handle the Execute Orders phase
-        else if (getCurrentState() == "execute orders") {
-            executeOrdersPhase();  // Execute orders
-
-            cout << "Press Enter to 'end' to the end the game or enter 'continue' to continue playing ...\n";
-            string userInput;
-            cin>> userInput;
-
-            if(userInput=="end"){
-                transition("win");
-            }
-        }
-
-
-        // If a player has won, transition to the win state
-        //checkWinCondition();
-        
-        // // Ask for confirmation before moving to the next phase
-        // if (currentState != "win") {
-        //     cout << "Press Enter to proceed to the next phase...\n";
-        //     cin.ignore();
-        //     string userInput;
-        //     getline(cin, userInput);  // Wait for user input (pressing Enter)
-        // }
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    }
-    cout << "Game Over! You have won!\n";
-}
 
 // New function to check win condition
 void GameEngine::checkWinCondition() {
