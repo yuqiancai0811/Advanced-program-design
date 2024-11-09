@@ -52,7 +52,8 @@ string Card::getType() const
 void Card::play(Hand &hand, Deck &deck)
 {
     // Check if the hand is not empty before playing the card
-    if (!hand.getHand().empty()) {
+    if (!hand.getHand().empty())
+    {
         // Get the first card from the hand
         Card *cardToPlay = hand.getHand().front();
 
@@ -63,11 +64,12 @@ void Card::play(Hand &hand, Deck &deck)
         deck.addCard(cardToPlay);
 
         cout << "Played card of type: " << cardToPlay->getType() << ". Card returned to the deck." << endl;
-    } else {
+    }
+    else
+    {
         cout << "Cannot play a card. Hand is empty." << endl;
     }
 }
-
 
 // friend operator to access private members
 ostream &operator<<(ostream &out, const Card &card)
@@ -80,30 +82,32 @@ ostream &operator<<(ostream &out, const Card &card)
 // Default constructor initializes a deck with all card types 6 times
 Deck::Deck()
 {
-   vector<string> types = {
-            CardType::BOMB, CardType::REINFORCEMENT, CardType::BLOCKADE,
-            CardType::AIRLIFT, CardType::DIPLOMACY
-        };
+    vector<string> types = {
+        CardType::BOMB, CardType::REINFORCEMENT, CardType::BLOCKADE,
+        CardType::AIRLIFT, CardType::DIPLOMACY};
 
-        for (const auto& type : types) {
-            for (int i = 0; i < 6; ++i) {
-                cards.push_back(new Card(type));
-            }
+    for (const auto &type : types)
+    {
+        for (int i = 0; i < 6; ++i)
+        {
+            cards.push_back(new Card(type));
         }
+    }
 }
 
 Deck::Deck(int a)
 {
-   vector<string> types = {
-            CardType::BOMB, CardType::REINFORCEMENT, CardType::BLOCKADE,
-            CardType::AIRLIFT, CardType::DIPLOMACY
-        };
+    vector<string> types = {
+        CardType::BOMB, CardType::REINFORCEMENT, CardType::BLOCKADE,
+        CardType::AIRLIFT, CardType::DIPLOMACY};
 
-        for (const auto& type : types) {
-            for (int i = 0; i < a; ++i) {
-                cards.push_back(new Card(type));
-            }
+    for (const auto &type : types)
+    {
+        for (int i = 0; i < a; ++i)
+        {
+            cards.push_back(new Card(type));
         }
+    }
 }
 
 // Copy constructor
@@ -147,7 +151,7 @@ Card *Deck::draw()
         throw runtime_error("Deck is empty!");
     }
 
-    //Method that shuffles the deck of cards
+    // Method that shuffles the deck of cards
     mt19937 rng(chrono::high_resolution_clock::now().time_since_epoch().count());
     shuffle(begin(cards), end(cards), rng);
 
@@ -235,6 +239,18 @@ void Hand::removeCard(const Card &card)
 bool Hand::isEmpty() const
 {
     return handCards.empty();
+}
+// Function to check if a specific card type is in the hand
+bool Hand::hasCardType(const std::string &type)
+{
+    for (const Card *card : handCards)
+    {
+        if (card->getType() == type)
+        {
+            return true; // Return true if the type matches
+        }
+    }
+    return false; // Return false if no card of the specified type is found
 }
 // friend operator to access private members
 ostream &operator<<(ostream &out, const Hand &hand)

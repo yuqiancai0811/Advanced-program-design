@@ -79,14 +79,15 @@ public:
     Hand &operator=(const Hand &other);
     ~Hand(); // Destructor
 
-    //getter method
+    // getter method
     vector<Card *> getHand() const;
 
     // Adds a card to the hand
     void addCard(Card *card);
     // Removes a card from the hand
     void removeCard(const Card &card);
-
+    // check specific card type from hand's cards
+    bool hasCardType( const string& type);
     // check if the hand is empty
     bool isEmpty() const;
     // friend operator to access private members
