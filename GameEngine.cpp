@@ -262,17 +262,17 @@ void GameEngine::handleUserCommand(const string& command, GameEngine &game) {
 //adjust----
 
 
-// New function to check win condition
-void GameEngine::checkWinCondition() {
-    for (Player* player : playerList) {
-        // Check if the player owns all territories (winning condition)
-        if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-            cout << "Player " << player->getName() << " has won the game!\n";
-            transition("win");  // Transition to the win state
-            break;
-        }
-    }
-}
+// // New function to check win condition
+// void GameEngine::checkWinCondition() {
+//     for (Player* player : playerList) {
+//         // Check if the player owns all territories (winning condition)
+//         if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
+//             cout << "Player " << player->getName() << " has won the game!\n";
+//             transition("win");  // Transition to the win state
+//             break;
+//         }
+//     }
+// }
 
 //PART1
 //Setter for the command processor
