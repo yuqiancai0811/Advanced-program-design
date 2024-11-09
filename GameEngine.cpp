@@ -16,14 +16,14 @@ using namespace std;
 //g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
 
 /*-------------------- Phases for Part 3 -------------------------*/
-const std::string START = "start";
-const std::string MAPLODADED = "map_loaded";
-const std::string PLAYERSADDED = "players_added";
-const std::string MAPVALIDATED = "map_validated";
-const std::string ASSIGN_REINFORCEMENT = "assignReinforcement";
-const std::string ISSUE_ORDERS = "issueOrders";
-const std::string EXECUTE_ORDERS = "executeOrders";
-const std::string WIN = "win";
+extern const std::string START = "start";
+extern const std::string MAPLODADED = "map_loaded";
+extern const std::string PLAYERSADDED = "players_added";
+extern const std::string MAPVALIDATED = "map_validated";
+extern const std::string ASSIGN_REINFORCEMENT = "assignReinforcement";
+extern const std::string ISSUE_ORDERS = "issueOrders";
+extern const std::string EXECUTE_ORDERS = "executeOrders";
+extern const std::string WIN = "win";
 /*---------------------------------------------------------------*/
 
 /*--------------------------------------------------------  Phases for Part 2 -------------------------------------------------------------*/

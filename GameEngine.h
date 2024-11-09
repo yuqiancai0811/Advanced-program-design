@@ -16,6 +16,9 @@ class CommandProcessor;
 
 /*-------------------- Phases for Part 3 -------------------------*/
 extern const std::string START;
+extern const std::string MAPLODADED;
+extern const std::string PLAYERSADDED;
+extern const std::string MAPVALIDATED;
 extern const std::string ASSIGN_REINFORCEMENT;
 extern const std::string ISSUE_ORDERS;
 extern const std::string EXECUTE_ORDERS;

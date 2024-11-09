@@ -8,7 +8,7 @@ using std::endl;
 // Test function to simulate command processing from user input
 void testCommandProcessor() {
     // Initialize the GameEngine and CommandProcessor with the initial game state
-    GameEngine* gameEngine = new GameEngine(GameEngine::start);
+    GameEngine* gameEngine = new GameEngine();
     CommandProcessor* processor = new CommandProcessor(gameEngine);
 
     // Link the GameEngine and CommandProcessor
@@ -19,7 +19,7 @@ void testCommandProcessor() {
 
     while (continueGame) {
         // Transition to the START state and prompt user for commands
-        gameEngine->transition(GameState::start);
+        gameEngine->transition(START);
         cout << "Current State: START" << endl;
         Command* command = processor->getCommand();
         
@@ -32,7 +32,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to MAP_LOADED state and process commands
-        gameEngine->transition(GameState::mapLoaded);
+        gameEngine->transition(MAPLODADED);
         cout << "Current State: MAP_LOADED" << endl;
         command = processor->getCommand();
 
@@ -48,7 +48,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to MAP_VALIDATED state and process commands
-        gameEngine->transition(GameState::mapValidated);
+        gameEngine->transition(MAPVALIDATED);
         cout << "Current State: MAP_VALIDATED" << endl;
         command = processor->getCommand();
 
@@ -61,7 +61,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to PLAYERS_ADDED state and process "gamestart" command
-        gameEngine->transition(GameState::playersAdded);
+        gameEngine->transition(PLAYERSADDED);
         cout << "Current State: PLAYERS_ADDED" << endl;
         command = processor->getCommand();
 
@@ -77,7 +77,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to WIN state and process commands to end the game
-        gameEngine->transition(GameState::win);
+        gameEngine->transition(WIN);
         cout << "Current State: WIN" << endl;
         command = processor->getCommand();
 
@@ -92,7 +92,7 @@ void testCommandProcessor() {
             command->saveEffect("Game ended.");
         } else {
             command->saveEffect("Restarting game.");
-            gameEngine->transition(GameState::start);
+            gameEngine->transition(START);
         }
         cout << "Effect: " << command->getEffect() << endl;
     }
@@ -108,14 +108,14 @@ void testCommandProcessor() {
 // Test function to process commands via console input
 void testCommandProcessorConsole() {
     cout << "Console Input Test" << endl;
-    GameEngine* gameEngine = new GameEngine(GameState::start);
+    GameEngine* gameEngine = new GameEngine();
     CommandProcessor* processor = new CommandProcessor(gameEngine);
 
     bool restartGame = true;
 
     while (restartGame) {
         // Set the game state to START and get command input
-        gameEngine->transition(GameState::start);
+        gameEngine->transition(START);
         cout << "State: START" << endl;
         Command* command = processor->getCommand();
         
@@ -128,7 +128,7 @@ void testCommandProcessorConsole() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to WIN state for console command validation
-        gameEngine->transition(GameState::win);
+        gameEngine->transition(WIN);
         command = processor->getCommand();
 
         // Validate command and handle quit or restart
@@ -141,7 +141,7 @@ void testCommandProcessorConsole() {
             command->saveEffect("Game ended.");
         } else {
             command->saveEffect("Restarting game.");
-            gameEngine->transition(GameState::start);
+            gameEngine->transition(START);
         }
     }
 
@@ -152,14 +152,14 @@ void testCommandProcessorConsole() {
 // Test function for command processing from a file input
 void testCommandProcessorFile(const string& fileName) {
     cout << "---------------File Input Test----------------" << endl;
-    GameEngine* gameEngine = new GameEngine(GameState::start);
+    GameEngine* gameEngine = new GameEngine();
     FileCommandProcessorAdapter* processor = new FileCommandProcessorAdapter(gameEngine, fileName);
 
     bool replayGame = true;
 
     while (replayGame) {
         // Transition to START state and get command from file
-        gameEngine->transition(GameState::start);
+        gameEngine->transition(START);
         cout << "State: START" << endl;
         Command* command = processor->getCommand();
         
@@ -172,7 +172,7 @@ void testCommandProcessorFile(const string& fileName) {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Repeat similar structure for other states; transition to WIN
-        gameEngine->transition(GameState::win);
+        gameEngine->transition(WIN);
         command = processor->getCommand();
 
         // Validate WIN state commands, handle quit or restart
@@ -185,7 +185,7 @@ void testCommandProcessorFile(const string& fileName) {
             command->saveEffect("Game ended.");
         } else {
             command->saveEffect("Restarting game.");
-            gameEngine->transition(GameState::start);
+            gameEngine->transition(START);
         }
     }
 
