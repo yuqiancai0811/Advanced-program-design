@@ -1,0 +1,30 @@
+CommandProcessor: Commands processed:
+ - Command: Loadmap Command
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap Command
+
+ - Command: Validatemap Command
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap Command
+
+ - Command: Validatemap Command
+
+ - Command: Addplayer Command
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap Command
+
+ - Command: Validatemap Command
+
+ - Command: Addplayer Command
+
+ - Command: Gamestart Command
+
+
+Command: ValidateMap Command
+

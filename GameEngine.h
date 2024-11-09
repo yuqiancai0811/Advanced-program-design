@@ -12,6 +12,8 @@
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
 
+class CommandProcessor;
+
 /*-------------------- Phases for Part 3 -------------------------*/
 extern const std::string START;
 extern const std::string ASSIGN_REINFORCEMENT;

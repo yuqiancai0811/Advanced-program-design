@@ -9,6 +9,7 @@
 #include <string>
 
 using namespace std;
+class GameEngine; // Forward declaration of GameEngine
 
 // Command class to encapsulate command data and effects
 class Command : public Subject, public ILoggable
@@ -44,8 +45,6 @@ private:
 
 protected:
     virtual string readCommand();    // Reads a command from console input
-    //????????????????????????????why protected, cannot access the saveCommand from Yuqian Cai 
-    void saveCommand(Command *cmd); // Stores a command in the command list 
     
 
 public:
@@ -55,6 +54,7 @@ public:
     void setGameEngine(GameEngine *engine);         // Sets the GameEngine context for command validation
     Command *getCommand();                          // Retrieves a command and validates it
     bool validateCommand(const Command *cmd) const; // Validates the command
+    void saveCommand(Command *cmd); // Stores a command in the command list 
 
     friend ostream &operator<<(ostream &os, const CommandProcessor &processor); // Overloads << operator
 
