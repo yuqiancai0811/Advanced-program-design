@@ -39,12 +39,12 @@ void testLoggingObserver()
     // ordersList.addOrder(new negotiateOrder());
 
     // // // GameEngine
-    GameEngine gameEngine;
-    gameEngine.Attach(logger);
+    // GameEngine gameEngine;
+    // gameEngine.Attach(logger);
 
-    gameEngine.transition("Setup");
-    gameEngine.transition("In Progress");
-    gameEngine.transition("Game Over");
+    // gameEngine.transition("Setup");
+    // gameEngine.transition("In Progress");
+    // gameEngine.transition("Game Over");
 
     std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
 }
