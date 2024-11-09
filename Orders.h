@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm> // for std::find
 #include "LoggingObserver.h"
+#include <random>
+#include <ctime>
 
 
 using namespace std;
@@ -18,6 +20,10 @@ class Territory;
 // Base class for all orders
 class Order : public Subject, public ILoggable
 {
+
+private:
+    bool negotiation=false;
+
 protected:
     std::string *effect;
     bool *executed;
@@ -66,6 +72,7 @@ private:
 public:
     deployOrder(int armies, Territory* target, Player* player);
     deployOrder(const deployOrder& other);
+    deployOrder();
     ~deployOrder();
 
     bool validate() const override;
@@ -74,22 +81,47 @@ public:
 
 class advanceOrder : public Order
 {
+private:
+    int armies;
+    Territory* source;
+    Territory* target;
+    Player* player;
+
 public:
-    advanceOrder();
+    bool winOrNot=false;
+    advanceOrder(int armirs,Territory* source,Territory* target, Player* player);
+    advanceOrder(const advanceOrder& other);
+    ~advanceOrder();
     bool validate() const override;
+    void battle(int army1,int army2);
     void execute() override;
+    void getCard();
 };
+
+
+
 
 class bombOrder : public Order
 {
+private:
+    Territory* target;
+    Player* player;
+
+
 public:
-    bombOrder();
+    bombOrder( Territory* target, Player* player);
     bool validate() const override;
     void execute() override;
 };
 
+
+
+
 class blockadeOrder : public Order
 {
+
+private:
+
 public:
     blockadeOrder();
     bool validate() const override;
@@ -98,8 +130,14 @@ public:
 
 class airliftOrder : public Order
 {
+private:
+    int armies;
+    Territory* source;
+    Territory* target;
+    Player* player;
+
 public:
-    airliftOrder();
+    airliftOrder(int armies,Territory* source,Territory* target, Player* player);
     bool validate() const override;
     void execute() override;
 };

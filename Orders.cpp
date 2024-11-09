@@ -7,6 +7,7 @@ using namespace std;
 // Order class methods
 Order::Order() : effect(new string), executed(new bool(false)), name(new string) {}
 
+
 Order::~Order() {
     delete effect;
     delete executed;
@@ -77,10 +78,19 @@ deployOrder::deployOrder(int armies, Territory* target, Player* player) {
     this->target=target;
     this->player=player;
 }
+deployOrder::deployOrder() {
+    *name = "deployOrder";
+
+}
+
 
 bool deployOrder::validate() const {
-    if(std::find(player->getOwnedTerritories().begin(),player->getOwnedTerritories().end(),target) != player->getOwnedTerritories().end()) {
-        return true;
+    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
+        if(this->armies<this->player->getNumberOfReinforcement()) {
+            std::cout<<"Not enough armies in the reinforcement pool";
+            return true;
+        }
+
     }
     else {
         return false;
@@ -89,43 +99,127 @@ bool deployOrder::validate() const {
 
 void deployOrder::execute() {
     if (validate()) {
-       player->setNumberOfReinforcement(player->getNumberOfReinforcement() - armies);
-        target->setArmies(target->getArmies() + armies);
+       this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement() - this->armies);
+        this->target->setArmies(this->target->getArmies() + this->armies);
+        this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement()-this->armies);
     }
 }
 
-advanceOrder::advanceOrder() {
+advanceOrder::advanceOrder(int armies, Territory* source,Territory* target, Player* player) {
     *name = "Advance Order";
+    this->armies=armies;
+    this->source=source;
+    this->target=target;
+    this->player=player;
 }
 
 bool advanceOrder::validate() const {
-    return true;
+    //check if source territories belong to the play and target territory is adjacent to source   or not
+    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()&&std::find(this->source->getAdjacentTerritories().begin(),this->source->getAdjacentTerritories().end(),this->target)!=this->source->getAdjacentTerritories().end()) {
+        return true;
+    }
+    else {
+        return false;
+    }}
+
+void advanceOrder::battle(int army1,int army2) {
+    const double attackSuccessfulRate=0.6;
+    const double defenseSuccessfulRate=0.7;
+    while(this->source->getArmies()>0&&this->target->getArmies()>0) {
+
+    }
 }
 
 void advanceOrder::execute() {
     if (validate()) {
-        *effect = "Advance troops";
         *executed = true;
+
+        //source and target belong to the same player
+        if(this->source->getOwner()==this->target->getOwner()) {
+            this->source->setArmies(this->source->getArmies() - this->armies);
+            this->target->setArmies(this->target->getArmies() + this->armies);
+        }
+        else {
+
+
+            while(this->source->getArmies()>0&&this->target->getArmies()>0) {
+                int sourceKill=this->source->getArmies()*0.6;
+
+                int targetKill=this->target->getArmies()*0.7;
+
+                int sourceLeft=source->getArmies()-targetKill;
+
+                int targetLeft=target->getArmies()-sourceKill;
+
+                this->source->setArmies(sourceLeft);
+
+                this->target->setArmies(targetLeft);
+            }
+
+            if(source->getArmies()>target->getArmies()) {
+                std::cout<<"The attacker captures the territory.";
+                this->target->setArmies(source->getArmies());
+                this->player->addTerritory(target);
+                this->target->setOwner(player->getName());
+                this->winOrNot=true;
+
+
+            }
+            else {
+                std::cout<<"The defender defends his/her territory";
+            }
+
+
+        }
+        if(winOrNot) {
+            //todo: card need to be given
+            //..........................
+            //..........................
+            string orderType[5]={"BOMB","REINFORCEMENT","BLOCKADE","AIRLIFT","DIPLOMACY"};
+            static std::mt19937 rng(static_cast<unsigned>(std::time(nullptr))); // Seed with current time
+            std::uniform_int_distribution<int> dist(0, 4); // Define range from 0 to 4
+            //randomly add a card to hand
+            this->player->getHand().addCard(orderType[rng]);
+        }
     }
+
 }
 
-bombOrder::bombOrder() {
+
+
+
+bombOrder::bombOrder(Territory* target, Player* player) {
     *name = "Bomb Order";
+    this->target=target;
+    this->player=player;
 }
 
 bool bombOrder::validate() const {
-    return true;
+    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) == this->player->getOwnedTerritories().end()) {
+        for(Territory* t:this->player->getOwnedTerritories()) {
+            if(std::find(t->getAdjacentTerritories().begin(),t->getAdjacentTerritories().end(),this->target) != t->getAdjacentTerritories().end()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    else {
+        return false;
+    }
 }
 
 void bombOrder::execute() {
     if (validate()) {
-        *effect = "Bomb troops";
         *executed = true;
+        this->target->setArmies((this->target->getArmies())/2);
     }
 }
 
 blockadeOrder::blockadeOrder() {
     *name = "Blockade Order";
+
 }
 
 bool blockadeOrder::validate() const {
@@ -139,18 +233,29 @@ void blockadeOrder::execute() {
     }
 }
 
-airliftOrder::airliftOrder() {
+airliftOrder::airliftOrder(int armies,Territory* source,Territory* target,Player* player) {
     *name = "Airlift Order";
+    this->armies=armies;
+    this->source=source;
+    this->target=target;
+    this->player=player;
 }
 
 bool airliftOrder::validate() const {
-    return true;
+    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()&&std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }
 
 void airliftOrder::execute() {
     if (validate()) {
-        *effect = "Airlift troops";
         *executed = true;
+        this->source->setArmies(this->source->getArmies() - this->armies);
+        this->target->setArmies(this->target->getArmies() + this->armies);
     }
 }
 
