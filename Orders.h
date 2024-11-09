@@ -4,13 +4,25 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm> // for std::find
 #include "LoggingObserver.h"
+
+
+using namespace std;
+class Player;
+class Territory;
+
+
+
+
 // Base class for all orders
 class Order : public Subject, public ILoggable
 {
 protected:
     std::string *effect;
     bool *executed;
+    int id;
+
 
 public:
     std::string *name;
@@ -42,10 +54,20 @@ public:
 };
 
 // Derived classes for specific order types
+
 class deployOrder : public Order
 {
+
+private:
+    int armies;
+    Territory* target;
+    Player* player;
+
 public:
-    deployOrder();
+    deployOrder(int armies, Territory* target, Player* player);
+    deployOrder(const deployOrder& other);
+    ~deployOrder();
+
     bool validate() const override;
     void execute() override;
 };

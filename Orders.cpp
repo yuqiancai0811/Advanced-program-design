@@ -2,6 +2,8 @@
 using namespace std;
 
 
+#include "Player.h"
+
 // Order class methods
 Order::Order() : effect(new string), executed(new bool(false)), name(new string) {}
 
@@ -69,18 +71,26 @@ string Order::stringToLog() const {
     }
 }
 // Subclass implementations
-deployOrder::deployOrder() {
+deployOrder::deployOrder(int armies, Territory* target, Player* player) {
     *name = "deployOrder";
+    this->armies=armies;
+    this->target=target;
+    this->player=player;
 }
 
 bool deployOrder::validate() const {
-    return true;
+    if(std::find(player->getOwnedTerritories().begin(),player->getOwnedTerritories().end(),target) != player->getOwnedTerritories().end()) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void deployOrder::execute() {
     if (validate()) {
-        *effect = "Deploy troops";
-        *executed = true;
+       player->setNumberOfReinforcement(player->getNumberOfReinforcement() - armies);
+        target->setArmies(target->getArmies() + armies);
     }
 }
 
