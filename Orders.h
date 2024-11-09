@@ -9,6 +9,8 @@
 #include <random>
 #include <ctime>
 
+#include "Player.h"
+
 
 using namespace std;
 class Player;
@@ -121,9 +123,16 @@ class blockadeOrder : public Order
 {
 
 private:
+    Player* player;
+    Player* neutral;
+    int armies;
+    Territory* target;
+
 
 public:
-    blockadeOrder();
+    blockadeOrder(int armies,Player* player, Player* neutral,Territory* target);
+    blockadeOrder(int armies,Player* player,Territory* target);
+
     bool validate() const override;
     void execute() override;
 };
@@ -144,8 +153,11 @@ public:
 
 class negotiateOrder : public Order
 {
+private:
+    Player* player;
+    Player* enemy;
 public:
-    negotiateOrder();
+    negotiateOrder(Player* player,Player *enemy );
     bool validate() const override;
     void execute() override;
 };

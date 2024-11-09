@@ -116,19 +116,18 @@ advanceOrder::advanceOrder(int armies, Territory* source,Territory* target, Play
 bool advanceOrder::validate() const {
     //check if source territories belong to the play and target territory is adjacent to source   or not
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()&&std::find(this->source->getAdjacentTerritories().begin(),this->source->getAdjacentTerritories().end(),this->target)!=this->source->getAdjacentTerritories().end()) {
-        return true;
+       if(this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
+           return false;
+       }
+        else {
+            return true;
+        }
     }
     else {
         return false;
     }}
 
-void advanceOrder::battle(int army1,int army2) {
-    const double attackSuccessfulRate=0.6;
-    const double defenseSuccessfulRate=0.7;
-    while(this->source->getArmies()>0&&this->target->getArmies()>0) {
 
-    }
-}
 
 void advanceOrder::execute() {
     if (validate()) {
@@ -159,8 +158,8 @@ void advanceOrder::execute() {
             if(source->getArmies()>target->getArmies()) {
                 std::cout<<"The attacker captures the territory.";
                 this->target->setArmies(source->getArmies());
+                this->target->getOwnerPlayer()->removeTerritory(target);
                 this->player->addTerritory(target);
-                this->target->setOwner(player->getName());
                 this->winOrNot=true;
 
 
@@ -197,11 +196,11 @@ bombOrder::bombOrder(Territory* target, Player* player) {
 bool bombOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) == this->player->getOwnedTerritories().end()) {
         for(Territory* t:this->player->getOwnedTerritories()) {
-            if(std::find(t->getAdjacentTerritories().begin(),t->getAdjacentTerritories().end(),this->target) != t->getAdjacentTerritories().end()) {
-                return true;
+            if(std::find(t->getAdjacentTerritories().begin(),t->getAdjacentTerritories().end(),this->target) == t->getAdjacentTerritories().end()&&this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
+                return false;
             }
             else {
-                return false;
+                return true;
             }
         }
     }
@@ -217,19 +216,39 @@ void bombOrder::execute() {
     }
 }
 
-blockadeOrder::blockadeOrder() {
+blockadeOrder::blockadeOrder(int armies,Player* player, Player* neutral,Territory* target) {
     *name = "Blockade Order";
+    this->armies=armies;
+    this->player=player;
+    this->neutral=neutral;
+    this->target=target;
+
+}
+blockadeOrder::blockadeOrder(int armies,Player* player, Territory* target) {
+    *name = "Blockade Order";
+    this->armies=armies;
+    this->player=player;
+    this->target=target;
+    Player neutral=Player();
 
 }
 
 bool blockadeOrder::validate() const {
-    return true;
+    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void blockadeOrder::execute() {
     if (validate()) {
-        *effect = "Blockade troops";
         *executed = true;
+        this->target->setArmies((this->target->getArmies())*2);
+        this->target->setOwner(this->neutral->getName());
+        this->neutral->addTerritory(this->target);
+        this->player->removeTerritory(this->target);
     }
 }
 
@@ -259,18 +278,29 @@ void airliftOrder::execute() {
     }
 }
 
-negotiateOrder::negotiateOrder() {
+//player is the player who issues this order
+negotiateOrder::negotiateOrder(Player* player,Player* enemy) {
     *name = "Negotiate Order";
+    this->player=player;
+    this->enemy=enemy;
+
 }
 
 bool negotiateOrder::validate() const {
-    return true;
+    if(player!=enemy) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
 }
 
 void negotiateOrder::execute() {
     if (validate()) {
-        *effect = "Negotiate troops";
         *executed = true;
+        this->player->setNegotiate(true);
+        this->enemy->setNegotiate(true);
     }
 }
 
