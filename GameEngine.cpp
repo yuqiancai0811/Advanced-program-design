@@ -514,7 +514,7 @@ void GameEngine::reinforcementPhase() {
 }
 
 
-
+// g++ -std=c++11 GameEngineDriver.cpp GameEngine.cpp Map.cpp Player.cpp Orders.cpp
 /* 
 ------------------------------ Part 3 issueOrdersPhase() -----------------------------
 1) Players issue orders and place them in their order list through a call to the Player::issueOrder() method.
