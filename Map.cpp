@@ -12,8 +12,7 @@
 #include <iterator>
 #include <algorithm>
 
-// Territory class methods
-
+// ------------------------------------------------------------------------------------------Territory class methods--------------------------------------------------------------------
 Territory::Territory(std::string name, int x, int y, std::string continent, const std::vector<std::string>& adjNames) : name(name), x(x), y(y), continent(continent), adjacentTerritoryNames(adjNames) {}
     //Constructor(Name + X + Y + Continent + vertor (adjacentTerritoryNames) );
 
@@ -27,8 +26,11 @@ void Territory::setOwner(const std::string& owner1){
     owner=owner1;
 }
 
+void Territory::setPlayer(Player player){ownerPlayer=player;};
+
 std::string Territory::getName() const {return name;};
 std::string Territory::getOwner() const {return owner;};
+Player Territory::getOwnerPlayer() const { return ownerPlayer;}
 std::string Territory::getContinent() const {return continent;};
 std::vector<std::string> Territory::getAdjacentTerritoryNames() const {return adjacentTerritoryNames;};
 std::vector<Territory*> Territory::getAdjacentTerritories() const {return adjacentTerritories;};
@@ -42,6 +44,11 @@ void Territory::printTerritoryInfo() const {
     std::cout << std::endl;
 }
 
+// ------------------------------------------------------------------------------------------Territory class END-----------------------------------------------------------------------------------
+
+
+
+// ------------------------------------------------------------------------------------------Continent class methods--------------------------------------------------------------------
 // Continent class methods
 
 Continent::Continent(std::string name, int controlValue)
@@ -80,6 +87,10 @@ void Continent::printContinentInfo() const {
     std::cout << std::endl;
 }
 
+// ------------------------------------------------------------------------------------------Continent class END-----------------------------------------------------------------------
+
+
+// ------------------------------------------------------------------------------------------Map class methods------------------------------------------------------------------
 // Map class methods
 Map::Map() : author("Nan"), warn("Nan"), image("Nan"), wrap("Nan"), horizontal("Nan") {}
 
@@ -338,3 +349,5 @@ bool Map::validate() const {
     // std::cout<< a<< b<<c <<std::endl;
     return a&&b&&c;
 }
+
+//------------------------------------------------------------------------------------------map class END--------------------------------------------------------------
