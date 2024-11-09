@@ -14,6 +14,7 @@ private:
     Hand playerHand;  // Player owns a hand of Warzone cards
     orderList playerOrders;  // List of orders issued by the player
     int numberOfReinforcement; //*Variable for reinforcement units
+    bool negotiate;  // Boolean flag for negotiation status
 
 public:
     // Default constructor
@@ -30,6 +31,10 @@ public:
 
     // Destructor
     ~Player();
+
+    // Setter and getter for negotiation status
+    void setNegotiate(bool status);
+    bool isNegotiating() const;
 
     // Getters
     std::string getName() const;

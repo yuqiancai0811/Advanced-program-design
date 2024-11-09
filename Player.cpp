@@ -6,10 +6,10 @@
 using namespace std; 
 
 // Default constructor -> update to include #ofReinforcement
-Player::Player() : name("Unnamed Player"), playerHand(Hand()), playerOrders(orderList()), numberOfReinforcement(0) {}
+Player::Player() : name("Unnamed Player"), playerHand(Hand()), playerOrders(orderList()), numberOfReinforcement(0), negotiate(false) {}
 
 // Parameterized constructor
-Player::Player(const string& name) : name(name), playerHand(Hand()), playerOrders(orderList()), numberOfReinforcement(0) {}
+Player::Player(const string& name) : name(name), playerHand(Hand()), playerOrders(orderList()), numberOfReinforcement(0), negotiate(false) {}
 
 // Copy constructor (deep copy)
 Player::Player(const Player& other) {
@@ -18,6 +18,7 @@ Player::Player(const Player& other) {
     playerHand = other.playerHand;  
     playerOrders = other.playerOrders;  
     numberOfReinforcement = other.numberOfReinforcement; // Copy reinforcement units
+    negotiate = other.negotiate;  // Copy negotiation status
 }
 
 // Assignment operator (deep copy)
@@ -28,6 +29,7 @@ Player& Player::operator=(const Player& other) {
         playerHand = other.playerHand; 
         playerOrders = other.playerOrders;  
         numberOfReinforcement = other.numberOfReinforcement; // Copy reinforcement units
+        negotiate = other.negotiate;  // Copy negotiation status
     }
     return *this;
 }
@@ -37,6 +39,14 @@ Player::~Player() {
     // (like Hand and orderList) is automatically called 
 }
 
+/* ------------ Setter and getter for negotiate used in P4 -----------*/
+void Player::setNegotiate(bool status) {
+    negotiate = status;
+}
+
+bool Player::isNegotiating() const {
+    return negotiate;
+}
 
 /* ---------------- Getters ----------------------*/
 string Player::getName() const {
