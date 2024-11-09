@@ -12,7 +12,7 @@ class Territory {
     int armies;
     std::string name;
     std::string owner;
-    Player ownerPlayer;
+    Player* ownerPlayer;
     std::string continent;
     std::vector<std::string> adjacentTerritoryNames;
     std::vector<Territory*> adjacentTerritories;
@@ -27,13 +27,14 @@ class Territory {
     void setOwner(const std::string& owner);
     void setArmies(int numArmies);
     void addAdjacentTerritory(Territory* territory);
-    void setPlayer(Player player);
+    void setPlayer(Player* player);
+    Player* getOwnerPlayer() const;
     
     //Get functions;
     int getArmies() const;
     std::string getName() const;
     std::string getOwner() const;
-    Player getOwnerPlayer() const;
+    
 
     std::string getContinent() const;
     std::vector<std::string> getAdjacentTerritoryNames() const;

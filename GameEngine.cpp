@@ -136,7 +136,7 @@ void GameEngine::AssignTerritories() {
 void GameEngine::assignTerritoryToPlayer(Territory* territory, Player* player) {
     player->addTerritory(territory);
     territory->setOwner(player->getName());
-    territory->setPlayer(*player);
+    territory->setPlayer(player);
 }
 
 

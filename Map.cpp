@@ -26,11 +26,11 @@ void Territory::setOwner(const std::string& owner1){
     owner=owner1;
 }
 
-void Territory::setPlayer(Player player){ownerPlayer=player;};
+void Territory::setPlayer(Player* player){ownerPlayer=player;};
 
 std::string Territory::getName() const {return name;};
 std::string Territory::getOwner() const {return owner;};
-Player Territory::getOwnerPlayer() const { return ownerPlayer;}
+Player* Territory::getOwnerPlayer() const { return ownerPlayer;}
 std::string Territory::getContinent() const {return continent;};
 std::vector<std::string> Territory::getAdjacentTerritoryNames() const {return adjacentTerritoryNames;};
 std::vector<Territory*> Territory::getAdjacentTerritories() const {return adjacentTerritories;};
