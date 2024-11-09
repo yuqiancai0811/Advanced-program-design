@@ -19,7 +19,7 @@ void testCommandProcessor() {
 
     while (continueGame) {
         // Transition to the START state and prompt user for commands
-        gameEngine->transitionTo(GameState::start);
+        gameEngine->transition(GameState::start);
         cout << "Current State: START" << endl;
         Command* command = processor->getCommand();
         
@@ -32,7 +32,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to MAP_LOADED state and process commands
-        gameEngine->transitionTo(GameState::mapLoaded);
+        gameEngine->transition(GameState::mapLoaded);
         cout << "Current State: MAP_LOADED" << endl;
         command = processor->getCommand();
 
@@ -48,7 +48,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to MAP_VALIDATED state and process commands
-        gameEngine->transitionTo(GameState::mapValidated);
+        gameEngine->transition(GameState::mapValidated);
         cout << "Current State: MAP_VALIDATED" << endl;
         command = processor->getCommand();
 
@@ -61,7 +61,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to PLAYERS_ADDED state and process "gamestart" command
-        gameEngine->transitionTo(GameState::playersAdded);
+        gameEngine->transition(GameState::playersAdded);
         cout << "Current State: PLAYERS_ADDED" << endl;
         command = processor->getCommand();
 
@@ -77,7 +77,7 @@ void testCommandProcessor() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to WIN state and process commands to end the game
-        gameEngine->transitionTo(GameState::win);
+        gameEngine->transition(GameState::win);
         cout << "Current State: WIN" << endl;
         command = processor->getCommand();
 
@@ -92,7 +92,7 @@ void testCommandProcessor() {
             command->saveEffect("Game ended.");
         } else {
             command->saveEffect("Restarting game.");
-            gameEngine->transitionTo(GameState::start);
+            gameEngine->transition(GameState::start);
         }
         cout << "Effect: " << command->getEffect() << endl;
     }
@@ -115,7 +115,7 @@ void testCommandProcessorConsole() {
 
     while (restartGame) {
         // Set the game state to START and get command input
-        gameEngine->transitionTo(GameState::start);
+        gameEngine->transition(GameState::start);
         cout << "State: START" << endl;
         Command* command = processor->getCommand();
         
@@ -128,7 +128,7 @@ void testCommandProcessorConsole() {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Transition to WIN state for console command validation
-        gameEngine->transitionTo(GameState::win);
+        gameEngine->transition(GameState::win);
         command = processor->getCommand();
 
         // Validate command and handle quit or restart
@@ -141,7 +141,7 @@ void testCommandProcessorConsole() {
             command->saveEffect("Game ended.");
         } else {
             command->saveEffect("Restarting game.");
-            gameEngine->transitionTo(GameState::start);
+            gameEngine->transition(GameState::start);
         }
     }
 
@@ -159,7 +159,7 @@ void testCommandProcessorFile(const string& fileName) {
 
     while (replayGame) {
         // Transition to START state and get command from file
-        gameEngine->transitionTo(GameState::start);
+        gameEngine->transition(GameState::start);
         cout << "State: START" << endl;
         Command* command = processor->getCommand();
         
@@ -172,7 +172,7 @@ void testCommandProcessorFile(const string& fileName) {
         cout << "Effect: " << command->getEffect() << endl;
 
         // Repeat similar structure for other states; transition to WIN
-        gameEngine->transitionTo(GameState::win);
+        gameEngine->transition(GameState::win);
         command = processor->getCommand();
 
         // Validate WIN state commands, handle quit or restart
@@ -185,7 +185,7 @@ void testCommandProcessorFile(const string& fileName) {
             command->saveEffect("Game ended.");
         } else {
             command->saveEffect("Restarting game.");
-            gameEngine->transitionTo(GameState::start);
+            gameEngine->transition(GameState::start);
         }
     }
 

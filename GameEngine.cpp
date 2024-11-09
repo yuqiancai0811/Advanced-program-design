@@ -335,6 +335,13 @@ void GameEngine::checkWinCondition() {
     }
 }
 
+//PART1
+//Setter for the command processor
+void GameEngine::setCommandProcessor(CommandProcessor *commandProcessor) {
+    this->commandProcessor = commandProcessor;
+}
+
+
 // Transition to the next game state
 void GameEngine::transition(const string& newState) {
     setcurrentState(newState);

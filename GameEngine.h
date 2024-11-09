@@ -100,7 +100,7 @@ public:
 
     // Print and display
     void printWelcomeMessage();       // Prints the welcome message when the game starts
-
+    void setCommandProcessor(CommandProcessor* commandProcessor); ///PAART1
     //Part5: Override the stringToLog function from ILoggable
     string stringToLog() const override;
 };
