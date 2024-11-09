@@ -88,6 +88,9 @@ bool deployOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
         if(this->armies<this->player->getNumberOfReinforcement()) {
             std::cout<<"Not enough armies in the reinforcement pool";
+            return false;
+        }
+        else {
             return true;
         }
 
@@ -99,9 +102,13 @@ bool deployOrder::validate() const {
 
 void deployOrder::execute() {
     if (validate()) {
+        std::cout<<"Origin armies in target territory:"<<this->target->getArmies()<<"\n";
        this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement() - this->armies);
         this->target->setArmies(this->target->getArmies() + this->armies);
         this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement()-this->armies);
+        std::cout<<"Have taken "<<this->armies<<" from reinforcement pool to the target territory\n";
+        std::cout<<"After the operation:"<<this->target->getArmies()<<"\n";
+
     }
 }
 
@@ -117,6 +124,7 @@ bool advanceOrder::validate() const {
     //check if source territories belong to the play and target territory is adjacent to source   or not
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()&&std::find(this->source->getAdjacentTerritories().begin(),this->source->getAdjacentTerritories().end(),this->target)!=this->source->getAdjacentTerritories().end()) {
        if(this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
+           std::cout<<"Invalid order\n";
            return false;
        }
         else {
@@ -124,6 +132,8 @@ bool advanceOrder::validate() const {
         }
     }
     else {
+        std::cout<<"Invalid order\n";
+
         return false;
     }}
 
@@ -197,6 +207,7 @@ bool bombOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) == this->player->getOwnedTerritories().end()) {
         for(Territory* t:this->player->getOwnedTerritories()) {
             if(std::find(t->getAdjacentTerritories().begin(),t->getAdjacentTerritories().end(),this->target) == t->getAdjacentTerritories().end()&&this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
+                std::cout<<"Invalid order\n";
                 return false;
             }
             else {
@@ -205,6 +216,7 @@ bool bombOrder::validate() const {
         }
     }
     else {
+        std::cout<<"Invalid order\n";
         return false;
     }
 }
@@ -238,6 +250,7 @@ bool blockadeOrder::validate() const {
         return true;
     }
     else {
+        std::cout<<"Invalid order\n";
         return false;
     }
 }
@@ -265,6 +278,7 @@ bool airliftOrder::validate() const {
         return true;
     }
     else {
+        std::cout<<"Invalid order\n";
         return false;
     }
 
@@ -291,6 +305,7 @@ bool negotiateOrder::validate() const {
         return true;
     }
     else {
+        std::cout<<"Invalid order\n";
         return false;
     }
 

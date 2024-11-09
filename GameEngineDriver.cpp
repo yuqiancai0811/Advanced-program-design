@@ -45,7 +45,7 @@ void testMainGameLoop() {
 /*----------------------------------------------------------------*/
 
 // Main function that now calls the testStartupPhase function
-int main() {
-     testStartupPhase();
-     return 0;
- }
+// int main() {
+//      testStartupPhase();
+//      return 0;
+//  }
