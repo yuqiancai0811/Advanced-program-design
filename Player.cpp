@@ -5,20 +5,22 @@
 
 using namespace std; 
 
-// Default constructor -> update to include #ofReinforcement
-Player::Player() : name("Unnamed Player"), playerHand(Hand()), playerOrders(orderList()), numberOfReinforcement(0), negotiate(false) {}
+// Default constructor -> update to initialize playerOrders pointer
+Player::Player() 
+    : name("Unnamed Player"), playerHand(Hand()), playerOrders(new orderList()), numberOfReinforcement(0), negotiate(false) {}
 
 // Parameterized constructor
-Player::Player(const string& name) : name(name), playerHand(Hand()), playerOrders(orderList()), numberOfReinforcement(0), negotiate(false) {}
+Player::Player(const string& name) 
+    : name(name), playerHand(Hand()), playerOrders(new orderList()), numberOfReinforcement(0), negotiate(false) {}
 
 // Copy constructor (deep copy)
 Player::Player(const Player& other) {
     name = other.name;  
     ownedTerritories = other.ownedTerritories;  
     playerHand = other.playerHand;  
-    playerOrders = other.playerOrders;  
-    numberOfReinforcement = other.numberOfReinforcement; // Copy reinforcement units
-    negotiate = other.negotiate;  // Copy negotiation status
+    playerOrders = new orderList(*other.playerOrders);  // Deep copy the orderList
+    numberOfReinforcement = other.numberOfReinforcement; 
+    negotiate = other.negotiate;  
 }
 
 // Assignment operator (deep copy)
@@ -27,16 +29,17 @@ Player& Player::operator=(const Player& other) {
         name = other.name;  
         ownedTerritories = other.ownedTerritories;  
         playerHand = other.playerHand; 
-        playerOrders = other.playerOrders;  
-        numberOfReinforcement = other.numberOfReinforcement; // Copy reinforcement units
-        negotiate = other.negotiate;  // Copy negotiation status
+        delete playerOrders;  // Delete existing orderList to avoid memory leak
+        playerOrders = new orderList(*other.playerOrders);  // Deep copy new orderList
+        numberOfReinforcement = other.numberOfReinforcement; 
+        negotiate = other.negotiate;  
     }
     return *this;
 }
 
+// Destructor
 Player::~Player() {
-    // When an object of Player is destroyed, the destructor for each member object 
-    // (like Hand and orderList) is automatically called 
+    delete playerOrders;  // Free allocated memory for playerOrders
 }
 
 /* ------------ Setter and getter for negotiate used in P4 -----------*/
@@ -64,6 +67,11 @@ Hand& Player::getHand() {
 // Getter for numberOfReinforcement
 int Player::getNumberOfReinforcement() const {
     return numberOfReinforcement;
+}
+
+// Get the list of issued orders
+orderList& Player::getOrders() {
+    return *playerOrders;  // Dereference the pointer to return the actual object
 }
 
 /* ---------------- Setters ----------------------*/
@@ -115,7 +123,7 @@ void Player::issueOrder() {
 
             // Create and add deploy order
             Order* deployOrder = new ::deployOrder(unitsToDeploy, territoryToDefend, this);
-            playerOrders.addOrder(deployOrder);
+            playerOrders->addOrder(deployOrder);
             std::cout << name << " issues a Deploy Order to " << territoryToDefend->getName()
                       << " with " << unitsToDeploy << " units.\n";
             return;
@@ -129,7 +137,7 @@ void Player::issueOrder() {
             if (sourceTerritory != defendTerritory && sourceTerritory->getArmies() > 1) {
                 // Issue an advance order to move troops to defend territory
                 Order* advanceOrder = new ::advanceOrder(1, sourceTerritory, defendTerritory, this);
-                playerOrders.addOrder(advanceOrder);
+                playerOrders->addOrder(advanceOrder);
                 std::cout << name << " issues an Advance Order to defend " << defendTerritory->getName()
                           << " from " << sourceTerritory->getName() << ".\n";
                 return;
@@ -148,7 +156,7 @@ void Player::issueOrder() {
                 
                 // Issue an advance order to move troops to attack
                 Order* advanceOrder = new ::advanceOrder(1, sourceTerritory, attackTerritory, this);
-                playerOrders.addOrder(advanceOrder);
+                playerOrders->addOrder(advanceOrder);
                 std::cout << name << " issues an Advance Order to attack " << attackTerritory->getName()
                           << " from " << sourceTerritory->getName() << ".\n";
                 return;
@@ -193,7 +201,7 @@ void Player::issueOrder() {
     }
 
         if (specialOrder) {
-            playerOrders.addOrder(specialOrder);
+            playerOrders->addOrder(specialOrder);
             std::cout << name << " issues a " << card->getType() << " Order using a card.\n";
         }
         delete card; // Clean up used card
@@ -229,10 +237,6 @@ bool Player::hasMoreOrders() const {
 }
 /*--------------------------- End of Update methods for A2_Part3 ------------------------*/
 
-// Get the list of issued orders
-orderList& Player::getOrders() {
-    return playerOrders;  // Return the player's orders
-}
 
 // Stream insertion operator
 ostream& operator<<(ostream& os, const Player& player) {
@@ -242,7 +246,7 @@ ostream& operator<<(ostream& os, const Player& player) {
         os << territory->getName() << " ";
     }
     os << "\nOrders: \n";
-    player.playerOrders.showAllOrders();
+    player.playerOrders->showAllOrders();
     return os;
 }
 
@@ -255,5 +259,5 @@ void Player::printPlayerInfo() const {
     }
 
     cout << "Orders: \n";
-    playerOrders.showAllOrders();  // Show all the orders in the orderList
+    playerOrders->showAllOrders();  // Show all the orders in the orderList
 }

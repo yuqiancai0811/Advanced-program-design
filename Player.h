@@ -8,12 +8,14 @@
 #include "Cards.h"  // For Hand, Deck, and Card classes
 
 
+class orderList; // Forward declaration for orderList
+
 class Player {
 private:
     std::string name;  // Player's name
     std::vector<Territory*> ownedTerritories;  // Player owns a collection of territories
     Hand playerHand;  // Player owns a hand of Warzone cards
-    orderList playerOrders;  // List of orders issued by the player
+    orderList* playerOrders;  // Pointer to list of orders issued by the player
     int numberOfReinforcement; //*Variable for reinforcement units
     bool negotiate;  // Boolean flag for negotiation status
 
@@ -60,7 +62,7 @@ public:
     void issueOrder();
 
     // Get the list of issued orders
-    orderList& getOrders();
+    orderList& getOrders();  // Return a reference instead of a pointer
 
     // Stream insertion operator
     friend std::ostream& operator<<(std::ostream& os, const Player& player);
