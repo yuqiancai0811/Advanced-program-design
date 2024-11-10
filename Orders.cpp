@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "Map.h"
 #include <vector>
 #include <iostream>
@@ -7,6 +8,10 @@
 #include <algorithm>
 #include <fstream>
 
+=======
+#include "Orders.h"
+#include "Cards.h"
+>>>>>>> 8da3d0614365f0f426d176cc7451b7bf332c3ecf
 using namespace std;
 
 
