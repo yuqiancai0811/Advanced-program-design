@@ -10,6 +10,7 @@
 #include "Orders.h"
 #include "Cards.h"
 #include "Player.h"
+#include "LoggingObserver.cpp"
 
 
 using namespace std;
@@ -113,6 +114,8 @@ deployOrder::deployOrder() {
 
 }
 
+deployOrder::~deployOrder(){}
+
 
 bool deployOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
@@ -148,6 +151,10 @@ advanceOrder::advanceOrder(int armies, Territory* source,Territory* target, Play
     this->source=source;
     this->target=target;
     this->player=player;
+}
+advanceOrder::~advanceOrder() {
+
+    // Destructor body (can be empty)
 }
 
 bool advanceOrder::validate() const {
