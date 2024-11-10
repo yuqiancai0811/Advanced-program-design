@@ -1,6 +1,7 @@
 #include "CommandProcessingDriver.h"
 #include "GameEngine.h"
 #include "CommandProcessor.h"
+
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -191,4 +192,42 @@ void testCommandProcessorFile(const string& fileName) {
 
     delete gameEngine;
     delete processor;
+}
+
+#include <iostream>
+#include <string>
+
+void testCommandProcessor();
+void testCommandProcessorConsole();
+void testCommandProcessorFile(const std::string& fileName);
+
+int main() {
+    int choice;
+    std::cout << "Select test to run:\n";
+    std::cout << "1. Test Command Processor with User Input\n";
+    std::cout << "2. Test Command Processor with Console Input\n";
+    std::cout << "3. Test Command Processor with File Input\n";
+    std::cout << "Enter choice (1/2/3): ";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        std::cout << "\n--- Running Test Command Processor with User Input ---\n";
+        testCommandProcessor();
+    }
+    else if (choice == 2) {
+        std::cout << "\n--- Running Test Command Processor with Console Input ---\n";
+        testCommandProcessorConsole();
+    }
+    else if (choice == 3) {
+        std::string fileName;
+        std::cout << "Enter the file name for commands: ";
+        std::cin >> fileName;
+        std::cout << "\n--- Running Test Command Processor with File Input ---\n";
+        //testCommandProcessorFile(fileName);
+    }
+    else {
+        std::cout << "Invalid choice. Exiting program.\n";
+    }
+
+    return 0;
 }
