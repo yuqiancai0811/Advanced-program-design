@@ -5,6 +5,24 @@ using namespace std;
 #include "Player.h"
 
 // Order class methods
+
+std::string getRandomCardType() {
+    // Random number generation setup
+    std::random_device rd;  // Seed generator
+    std::mt19937 gen(rd()); // Mersenne Twister engine
+    std::uniform_int_distribution<> dist(1, 5);  // Range 1 to 5 for each card type
+
+    // Select a card type based on the random number
+    switch (dist(gen)) {
+        case 1: return "BOMB";
+        case 2: return "REINFORCEMENT";
+        case 3: return "BLOCKADE";
+        case 4: return "AIRLIFT";
+        case 5: return "DIPLOMACY";
+        default: return "";  // Should never happen
+    }
+}
+
 Order::Order() : effect(new string), executed(new bool(false)), name(new string) {}
 
 
@@ -184,11 +202,9 @@ void advanceOrder::execute() {
             //todo: card need to be given
             //..........................
             //..........................
-            string orderType[5]={"BOMB","REINFORCEMENT","BLOCKADE","AIRLIFT","DIPLOMACY"};
-            static std::mt19937 rng(static_cast<unsigned>(std::time(nullptr))); // Seed with current time
-            std::uniform_int_distribution<int> dist(0, 4); // Define range from 0 to 4
-            //randomly add a card to hand
-            this->player->getHand().addCard(orderType[rng]);
+
+            Card* card=new Card(getRandomCardType());
+            this->player->getHand().addCard(card);
         }
     }
 
@@ -275,7 +291,13 @@ airliftOrder::airliftOrder(int armies,Territory* source,Territory* target,Player
 
 bool airliftOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()&&std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()) {
-        return true;
+        if(this->player->getHand().hasCardType("Airlift")) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
     else {
         std::cout<<"Invalid order\n";
@@ -320,6 +342,7 @@ void negotiateOrder::execute() {
 }
 
 // orderList methods
+
 orderList::~orderList() {
     for (Order* order : orders) {
         delete order;
