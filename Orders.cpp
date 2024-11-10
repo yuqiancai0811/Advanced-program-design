@@ -1,3 +1,12 @@
+#include "Map.h"
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <stdexcept>
+#include <iterator>
+#include <algorithm>
+#include <fstream>
+
 #include "Orders.h"
 #include "Cards.h"
 using namespace std;
@@ -264,8 +273,12 @@ blockadeOrder::blockadeOrder(int armies,Player* player, Territory* target) {
 
 bool blockadeOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
-        return true;
-    }
+        if(this->player->getHand().hasCardType("BLOCKADE")) {
+            return true;
+        }
+        else {
+            return false;
+        }    }
     else {
         std::cout<<"Invalid order\n";
         return false;
@@ -275,10 +288,15 @@ bool blockadeOrder::validate() const {
 void blockadeOrder::execute() {
     if (validate()) {
         *executed = true;
+        std::cout<<"Running the blockade order,\n";
+        std::cout<<"The armies number:"<<this->target->getArmies()<<"\n";
+
         this->target->setArmies((this->target->getArmies())*2);
         this->target->setOwner(this->neutral->getName());
         this->neutral->addTerritory(this->target);
         this->player->removeTerritory(this->target);
+        std::cout<<"The armies have doubled:"<<this->target->getArmies()<<"\n";
+
     }
 }
 
@@ -310,8 +328,15 @@ bool airliftOrder::validate() const {
 void airliftOrder::execute() {
     if (validate()) {
         *executed = true;
+        std::cout<<"\nSource territory armies:"<<this->source->getArmies();
+        std::cout<<"\nTarget territory armies:"<<this->target->getArmies();
+
+
         this->source->setArmies(this->source->getArmies() - this->armies);
         this->target->setArmies(this->target->getArmies() + this->armies);
+
+        std::cout<<"\nSource territory armies(after airlift):"<<this->source->getArmies();
+        std::cout<<"\nTarget territory armies(after airlift):"<<this->target->getArmies();
     }
 }
 
@@ -343,6 +368,7 @@ void negotiateOrder::execute() {
 }
 
 // orderList methods
+orderList::orderList() {}
 
 orderList::~orderList() {
     for (Order* order : orders) {
