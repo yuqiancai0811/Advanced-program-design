@@ -151,10 +151,19 @@ Card *Deck::draw()
         throw runtime_error("Deck is empty!");
     }
 
-    // Method that shuffles the deck of cards
-    unsigned seed = static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    std::mt19937 rng(seed);
-    shuffle(begin(cards), end(cards), rng);
+    // // Method that shuffles the deck of cards
+    // unsigned seed = static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+    // std::mt19937 rng(seed);
+    // shuffle(begin(cards), end(cards), rng);
+    
+     // Seed the random number generator with a real time value
+    srand(time(0));
+    // Shuffle the deck manually using a random index
+    for (size_t i = 0; i < cards.size() - 1; ++i)
+    {
+        size_t j = i + rand() / (RAND_MAX / (cards.size() - i) + 1);
+        swap(cards[i], cards[j]);
+    }
 
     // Draw the last card
     Card *drawnCard = cards.back();
