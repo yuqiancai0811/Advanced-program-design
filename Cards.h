@@ -97,4 +97,4 @@ private:
     vector<Card *> handCards; // Cards in the player's hand
 };
 
-#endif CARDS_H
+#endif
