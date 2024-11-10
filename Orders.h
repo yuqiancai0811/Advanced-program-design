@@ -169,6 +169,7 @@ private:
     std::vector<Order *> orders;
 
 public:
+    orderList();  // Default constructor declaration
     // Destructor
     ~orderList();
 
