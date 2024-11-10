@@ -10,6 +10,8 @@
 #include <ctime>
 
 
+
+
 using namespace std;
 class Player;
 class Territory;
@@ -166,7 +168,6 @@ private:
     std::vector<Order *> orders;
 
 public:
-
     orderList();
     // Destructor
     ~orderList();
