@@ -7,12 +7,16 @@ using namespace std;
 
 // Implementation of Command class constructors and methods
 
+// Default constructor initializes command and effect as empty strings
 Command::Command() : command(""), effect("") {}
 
+// Constructor that sets the command string with a given input
 Command::Command(const string &cmd) : command(cmd), effect("") {}
 
+// Copy constructor to initialize a Command object from another Command object
 Command::Command(const Command &other) : command(other.command), effect(other.effect) {}
 
+// Assignment operator to copy data from another Command object
 Command &Command::operator=(const Command &other)
 {
     if (this != &other)
@@ -23,34 +27,39 @@ Command &Command::operator=(const Command &other)
     return *this;
 }
 
+// Getter for the command string
 string Command::getCommand() const
 {
     return command;
 }
 
+// Getter for the effect string
 string Command::getEffect() const
 {
     return effect;
 }
 
+// Setter to set the effect string
 void Command::setEffect(const string &eff)
 {
     effect = eff;
 }
 
+// Method to save the effect and trigger logging
 void Command::saveEffect(const string &eff)
 {
     effect = eff;
-    Notify(this); // Part 5: trigger the writing of the entry in the log file
+    Notify(this); // Part 5: Trigger logging through the observer pattern
 }
 
+// Overloading the << operator to print Command details
 ostream &operator<<(ostream &os, const Command &cmd)
 {
     os << "Command: " << cmd.command << " | Effect: " << cmd.effect;
     return os;
 }
 
-// Part5: Implementing the stringToLog() function from ILoggable
+// Part 5: Implement the stringToLog() function for logging command details
 string Command::stringToLog() const
 {
     return "Command: " + command + "\n";
@@ -58,8 +67,10 @@ string Command::stringToLog() const
 
 // Implementation of CommandProcessor class
 
+// Constructor that sets the associated GameEngine instance
 CommandProcessor::CommandProcessor(GameEngine *engine) : gameEngine(engine) {}
 
+// Destructor to clean up command pointers stored in the command list
 CommandProcessor::~CommandProcessor()
 {
     for (Command *cmd : commands)
@@ -69,11 +80,13 @@ CommandProcessor::~CommandProcessor()
     commands.clear();
 }
 
+// Setter to assign the GameEngine instance
 void CommandProcessor::setGameEngine(GameEngine *engine)
 {
     gameEngine = engine;
 }
 
+// Reads a command from user input
 string CommandProcessor::readCommand()
 {
     string cmd;
@@ -81,12 +94,15 @@ string CommandProcessor::readCommand()
     getline(cin, cmd);
     return cmd;
 }
+
+// Stores the command in the command list and triggers logging
 void CommandProcessor::saveCommand(Command *cmd)
 {
     commands.push_back(cmd);
-    Notify(this); // Part 5: trigger the writing of the entry in the log file
+    Notify(this); // Part 5: Trigger logging
 }
 
+// Retrieves a command from input, validates it, and saves it if valid
 Command *CommandProcessor::getCommand()
 {
     string cmdStr = readCommand();
@@ -103,6 +119,7 @@ Command *CommandProcessor::getCommand()
     return cmd;
 }
 
+// Validates if the command matches a list of known valid commands
 bool CommandProcessor::validateCommand(const Command *cmd) const
 {
     const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
@@ -117,6 +134,7 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
     return false;
 }
 
+// Overloading the << operator to print details of the CommandProcessor
 ostream &operator<<(ostream &os, const CommandProcessor &processor)
 {
     os << "CommandProcessor containing commands:\n";
@@ -126,7 +144,8 @@ ostream &operator<<(ostream &os, const CommandProcessor &processor)
     }
     return os;
 }
-// Part5: Implementing the stringToLog() function from ILoggable
+
+// Part 5: Implement the stringToLog() function for logging processed commands
 string CommandProcessor::stringToLog() const
 {
     if (commands.empty())
@@ -144,6 +163,7 @@ string CommandProcessor::stringToLog() const
 
 // Implementation of FileLineReader class
 
+// Constructor that opens a file for reading
 FileLineReader::FileLineReader(const string &fileName) : file(fileName)
 {
     if (!file.is_open())
@@ -152,6 +172,7 @@ FileLineReader::FileLineReader(const string &fileName) : file(fileName)
     }
 }
 
+// Destructor that closes the file if open
 FileLineReader::~FileLineReader()
 {
     if (file.is_open())
@@ -160,6 +181,7 @@ FileLineReader::~FileLineReader()
     }
 }
 
+// Reads a line from the file and returns it
 string FileLineReader::readLine()
 {
     string line;
@@ -167,19 +189,22 @@ string FileLineReader::readLine()
     {
         return line;
     }
-    return ""; // Return an empty string if EOF or error
+    return ""; // Return an empty string if end of file or error
 }
 
 // Implementation of FileCommandProcessorAdapter class
 
+// Constructor that initializes the CommandProcessor with a file reader for reading commands from a file
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(GameEngine *engine, const std::string &fileName)
     : CommandProcessor(engine), fileReader(new FileLineReader(fileName)) {}
 
+// Destructor to clean up the file reader
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
 {
     delete fileReader;
 }
 
+// Overrides readCommand to read commands from the file instead of console
 string FileCommandProcessorAdapter::readCommand()
 {
     string cmd = fileReader->readLine();
@@ -194,6 +219,7 @@ string FileCommandProcessorAdapter::readCommand()
     return cmd;
 }
 
+// Overloading the << operator to print FileCommandProcessorAdapter details
 ostream &operator<<(ostream &os, const FileCommandProcessorAdapter &adapter)
 {
     os << "FileCommandProcessorAdapter with attached file reader";
