@@ -9,10 +9,12 @@
 
 #include "Orders.h"
 #include "Cards.h"
+#include "Player.h"
+
+
 using namespace std;
 
 
-#include "Player.h"
 
 // Order class methods
 
@@ -245,6 +247,7 @@ bool bombOrder::validate() const {
         std::cout<<"Invalid order\n";
         return false;
     }
+    return false;
 }
 
 void bombOrder::execute() {
@@ -368,7 +371,9 @@ void negotiateOrder::execute() {
 }
 
 // orderList methods
-orderList::orderList() {}
+orderList::orderList() {
+    this->orders = vector<Order*>();
+}
 
 orderList::~orderList() {
     for (Order* order : orders) {

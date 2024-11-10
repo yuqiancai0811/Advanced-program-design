@@ -1,5 +1,7 @@
 #include "OrderDriver.h"
 #include "Orders.h"
+#include "Player.h"
+#include "LoggingObserver.h"
 
 void testOrdersLists() {
 
