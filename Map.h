@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
-#include "Player.h"
+//#include "Player.h"
 
 
 #ifndef MAP_H
 #define MAP_H
+
+class Player;
 
 class Territory {
      private:
