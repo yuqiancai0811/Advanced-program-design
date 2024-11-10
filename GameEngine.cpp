@@ -13,7 +13,7 @@
 
 using namespace std;
 ///
-//g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp
+//g++ GameEngine.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp LoggingObserver.h CommandProcessor.h CommandProcessor.cpp
 
 /*-------------------- Phases for Part 3 -------------------------*/
 extern const std::string START = "start";
