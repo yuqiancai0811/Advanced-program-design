@@ -28,6 +28,12 @@ void Territory::setOwner(const std::string& owner1){
 }
 
 void Territory::setPlayer(Player* player){ownerPlayer=player;};
+int Territory::getArmies() const {
+    return this->armies;
+}
+void Territory::setArmies(int armies) {
+    this->armies=armies;
+}
 
 std::string Territory::getName() const {return name;};
 std::string Territory::getOwner() const {return owner;};
