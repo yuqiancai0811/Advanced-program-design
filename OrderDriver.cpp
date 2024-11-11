@@ -39,6 +39,14 @@ void testOrdersLists() {
     player1->addTerritory(territory1);
     player1->addTerritory(territory2);
     player1->setNumberOfReinforcement(1000);
+    Card* airlift=new Card("Airlift");
+    player1->getHand().addCard(airlift);
+
+    territory1->setArmies(100);
+    territory2->setArmies(100);
+    territory3->setArmies(1000);
+
+
 
     Player* player2 = new Player("Player 2");
     player2->addTerritory(territory3);
@@ -49,22 +57,27 @@ void testOrdersLists() {
     territory2->addAdjacentTerritory(territory3);
     territory3->addAdjacentTerritory(territory2);
 
-    deployOrder* deploy_order = new deployOrder(100,territory3,player1);
-    advanceOrder* advance_order=new advanceOrder(100,territory1,territory3,player1);
+    territory1->setOwner("Player1");
+    territory2->setOwner("Player1");
+    territory3->setOwner("Player2");
+
+
+    deployOrder* deploy_order = new deployOrder(100,territory1,player1);
+    advanceOrder* advance_order=new advanceOrder(100,territory3,territory1,player2);
     airliftOrder* airlift_order=new airliftOrder(100,territory1,territory3,player1);
     bombOrder* bomb_order=new bombOrder(territory3,player1);
     blockadeOrder* blockade_order=new blockadeOrder(100,player1,player2,territory1);
     negotiateOrder* negotiate_order=new negotiateOrder(player1,player2);
-    deploy_order->execute();
-    advance_order->execute();
-    airlift_order->execute();
+    //deploy_order->execute();
+    //advance_order->execute();
+    //airlift_order->execute();
     bomb_order->execute();
     blockade_order->execute();
     negotiate_order->execute();
 
 }
 
-// int main() {
-//     testOrdersLists();
-//     return 0;
-// }
+int main() {
+    testOrdersLists();
+    return 0;
+}

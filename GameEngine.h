@@ -42,7 +42,10 @@ public:
     CommandProcessor *commandProcessor;
 
     GameEngine();  // Constructor to initialize the game
-    ~GameEngine(); // Destructor to clean up resources 
+    ~GameEngine(); // Destructor to clean up resources
+
+     // Method to get the player list for testing
+    vector<Player*> getPlayerList() const;
 
     // Handles the gameplay phase (assigning reinforcement, issuing orders, executing orders)
     void playGame();
@@ -50,18 +53,6 @@ public:
     // Function to draw and play cards
     void playCards(Player* player);
 
-    
-
-    // /////2
-    // void transitionTo(GameEngine newState);
-
-
-    // Prompts the user for the next action after startup
-    void promptNextActionPlay();
-
-    // Declaration for the checkWinCondition function
-    void checkWinCondition();
-    
 
 
     /*  --------------  Game state part ------------------*/
@@ -112,6 +103,8 @@ public:
     void resetGame(); //Not sure if it's part of MainLoop...
     void removeEliminatedPlayers(); //Helper function for mainGameLoop
 
+    // bool checkWinCondition();
+    
     // Main game loop
     void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
      /* -------------- End of P3 ------------------*/

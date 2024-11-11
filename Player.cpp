@@ -114,6 +114,7 @@ vector<Territory*> Player::toAttack() const {
 /*--------------------------- Update methods for A2_Part3 ------------------------*/
 void Player::issueOrder() {
     // Step 1: Deploy Reinforcements if available
+    std::cout << "[LOG] " << name << " attempting to deploy reinforcements...\n";
     if (numberOfReinforcement > 0) {
         std::vector<Territory*> defendList = toDefend();
         if (!defendList.empty()) {
@@ -131,6 +132,7 @@ void Player::issueOrder() {
     }
 
     // Step 2: Advance Orders for Defense
+    std::cout << "[LOG] " << name << " attempting to issue advance orders for defense...\n";
     std::vector<Territory*> defendList = toDefend();
     for (Territory* defendTerritory : defendList) {
         for (Territory* sourceTerritory : ownedTerritories) {
@@ -146,6 +148,7 @@ void Player::issueOrder() {
     }
 
     // Step 3: Advance Orders for Attack
+    std::cout << "[LOG] " << name << " attempting to issue advance orders for attack...\n";
     std::vector<Territory*> attackList = toAttack();
     for (Territory* attackTerritory : attackList) {
         for (Territory* sourceTerritory : ownedTerritories) {
@@ -165,6 +168,7 @@ void Player::issueOrder() {
     }
 
     // Step 4: Use Cards to Issue Orders
+    std::cout << "[LOG] " << name << " attempting to use a card to issue an order...\n";
     if (!playerHand.getHand().empty()) {
         Card* card = playerHand.getHand().front();
         playerHand.removeCard(*card); // Remove the card from hand after using
