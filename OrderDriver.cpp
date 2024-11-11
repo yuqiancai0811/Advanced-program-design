@@ -40,7 +40,10 @@ void testOrdersLists() {
     player1->addTerritory(territory2);
     player1->setNumberOfReinforcement(1000);
     Card* airlift=new Card("Airlift");
+    Card* blockade=new Card("BLOCKADE");
+
     player1->getHand().addCard(airlift);
+    player1->getHand().addCard(blockade);
 
     territory1->setArmies(100);
     territory2->setArmies(100);
@@ -66,14 +69,16 @@ void testOrdersLists() {
     advanceOrder* advance_order=new advanceOrder(100,territory3,territory1,player2);
     airliftOrder* airlift_order=new airliftOrder(100,territory1,territory3,player1);
     bombOrder* bomb_order=new bombOrder(territory3,player1);
-    blockadeOrder* blockade_order=new blockadeOrder(100,player1,player2,territory1);
+    blockadeOrder* blockade_order=new blockadeOrder(100,player1,player2,territory2);
     negotiateOrder* negotiate_order=new negotiateOrder(player1,player2);
-    //deploy_order->execute();
+
+    deploy_order->execute();
     //advance_order->execute();
-    //airlift_order->execute();
+    airlift_order->execute();
     bomb_order->execute();
     blockade_order->execute();
     negotiate_order->execute();
+    advance_order->execute();
 
 }
 

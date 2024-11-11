@@ -163,13 +163,15 @@ bool advanceOrder::validate() const {
 
 
 
-        if(this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
+        if(this->player->isNegotiating()==true) {
             std::cout<<"Invalid order because negotiation\n";
             return false;
         }
         else {
+
             return true;
         }
+
     }
     else {
         std::cout<<"Invalid order advance\n";
@@ -254,30 +256,33 @@ bombOrder::bombOrder(Territory* target, Player* player) {
 
 bool bombOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
-        std::cout<<"\nInvalid order bomb1.5\n";
 
 
         bool isValidOrder = false; // Flag to track if the order is valid
 
         for (Territory* t : this->player->getOwnedTerritories()) {
-            std::cout << "\nInvalid order bomb1.6 \n";
-            std::cout << "t is " << t->getName();
 
-            if (std::find(t->getAdjacentTerritories().begin(), t->getAdjacentTerritories().end(), this->target) == t->getAdjacentTerritories().end() &&
-                this->player->isNegotiating() == true &&
-                this->target->getOwnerPlayer()->isNegotiating() == true) {
-                std::cout << "Invalid order bomb1\n";
-                isValidOrder = false;
-                break;  // Exit loop if condition is met
-                } else {
+
+            // if (std::find(t->getAdjacentTerritoryNames().begin(), t->getAdjacentTerritoryNames().end(), this->target->getName()) == t->getAdjacentTerritoryNames().end() &&
+            //     this->player->isNegotiating() == true &&
+            //     this->target->getOwnerPlayer()->isNegotiating() == true) {
+            //     std::cout << "Invalid order bomb1\n";
+            //     isValidOrder = false;
+            //     break;  // Exit loop if condition is met
+            //     } else {
+            //         isValidOrder = true;
+            //     }
+            for(Territory* i : t->getAdjacentTerritories()) {
+                if(i->getName()==this->target->getName()) {
                     isValidOrder = true;
                 }
+
+            }
         }
 
         return isValidOrder;
     }
     else {
-        std::cout<<"\nInvalid order bomb2\n";
         return false;
     }
     return false;
@@ -286,7 +291,10 @@ bool bombOrder::validate() const {
 void bombOrder::execute() {
     if (validate()) {
         *executed = true;
+        std::cout<<"\nTarget territory before bomb:"<<this->target->getArmies();
+
         this->target->setArmies((this->target->getArmies())/2);
+        std::cout<<"\nTarget territory after bomb:"<<this->target->getArmies();
     }
 }
 
@@ -313,6 +321,7 @@ bool blockadeOrder::validate() const {
             return true;
         }
         else {
+
             return false;
         }    }
     else {
@@ -392,6 +401,8 @@ negotiateOrder::negotiateOrder(Player* player,Player* enemy) {
 
 bool negotiateOrder::validate() const {
     if(player!=enemy) {
+        std::cout<<"valid order negotiation\n";
+
         return true;
     }
     else {
