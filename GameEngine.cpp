@@ -19,6 +19,7 @@ using namespace std;
 /*-------------------- Phases for Part 3 -------------------------*/
 extern const std::string START = "start";
 extern const std::string MAPLODADED = "map_loaded";
+extern const std::string GAMESTART = "gamestart";
 extern const std::string PLAYERSADDED = "players_added";
 extern const std::string MAPVALIDATED = "map_validated";
 extern const std::string ASSIGN_REINFORCEMENT = "assignReinforcement";
@@ -46,8 +47,10 @@ CommandProcessor *commandProcessor= new CommandProcessor();
 commandProcessor->setGameEngine(game);
 game->setProcessor(commandProcessor);
 
-*game->commandProcessor->getCommand();
 
+while(game->getCurrentState()!=GAMESTART){
+    *game->commandProcessor->getCommand();
+}
 return *game;
 }
 
