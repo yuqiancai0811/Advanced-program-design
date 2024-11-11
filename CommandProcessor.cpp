@@ -233,6 +233,47 @@ void CommandProcessor::handleloadmapCommand(Command* Command){
     }
 }
 
+void CommandProcessor::handleValidateMapCommand(Command* command){
+        cout << "Validating the map...\n";
+          
+        bool mapValidated = (gameEngine->selectedMap->validate()); 
+
+        if (mapValidated) {
+            cout << "Map validated successfully!\n";
+            gameEngine->transition(MAPVALIDATED);
+        } else {
+            cout << "Map validation failed. Please load a valid map.\n";
+        }
+
+}
+
+void CommandProcessor::handleAddPlayerCommand(Command* command){
+       string playerName;
+       cout << "Enter player name (or 'done' to finish): ";
+        cin >> playerName;
+        if (playerName == "done") 
+            {
+            if(gameEngine->playerList.size()>=2)
+                { 
+                    gameEngine->deck=Deck(gameEngine->playerList.size());
+                    gameEngine->transition(PLAYERSADDED);
+                } 
+            else cout << "Need at least 2 players.\n";}
+        
+        else
+            {
+            gameEngine->playerList.push_back(new Player(playerName));
+            cout << "Player " << playerName << " added.\n";
+            gameEngine->transition(PLAYERSADDED);
+            }
+}
+
+void CommandProcessor::handleGameStartCommand(Command* command){
+     gameEngine->gamestart(*gameEngine);
+     gameEngine->mainGameLoop();
+}; 
+
+
 // Overloading the << operator to print details of the CommandProcessor
 ostream &operator<<(ostream &os, const CommandProcessor &processor)
 {
