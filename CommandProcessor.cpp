@@ -91,7 +91,7 @@ string CommandProcessor::readCommand()
 {
     string cmd;
     cout << "Enter command: ";
-    getline(cin, cmd);
+    cin>>cmd;
     return cmd;
 }
 
@@ -122,7 +122,7 @@ Command *CommandProcessor::getCommand()
 // Validates if the command matches a list of known valid commands
 bool CommandProcessor::validateCommand(const Command *cmd) const
 {
-    const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
+    const string validCommands[] = {"start", "loadmap", "validatemap", "addplayer", "assignReinforcement", "issueOrders", "executeOrders", "win"};
     for (const auto &validCmd : validCommands)
     {
         if (cmd->getCommand() == validCmd)

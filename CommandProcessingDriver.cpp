@@ -6,6 +6,7 @@
 using std::cout;
 using std::endl;
 
+//{"start", "loadmap", "validatemap", "addplayer", "assignReinforcement", "issueOrders", "executeOrders", "win"};
 // Test function to simulate command processing from user input
 void testCommandProcessor() {
     // Initialize the GameEngine and CommandProcessor with the initial game state
@@ -194,3 +195,33 @@ void testCommandProcessorFile(const string& fileName) {
     delete processor;
 }
 
+int main() {
+    int choice;
+    std::cout << "Select test to run:\n";
+    std::cout << "1. Test Command Processor with User Input\n";
+    std::cout << "2. Test Command Processor with Console Input\n";
+    std::cout << "3. Test Command Processor with File Input\n";
+    std::cout << "Enter choice (1/2/3): ";
+    std::cin >> choice;
+
+    if (choice == 1) {
+        std::cout << "\n--- Running Test Command Processor with User Input ---\n";
+        testCommandProcessor();
+    }
+    else if (choice == 2) {
+        std::cout << "\n--- Running Test Command Processor with Console Input ---\n";
+        testCommandProcessorConsole();
+    }
+    else if (choice == 3) {
+        std::string fileName;
+        std::cout << "Enter the file name for commands: ";
+        std::cin >> fileName;
+        std::cout << "\n--- Running Test Command Processor with File Input ---\n";
+        //testCommandProcessorFile("Command1.txt");
+    }
+    else {
+        std::cout << "Invalid choice. Exiting program.\n";
+    }
+
+    return 0;
+}
