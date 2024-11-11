@@ -27,23 +27,22 @@ extern const std::string WIN;
 
 class GameEngine : public Subject, public ILoggable{
 private:
-   
-    CommandProcessor* commandProcessor;///
+    
 
+public:
+
+    CommandProcessor* commandProcessor;//
     Map* selectedMap;                // The game map
     std::vector<Player*> playerList; // List of players
     Deck deck;                       // The deck of cards for the game
     vector <Player*> eliminatedPlayers;
     Player *currentPlayer;
     vector <Player*> playerOder;
-    string currentState;  // The current state of the game added by Yuqian Cai 
+    string currentState;  // The current state of the game added by Yuqian Cai
+    CommandProcessor *commandProcessor;
 
-public:
     GameEngine();  // Constructor to initialize the game
-    ~GameEngine(); // Destructor to clean up resources
-
-
-    
+    ~GameEngine(); // Destructor to clean up resources 
 
     // Handles the gameplay phase (assigning reinforcement, issuing orders, executing orders)
     void playGame();
@@ -71,6 +70,9 @@ public:
     void setcurrentState(std::string newGameState);
     // Helper function to transition between states
     void transition(const std::string& newState);
+    void setProcessor(CommandProcessor *processor);
+    void setMap(Map *selectedMap);
+
     
 
 
@@ -83,7 +85,7 @@ public:
 
     void randomizeOrderOfPlay();      // Randomly determines the order of play for players
     
-    void startupPhase();              // Handles the startup phase commands and game setup
+    GameEngine startupPhase();              // Handles the startup phase commands and game setup
     // 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
     // which results in the map being loaded in the game.
     // 2) use the validatemap command to validate the map (i.e. it is a connected graph, etc – see assignment 1).
@@ -122,7 +124,6 @@ public:
 
     // Print and display
     void printWelcomeMessage();       // Prints the welcome message when the game starts
-    void setCommandProcessor(CommandProcessor* commandProcessor); ///PAART1
     //Part5: Override the stringToLog function from ILoggable
     string stringToLog() const override;
 };

@@ -2,6 +2,11 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
+#include <unordered_map>
+#include <functional>
+#include <map>
+#include "Map.h"
 
 using namespace std;
 
@@ -108,30 +113,129 @@ Command *CommandProcessor::getCommand()
     string cmdStr = readCommand();
     Command *cmd = new Command(cmdStr);
     if (validateCommand(cmd))
-    {
+    {   
+
+    std::istringstream iss(cmd->getCommand());
+    std::string command;
+    std::string argument;
+
+    iss >> command;
+    std::getline(iss, argument);
+
+        if (!argument.empty()) {
+                // remove space;
+                argument = argument.substr(argument.find_first_not_of(' '));
+        }
+
         saveCommand(cmd);
+        if(command=="loadmap"){
+            if(gameEngine->getCurrentState()=="start" || gameEngine->getCurrentState()=="maploaded");
+        }
+        else if(command=="validatemap"){
+            if(gameEngine->getCurrentState()=="maploaded");
+        }
+        else if(command=="addplayer"){
+            if(gameEngine->getCurrentState()=="mapvalidated" || gameEngine->getCurrentState()=="playersadded");
+        }
+        else if(command=="gamestart"){
+            if(gameEngine->getCurrentState()=="playersadded" );
+        }
+        else if(command=="replay"){
+            if(gameEngine->getCurrentState()=="win" );
+        }
+        else if(command=="quit"){
+            if(gameEngine->getCurrentState()=="win" );  
+        }
+
     }
     else
-    {
-        cmd->setEffect("Invalid command");
+        {
+        cmd->setEffect("Error: can not read command");
         cout << "Error: Invalid command entered: " << cmdStr << endl;
-    }
+        }
+
     return cmd;
 }
 
 // Validates if the command matches a list of known valid commands
 bool CommandProcessor::validateCommand(const Command *cmd) const
-{
-    const string validCommands[] = {"start", "loadmap", "validatemap", "addplayer", "assignReinforcement", "issueOrders", "executeOrders", "win"};
+{   
+    std::istringstream iss(cmd->getCommand());
+    std::string command;
+    std::string argument;
+
+    iss >> command;
+    std::getline(iss, argument);
+
+        if (!argument.empty()) {
+            // remove space;
+            argument = argument.substr(argument.find_first_not_of(' '));
+        }
+
+    const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
+    
+    //check if the command is A command or not
+    bool isCommand=false;
     for (const auto &validCmd : validCommands)
     {
         if (cmd->getCommand() == validCmd)
         {
-            return true;
+            isCommand=true;
         }
     }
+
+    //check the  Validation with game state
+             if(command=="loadmap"){
+             if(gameEngine->getCurrentState()=="start" || gameEngine->getCurrentState()=="maploaded") return true;
+        }
+        else if(command=="validatemap"){
+            if(gameEngine->getCurrentState()=="maploaded") return true;
+        }
+        else if(command=="addplayer"){
+            if(gameEngine->getCurrentState()=="mapvalidated" || gameEngine->getCurrentState()=="playersadded") return true;
+        }
+        else if(command=="gamestart"){
+            if(gameEngine->getCurrentState()=="playersadded" ) return true;
+        }
+        else if(command=="replay"){
+            if(gameEngine->getCurrentState()=="win" ) return true;
+        }
+        else if(command=="quit"){
+            if(gameEngine->getCurrentState()=="win" ) return true;  
+        }
+
     cout << "Invalid command: " << cmd->getCommand() << endl;
     return false;
+
+}
+
+void CommandProcessor::handleloadmapCommand(Command* Command){
+    std::istringstream iss(Command->getCommand());
+    std::string command;
+    std::string argument;
+
+    iss >> command;
+    std::getline(iss, argument);
+
+        if (!argument.empty()) {
+            // remove space;
+            argument = argument.substr(argument.find_first_not_of(' '));
+        }
+    
+    cout << "Please select the name of the map you want to load: ";
+        string mapName;
+        cin >> mapName;
+
+        *gameEngine->selectedMap=loadMapFromFile(mapName);
+        
+        bool result =  (gameEngine->selectedMap == nullptr);
+        if (!result) {
+            cout << "Map " << mapName << " loaded successfully!\n";
+            gameEngine->setcurrentState(MAPLODADED);
+        } else {
+            cout << "Failed to load the map. Please try again.\n";
+        }
+
 }
 
 // Overloading the << operator to print details of the CommandProcessor
