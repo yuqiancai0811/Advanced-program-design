@@ -49,8 +49,8 @@ void testLoggingObserver()
     std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
 }
 
-// int main()
-// {
-//     testLoggingObserver();
-//     return 0;
-// }
+int main()
+{
+    testLoggingObserver();
+    return 0;
+}

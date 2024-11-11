@@ -31,7 +31,6 @@ private:
 
 public:
 
-    CommandProcessor* commandProcessor;//
     Map* selectedMap;                // The game map
     std::vector<Player*> playerList; // List of players
     Deck deck;                       // The deck of cards for the game
@@ -41,11 +40,13 @@ public:
     string currentState;  // The current state of the game added by Yuqian Cai
     CommandProcessor *commandProcessor;
 
+
+    //Constructor && Destructor
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
-    void setCommandProcessor(CommandProcessor *processor) {}
+    void setProcessor(CommandProcessor *processor);
      // Method to get the player list for testing
-    vector<Player*> getPlayerList() const;
+    std::vector<Player*> getPlayerList() const; 
 
     // Handles the gameplay phase (assigning reinforcement, issuing orders, executing orders)
     void playGame();
@@ -58,10 +59,13 @@ public:
     /*  --------------  Game state part ------------------*/
     // Get the current game state as a string
     std::string getCurrentState();
+
+
+    //setter
     void setcurrentState(std::string newGameState);
+  
     // Helper function to transition between states
     void transition(const std::string& newState);
-    void setProcessor(CommandProcessor *processor);
     void setMap(Map *selectedMap);
 
     
@@ -71,12 +75,11 @@ public:
     /* Assignment 2 -------------- Part 2 ------------------*/
     // By lucasS
     // Additional game setup and management
-    void AssignTerritories();         // Assigns territories to players
-    void assignTerritoryToPlayer(Territory* territory, Player* player);
-
-    void randomizeOrderOfPlay();      // Randomly determines the order of play for players
     
-    GameEngine startupPhase();              // Handles the startup phase commands and game setup
+    
+    
+    GameEngine startupPhase();              
+    // Handles the startup phase commands and game setup
     // 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
     // which results in the map being loaded in the game.
     // 2) use the validatemap command to validate the map (i.e. it is a connected graph, etc – see assignment 1).
@@ -87,6 +90,10 @@ public:
     // b) determine randomly the order of play of the players in the game
     // c) give 50 initial army units to the players, which are placed in their respective reinforcement pool
     // d) let each player draw 2 initial cards from the deck using the deck’s draw() method
+    void AssignTerritories();         // Assigns territories to players
+    void assignTerritoryToPlayer(Territory* territory, Player* player);
+    void randomizeOrderOfPlay();      // Randomly determines the order of play for players
+
 
     /* End  -------------- Part 2 ------------------*/
 
@@ -109,8 +116,6 @@ public:
     void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
      /* -------------- End of P3 ------------------*/
 
-    // Set and Get current game state
-    void setCurrentState(const std::string& newGameState); // Sets the current game state
 
     // Command processing
     void handleUserCommand(const std::string& command, GameEngine &game);  // Processes user commands
