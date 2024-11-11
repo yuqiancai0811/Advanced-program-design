@@ -218,6 +218,7 @@ void advanceOrder::execute() {
                 std::cout<<"The attacker captures the territory.";
                 this->target->setArmies(source->getArmies());
                 this->target->getOwnerPlayer()->removeTerritory(target);
+                this->target->setPlayer(player);
                 this->player->addTerritory(target);
                 this->winOrNot=true;
 
