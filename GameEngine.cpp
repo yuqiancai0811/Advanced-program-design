@@ -46,66 +46,66 @@ CommandProcessor *commandProcessor= new CommandProcessor();
 commandProcessor->setGameEngine(game);
 game->setProcessor(commandProcessor);
 
-// *game->commandProcessor->getCommand();
+*game->commandProcessor->getCommand();
 
-
-
-cout << "Please select the name of the map you want to load: ";
-        string mapName;
-        cin >> mapName;
-
-        selectedMap = selectedMap -> loadMapFromFile(mapName);
-        
-        bool result =  (selectedMap == nullptr);
-        if (!result) {
-            cout << "Map " << mapName << " loaded successfully!\n";
-            setcurrentState(MAPLODADED);
-        } else {
-            cout << "Failed to load the map. Please try again.\n";
-        }
-
-while (currentState == MAPLODADED) {     //state2
-        cout << "Validating the map...\n";
-          
-        bool mapValidated = selectedMap->validate(); 
-
-        if (mapValidated) {
-            cout << "Map validated successfully!\n";
-            transition(MAPVALIDATED);
-            cout << "Change the Game state to Addplayer \n";
-            cout << "Add 2-6 players \n";
-            //state3
-        } else {
-            cout << "Map validation failed. Please load a valid map.\n";
-            transition(START);
-        }
-    }
-
-    // Adding players
-    string playerName;
-    while (true) {
-        if (playerList.size()==6){break;}
-        cout << "Enter player name (or 'done' to finish): ";
-        cin >> playerName;
-        if (playerName == "done") 
-            {if(playerList.size()>=2)
-                { deck=Deck(playerList.size());
-                transition(PLAYERSADDED);
-                break;} 
-            else cout << "Need at least 2 players.\n";}
-        
-        else
-            {playerList.push_back(new Player(playerName));
-            cout << "Player " << playerName << " added.\n";}
-        
-        
-        cout << "Total number of play\n" << playerList.size()<< endl;
-        for(Player* player : playerList){
-                cout << "Player: " << player->getName() << " \n";
-            }
-    }
 return *game;
 }
+
+// cout << "Please select the name of the map you want to load: ";
+//         string mapName;
+//         cin >> mapName;
+
+//         selectedMap = selectedMap -> loadMapFromFile(mapName);
+        
+//         bool result =  (selectedMap == nullptr);
+//         if (!result) {
+//             cout << "Map " << mapName << " loaded successfully!\n";
+//             setcurrentState(MAPLODADED);
+//         } else {
+//             cout << "Failed to load the map. Please try again.\n";
+//         }
+
+// while (currentState == MAPLODADED) {     //state2
+//         cout << "Validating the map...\n";
+          
+//         bool mapValidated = selectedMap->validate(); 
+
+//         if (mapValidated) {
+//             cout << "Map validated successfully!\n";
+//             transition(MAPVALIDATED);
+//             cout << "Change the Game state to Addplayer \n";
+//             cout << "Add 2-6 players \n";
+//             //state3
+//         } else {
+//             cout << "Map validation failed. Please load a valid map.\n";
+//             transition(START);
+//         }
+//     }
+
+//     // Adding players
+//     string playerName;
+//     while (true) {
+//         if (playerList.size()==6){break;}
+//         cout << "Enter player name (or 'done' to finish): ";
+//         cin >> playerName;
+//         if (playerName == "done") 
+//             {if(playerList.size()>=2)
+//                 { deck=Deck(playerList.size());
+//                 transition(PLAYERSADDED);
+//                 break;} 
+//             else cout << "Need at least 2 players.\n";}
+        
+//         else
+//             {playerList.push_back(new Player(playerName));
+//             cout << "Player " << playerName << " added.\n";}
+        
+        
+//         cout << "Total number of play\n" << playerList.size()<< endl;
+//         for(Player* player : playerList){
+//                 cout << "Player: " << player->getName() << " \n";
+//             }
+//     }
+
 //fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
 void GameEngine::AssignTerritories() {
     cout << "Debug: AssignTerritories is running.\n";

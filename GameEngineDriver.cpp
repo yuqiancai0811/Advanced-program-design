@@ -34,10 +34,9 @@ This driver function must be in the GameEngineDriver.cpp file.
 */
 void testMainGameLoop() {
     GameEngine gameEngine;
-    gameEngine.transition(START);  // Start the game
 
     // Setup players and territories
-    gameEngine.startupPhase();  // This should add players and distribute territories
+    gameEngine=gameEngine.startupPhase();  // This should add players and distribute territories
 
     gameEngine.gamestart(gameEngine);
 
