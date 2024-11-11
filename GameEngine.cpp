@@ -104,7 +104,7 @@ while (currentState == MAPLODADED) {     //state2
                 cout << "Player: " << player->getName() << " \n";
             }
     }
-
+return *game;
 }
 //fairly distribute all the territories to the players using BFS, (add Adjacent terrtory first)
 void GameEngine::AssignTerritories() {
