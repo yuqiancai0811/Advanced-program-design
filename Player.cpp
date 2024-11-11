@@ -232,31 +232,31 @@ void Player::issueOrder() {
 
 
 
-// Checks if the player has more orders to issue this turn
-bool Player::hasMoreOrders() const {
-    if (numberOfReinforcement > 0) {
-        std::cout << "[DEBUG] " << name << " has reinforcements available.\n";
-        return true;
-    }
+// // Checks if the player has more orders to issue this turn
+// bool Player::hasMoreOrders() const {
+//     if (numberOfReinforcement > 0) {
+//         std::cout << "[DEBUG] " << name << " has reinforcements available.\n";
+//         return true;
+//     }
 
-    if (!toDefend().empty()) {
-        std::cout << "[DEBUG] " << name << " has territories to defend.\n";
-        return true;
-    }
+//     if (!toDefend().empty()) {
+//         std::cout << "[DEBUG] " << name << " has territories to defend.\n";
+//         return true;
+//     }
 
-    if (!toAttack().empty()) {
-        std::cout << "[DEBUG] " << name << " has territories to attack.\n";
-        return true;
-    }
+//     if (!toAttack().empty()) {
+//         std::cout << "[DEBUG] " << name << " has territories to attack.\n";
+//         return true;
+//     }
 
-    if (!playerHand.getHand().empty()) {
-        std::cout << "[DEBUG] " << name << " has cards available.\n";
-        return true;
-    }
+//     if (!playerHand.getHand().empty()) {
+//         std::cout << "[DEBUG] " << name << " has cards available.\n";
+//         return true;
+//     }
 
-    std::cout << "[DEBUG] " << name << " has no more orders to issue this turn.\n";
-    return false;
-} // try to add AND condition
+//     std::cout << "[DEBUG] " << name << " has no more orders to issue this turn.\n";
+//     return false;
+// } // try to add AND condition
 
 bool Player::hasMoreOrders() const {
     bool hasReinforcements = (numberOfReinforcement > 0);
