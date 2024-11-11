@@ -226,7 +226,7 @@ void CommandProcessor::handleloadmapCommand(Command* Command){
         string mapName;
         cin >> mapName;
 
-        *gameEngine->selectedMap=loadMapFromFile(mapName);
+        *gameEngine->selectedMap = *gameEngine->selectedMap->loadMapFromFile(mapName);
         
         bool result =  (gameEngine->selectedMap == nullptr);
         if (!result) {
