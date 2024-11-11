@@ -25,6 +25,7 @@ extern const std::string MAPVALIDATED = "map_validated";
 extern const std::string ASSIGN_REINFORCEMENT = "assignReinforcement";
 extern const std::string ISSUE_ORDERS = "issueOrders";
 extern const std::string EXECUTE_ORDERS = "executeOrders";
+extern const std::string PLAY = "play";
 extern const std::string WIN = "win";
 /*---------------------------------------------------------------*/
 
@@ -193,7 +194,7 @@ void GameEngine::randomizeOrderOfPlay() {
 void GameEngine::gamestart( GameEngine &game){
     game.AssignTerritories();        //fairly distribute all the territories to the players
 
-    for(Player* player:playerList){
+    for(Player* player: game.playerList){
         vector<Territory*> ownedTerritory;
         ownedTerritory= (player->getOwnedTerritories());
         for(Territory* terr:ownedTerritory){
@@ -205,7 +206,7 @@ void GameEngine::gamestart( GameEngine &game){
 
 
     //let each player draw 2 initial cards from the deck using the deck’s draw() method
-    for(Player* player : playerOder){
+    for(Player* player : game.playerOder){
         player->getHand().addCard(deck.draw());
         player->getHand().addCard(deck.draw());
     }
@@ -213,12 +214,12 @@ void GameEngine::gamestart( GameEngine &game){
 
     //give 50 initial army units to the players, which are placed in their respective reinforcement pool
     //Tempaly add the data to the player class!
-    for(Player* player : playerOder){
+    for(Player* player : game.playerOder){
         player->setNumberOfReinforcement(50);
     }
 
     //switch the game to the play phase
-    currentState = "Play";
+    game.transition(PLAY);
 
 }
 
