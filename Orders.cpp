@@ -134,6 +134,7 @@ bool deployOrder::validate() const {
 
 void deployOrder::execute() {
     if (validate()) {
+        std::cout<<"\nNow running deploy order\n";
         std::cout<<"Origin armies in target territory:"<<this->target->getArmies()<<"\n";
        this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement() - this->armies);
         this->target->setArmies(this->target->getArmies() + this->armies);
@@ -182,6 +183,8 @@ bool advanceOrder::validate() const {
 
 void advanceOrder::execute() {
     if (validate()) {
+        std::cout<<"\nNow running advance order\n";
+
         *executed = true;
 
         //source and target belong to the same player
@@ -291,6 +294,8 @@ bool bombOrder::validate() const {
 
 void bombOrder::execute() {
     if (validate()) {
+        std::cout<<"\nNow running bomb order\n";
+
         *executed = true;
         std::cout<<"\nTarget territory before bomb:"<<this->target->getArmies();
 
@@ -333,6 +338,8 @@ bool blockadeOrder::validate() const {
 
 void blockadeOrder::execute() {
     if (validate()) {
+        std::cout<<"\nNow running blockade order\n";
+
         *executed = true;
         std::cout<<"Running the blockade order,\n";
         std::cout<<"The armies number:"<<this->target->getArmies()<<"\n";
@@ -376,9 +383,10 @@ bool airliftOrder::validate() const {
 }
 
 void airliftOrder::execute() {
-    std::cout<<" order airlift execute\n";
 
     if (validate()) {
+        std::cout<<"\nNow running airlift order\n";
+
         *executed = true;
         std::cout<<"\nSource territory armies:"<<this->source->getArmies();
         std::cout<<"\nTarget territory armies:"<<this->target->getArmies();
@@ -415,6 +423,8 @@ bool negotiateOrder::validate() const {
 
 void negotiateOrder::execute() {
     if (validate()) {
+        std::cout<<"\nNow running negotiate order\n";
+
         *executed = true;
         this->player->setNegotiate(true);
         this->enemy->setNegotiate(true);
