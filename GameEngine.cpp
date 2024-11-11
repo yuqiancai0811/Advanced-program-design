@@ -27,9 +27,28 @@ extern const std::string EXECUTE_ORDERS = "executeOrders";
 extern const std::string WIN = "win";
 /*---------------------------------------------------------------*/
 
+//Setter for the command processor
+void GameEngine::setProcessor(CommandProcessor *processor){
+    commandProcessor=processor;
+};
+
+void GameEngine::setMap(Map *map){
+    selectedMap=map;
+}
+
 /*--------------------------------------------------------  Phases for Part 2 -------------------------------------------------------------*/
 //By Lucas
-void GameEngine::startupPhase(){
+GameEngine GameEngine::startupPhase(){
+
+GameEngine *game =  new GameEngine();
+printWelcomeMessage();
+CommandProcessor *commandProcessor= new CommandProcessor();
+commandProcessor->setGameEngine(game);
+game->setProcessor(commandProcessor);
+
+*game->commandProcessor->getCommand();
+
+
 
 cout << "Please select the name of the map you want to load: ";
         string mapName;
@@ -267,9 +286,6 @@ std::vector<Player*> GameEngine::getPlayerList() const {
 
 //PART1
 //Setter for the command processor
-void GameEngine::setCommandProcessor(CommandProcessor *commandProcessor) {
-    this->commandProcessor = commandProcessor;
-}
 
 
 // Transition to the next game state

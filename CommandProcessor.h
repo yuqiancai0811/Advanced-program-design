@@ -3,6 +3,7 @@
 
 #include "GameEngine.h"
 #include "LoggingObserver.h"
+#include "Map.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -49,6 +50,7 @@ protected:
 
 public:
     CommandProcessor(GameEngine *engine = nullptr); // Constructor with GameEngine pointer
+
     virtual ~CommandProcessor();                    // Destructor to clean up the command list
 
     void setGameEngine(GameEngine *engine);         // Sets the GameEngine context for command validation
@@ -58,10 +60,17 @@ public:
 
     friend ostream &operator<<(ostream &os, const CommandProcessor &processor); // Overloads << operator
 
-    void setCommandProcessor(CommandProcessor *processor) {}
+   
 
     //Part5: Override the stringToLog function from ILoggable
     string stringToLog() const override;
+
+    void handleloadmapCommand(Command* Command);
+    void handleValidateMapCommand(Command* command); 
+    void handleAddPlayerCommand(Command* command);
+    void handleGameStartCommand(Command* command); 
+    void handleReplayCommand(Command* command); 
+    void handleQuitCommand(Command* command);
 };
 
 // FileLineReader class to read commands from a file
