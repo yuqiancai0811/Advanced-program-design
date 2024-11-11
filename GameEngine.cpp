@@ -27,7 +27,7 @@ extern const std::string EXECUTE_ORDERS = "executeOrders";
 extern const std::string WIN = "win";
 /*---------------------------------------------------------------*/
 
-//Setter for the command processor
+//Setter for associating CommandProcessor with GameEngine
 void GameEngine::setProcessor(CommandProcessor *processor){
     commandProcessor=processor;
 };

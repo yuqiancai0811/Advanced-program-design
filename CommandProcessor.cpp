@@ -85,10 +85,10 @@ CommandProcessor::~CommandProcessor()
     commands.clear();
 }
 
-// Setter for associating CommandProcessor with GameEngine
-void GameEngine::setCommandProcessor(CommandProcessor *processor) {
-    this->commandProcessor = processor;
-}
+
+// void GameEngine::setCommandProcessor(CommandProcessor *processor) {
+//     this->commandProcessor = processor;
+// }
 
 // Setter to assign the GameEngine instance
 void CommandProcessor::setGameEngine(GameEngine *engine)

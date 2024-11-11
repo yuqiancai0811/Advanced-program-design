@@ -31,7 +31,6 @@ private:
 
 public:
 
-    CommandProcessor* commandProcessor;//
     Map* selectedMap;                // The game map
     std::vector<Player*> playerList; // List of players
     Deck deck;                       // The deck of cards for the game
@@ -43,7 +42,7 @@ public:
 
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
-    void setCommandProcessor(CommandProcessor *processor) {}
+    void setProcessor(CommandProcessor *processor);
      // Method to get the player list for testing
     vector<Player*> getPlayerList() const;
 
@@ -64,7 +63,7 @@ public:
     void setProcessor(CommandProcessor *processor);
     void setMap(Map *selectedMap);
 
-    
+ 
 
 
 

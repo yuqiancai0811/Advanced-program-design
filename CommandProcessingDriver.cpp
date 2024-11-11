@@ -14,7 +14,7 @@ void testCommandProcessor() {
     CommandProcessor* processor = new CommandProcessor(gameEngine);
 
     // Link the GameEngine and CommandProcessor
-    gameEngine->setCommandProcessor(processor);
+    gameEngine->setProcessor(processor);
     processor->setGameEngine(gameEngine);
 
     bool continueGame = true;
