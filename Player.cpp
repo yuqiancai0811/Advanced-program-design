@@ -332,30 +332,58 @@ void Player::issueOrder() {
 
 
 // Checks if the player has more orders to issue this turn
+// bool Player::hasMoreOrders() const {
+//     if (numberOfReinforcement > 0) {
+//         std::cout << "[DEBUG] " << name << " has reinforcements available.\n";
+//         return true;
+//     }
+
+//     if (!toDefend().empty()) {
+//         std::cout << "[DEBUG] " << name << " has territories to defend.\n";
+//         return true;
+//     }
+
+//     if (!toAttack().empty()) {
+//         std::cout << "[DEBUG] " << name << " has territories to attack.\n";
+//         return true;
+//     }
+
+//     if (!playerHand.getHand().empty()) {
+//         std::cout << "[DEBUG] " << name << " has cards available.\n";
+//         return true;
+//     }
+
+//     std::cout << "[DEBUG] " << name << " has no more orders to issue this turn.\n";
+//     return false;
+// } // try to add AND condition
 bool Player::hasMoreOrders() const {
-    if (numberOfReinforcement > 0) {
+    bool hasReinforcements = (numberOfReinforcement > 0);
+    bool hasDefendTargets = !toDefend().empty();
+    bool hasAttackTargets = !toAttack().empty();
+    bool hasCards = !playerHand.getHand().empty();
+
+    if (hasReinforcements) {
         std::cout << "[DEBUG] " << name << " has reinforcements available.\n";
-        return true;
     }
-
-    if (!toDefend().empty()) {
+    if (hasDefendTargets) {
         std::cout << "[DEBUG] " << name << " has territories to defend.\n";
-        return true;
     }
-
-    if (!toAttack().empty()) {
+    if (hasAttackTargets) {
         std::cout << "[DEBUG] " << name << " has territories to attack.\n";
-        return true;
     }
-
-    if (!playerHand.getHand().empty()) {
+    if (hasCards) {
         std::cout << "[DEBUG] " << name << " has cards available.\n";
-        return true;
     }
 
-    std::cout << "[DEBUG] " << name << " has no more orders to issue this turn.\n";
-    return false;
-} // try to add AND condition
+    // If player has no reinforcements, no defend or attack targets, and no usable cards, they have no more orders.
+    if (!hasReinforcements && !hasDefendTargets && !hasAttackTargets && !hasCards) {
+        std::cout << "[DEBUG] " << name << " has no more orders to issue this turn.\n";
+        return false;
+    }
+    
+    // Otherwise, at least one type of order is possible
+    return true;
+}
 
 /*--------------------------- End of Update methods for A2_Part3 ------------------------*/
 
