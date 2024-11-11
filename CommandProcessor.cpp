@@ -101,7 +101,7 @@ string CommandProcessor::readCommand()
 {
     string cmd;
     cout << "Enter command: ";
-    cin >> cmd;
+    std::getline(std::cin, cmd);
     return cmd;
 }
 
@@ -120,7 +120,10 @@ Command *CommandProcessor::getCommand()
     if (validateCommand(cmd))
     {
         // Parse the command and argument
-        std::istringstream iss(cmd->getCommand());
+        
+        std::string fullCommand = cmd->getCommand();
+        //fullCommand = fullCommand.substr(fullCommand.find_first_not_of(' '), fullCommand.find_last_not_of(' ') - fullCommand.find_first_not_of(' ') + 1);
+        std::istringstream iss(fullCommand);
         std::string command;
         std::string argument;
 
@@ -132,47 +135,47 @@ Command *CommandProcessor::getCommand()
             argument = argument.substr(argument.find_first_not_of(' '));
         }
 
-        saveCommand(cmd); // Save the command to the list
+        cout << "Debug: in function getCommand, comment receive: command:" << command <<";  argument:"<<argument<< endl;
 
         // Check the game state compatibility for each command
         if(command == "loadmap"){
-            if(gameEngine->getCurrentState() == "start" || gameEngine->getCurrentState() == "maploaded")
-            ;
+            cout << "Debug: in function getCommand calling  handleloadmapCommand"<< endl;
+            handleloadmapCommand(cmd);
         }
         else if(command == "validatemap"){
-            if(gameEngine->getCurrentState() == "maploaded")
-            ;
+            cout << "Debug: in function getCommand calling  handlevalidatemap"<< endl;
+            handleValidateMapCommand(cmd);
         }
         else if(command == "addplayer"){
-            if(gameEngine->getCurrentState() == "mapvalidated" || gameEngine->getCurrentState() == "playersadded")
-            ;
+            cout << "Debug: in function getCommand calling  handleaddplayer"<< endl;
+            handleAddPlayerCommand(cmd);
         }
         else if(command == "gamestart"){
-            if(gameEngine->getCurrentState() == "playersadded")
-            ;
+            cout << "Debug: in function getCommand calling  handleGameStartCommand"<< endl;
+            handleGameStartCommand(cmd);
         }
         else if(command == "replay"){
-            if(gameEngine->getCurrentState() == "win")
-            ;
+            
         }
         else if(command == "quit"){
-            if(gameEngine->getCurrentState() == "win")
-            ;
+            
         }
     }
     else
     {
         cmd->setEffect("Error: cannot read command");
-        cout << "Error: Invalid command entered: " << cmdStr << endl;
+        cout << "Debug Error in (getCommand): Invalid command entered: " << cmdStr << endl;
     }
 
+    saveCommand(cmd); // Save the command to the list
     return cmd;
 }
 
 // Validates if the command matches a list of known valid commands
 bool CommandProcessor::validateCommand(const Command *cmd) const
-{
-    std::istringstream iss(cmd->getCommand());
+{   
+    std::string fullCommand = cmd->getCommand();
+    std::istringstream iss(fullCommand);
     std::string command;
     std::string argument;
 
@@ -191,31 +194,33 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
     bool isCommand = false;
     for (const auto &validCmd : validCommands)
     {
-        if (cmd->getCommand() == validCmd)
+        if (command == validCmd)
         {
             isCommand = true;
         }
     }
 
+   
+    cout << "Debug in function(validateCommand): command receive:" << command <<";argument:"<<argument<< endl;
     // Validate the command based on the current game state
-    if (command == "loadmap" && (gameEngine->getCurrentState() == "start" || gameEngine->getCurrentState() == "maploaded")) return true;
-    if (command == "validatemap" && gameEngine->getCurrentState() == "maploaded") return true;
-    if (command == "addplayer" && (gameEngine->getCurrentState() == "mapvalidated" || gameEngine->getCurrentState() == "playersadded")) return true;
-    if (command == "gamestart" && gameEngine->getCurrentState() == "playersadded") return true;
+    if (command == "loadmap" && (gameEngine->getCurrentState() == START || gameEngine->getCurrentState() == MAPLODADED)) {return true;}
+    if (command == "validatemap" && gameEngine->getCurrentState() == MAPLODADED) return true;
+    if (command == "addplayer" && (gameEngine->getCurrentState() == MAPVALIDATED || gameEngine->getCurrentState() == PLAYERSADDED)) return true;
+    if (command == "gamestart" && gameEngine->getCurrentState() == PLAYERSADDED) return true;
     if (command == "replay" && gameEngine->getCurrentState() == "win") return true;
     if (command == "quit" && gameEngine->getCurrentState() == "win") return true;
-
-    cout << "Invalid command: " << cmd->getCommand() << endl;
+    cout << "Debug in function(validateCommand): Invalid command full command:" << fullCommand << endl;
+    cout << "Debug in function(validateCommand): Invalid command:" << command <<";argument "<<argument<< endl;
     return false;
 }
 
 // Handler for loadmap command - prompts the user for map name and loads it
-void CommandProcessor::handleloadmapCommand(Command* Command){
-    std::istringstream iss(Command->getCommand());
-    std::string command;
+void CommandProcessor::handleloadmapCommand(Command* command){
+    std::istringstream iss(command->getCommand());
+    std::string commandstring;
     std::string argument;
 
-    iss >> command;
+    iss >> commandstring;
     std::getline(iss, argument);
 
     if (!argument.empty()) {
@@ -223,23 +228,21 @@ void CommandProcessor::handleloadmapCommand(Command* Command){
         argument = argument.substr(argument.find_first_not_of(' '));
     }
     
-    cout << "Please select the name of the map you want to load: ";
-    string mapName;
-    cin >> mapName;
-
+   
     // Load map and set state based on result
-    *gameEngine->selectedMap = *gameEngine->selectedMap->loadMapFromFile(mapName);
+    Map objectr;
+    gameEngine->selectedMap=objectr.loadMapFromFile(argument);
     
     bool result = (gameEngine->selectedMap == nullptr);
     if (!result) {
-        cout << "Map " << mapName << " loaded successfully!\n";
-        gameEngine->setcurrentState(MAPLODADED);
+        cout << "Map " << argument << " loaded successfully!\n";
+        gameEngine->transition(MAPLODADED);
     } else {
         cout << "Failed to load the map. Please try again.\n";
     }
 }
 
-void CommandProcessor::handleValidateMapCommand(Command* command){
+void CommandProcessor::handleValidateMapCommand(Command* Command){
         cout << "Validating the map...\n";
           
         bool mapValidated = (gameEngine->selectedMap->validate()); 
@@ -254,24 +257,27 @@ void CommandProcessor::handleValidateMapCommand(Command* command){
 }
 
 void CommandProcessor::handleAddPlayerCommand(Command* command){
-       string playerName;
-       cout << "Enter player name (or 'done' to finish): ";
-        cin >> playerName;
-        if (playerName == "done") 
-            {
-            if(gameEngine->playerList.size()>=2)
-                { 
-                    gameEngine->deck=Deck(gameEngine->playerList.size());
-                    gameEngine->transition(PLAYERSADDED);
-                } 
-            else cout << "Need at least 2 players.\n";}
-        
-        else
-            {
-            gameEngine->playerList.push_back(new Player(playerName));
-            cout << "Player " << playerName << " added.\n";
-            gameEngine->transition(PLAYERSADDED);
-            }
+    std::istringstream iss(command->getCommand());
+    std::string commandstring;
+    std::string argument;
+
+    iss >> commandstring;
+    std::getline(iss, argument);
+    std::string playerName=argument;
+
+    if (!argument.empty()) {
+        // remove spaces at the beginning of the argument
+        argument = argument.substr(argument.find_first_not_of(' '));
+    }
+
+    gameEngine->playerList.push_back(new Player(playerName));
+    gameEngine->transition(PLAYERSADDED);
+    
+    cout << "Total number of play\n" << gameEngine->playerList.size()<< endl;
+         for(Player* player : gameEngine->playerList){
+            cout << "Player: " << player->getName() << " \n";
+          }   
+                 
 }
 
 void CommandProcessor::handleGameStartCommand(Command* command){
