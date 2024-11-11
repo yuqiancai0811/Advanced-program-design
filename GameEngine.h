@@ -63,8 +63,7 @@ public:
 
     //setter
     void setcurrentState(std::string newGameState);
-    // void setCommandProcessor(CommandProcessor *processor);
-    void setProcessor(CommandProcessor *processor);
+  
     // Helper function to transition between states
     void transition(const std::string& newState);
     void setMap(Map *selectedMap);
