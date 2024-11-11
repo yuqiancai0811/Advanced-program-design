@@ -136,22 +136,28 @@ Command *CommandProcessor::getCommand()
 
         // Check the game state compatibility for each command
         if(command == "loadmap"){
-            if(gameEngine->getCurrentState() == "start" || gameEngine->getCurrentState() == "maploaded");
+            if(gameEngine->getCurrentState() == "start" || gameEngine->getCurrentState() == "maploaded")
+            ;
         }
         else if(command == "validatemap"){
-            if(gameEngine->getCurrentState() == "maploaded");
+            if(gameEngine->getCurrentState() == "maploaded")
+            ;
         }
         else if(command == "addplayer"){
-            if(gameEngine->getCurrentState() == "mapvalidated" || gameEngine->getCurrentState() == "playersadded");
+            if(gameEngine->getCurrentState() == "mapvalidated" || gameEngine->getCurrentState() == "playersadded")
+            ;
         }
         else if(command == "gamestart"){
-            if(gameEngine->getCurrentState() == "playersadded");
+            if(gameEngine->getCurrentState() == "playersadded")
+            ;
         }
         else if(command == "replay"){
-            if(gameEngine->getCurrentState() == "win");
+            if(gameEngine->getCurrentState() == "win")
+            ;
         }
         else if(command == "quit"){
-            if(gameEngine->getCurrentState() == "win");
+            if(gameEngine->getCurrentState() == "win")
+            ;
         }
     }
     else

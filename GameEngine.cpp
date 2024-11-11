@@ -46,7 +46,7 @@ CommandProcessor *commandProcessor= new CommandProcessor();
 commandProcessor->setGameEngine(game);
 game->setProcessor(commandProcessor);
 
-*game->commandProcessor->getCommand();
+// *game->commandProcessor->getCommand();
 
 
 
