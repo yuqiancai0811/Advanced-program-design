@@ -10,7 +10,6 @@
 #include "Orders.h"
 #include "Cards.h"
 #include "Player.h"
-#include "LoggingObserver.cpp"
 
 
 using namespace std;
