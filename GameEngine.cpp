@@ -1,6 +1,7 @@
 #include "GameEngine.h"
 #include "MapDriver.h"
 #include "Orders.h"
+#include "Player.h"
 #include <iostream>
 #include <limits>
 #include <map>
@@ -259,20 +260,10 @@ void GameEngine::handleUserCommand(const string& command, GameEngine &game) {
         cout << "Invalid command.\n";
     }
 }
-//adjust----
 
-
-// // New function to check win condition
-// void GameEngine::checkWinCondition() {
-//     for (Player* player : playerList) {
-//         // Check if the player owns all territories (winning condition)
-//         if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-//             cout << "Player " << player->getName() << " has won the game!\n";
-//             transition("win");  // Transition to the win state
-//             break;
-//         }
-//     }
-// }
+std::vector<Player*> GameEngine::getPlayerList() const {
+    return playerList;
+}
 
 //PART1
 //Setter for the command processor
@@ -303,7 +294,7 @@ Implements the main game loop following the official rules of the Warzone game.
 - Orders Execution Phase
 */
 void GameEngine::mainGameLoop() {
-     cout << "=== Main Game Loop ===" << endl;
+    std::cout << "=== Main Game Loop ===" << std::endl;
     transition(ASSIGN_REINFORCEMENT);  // Start from the reinforcement phase
     bool gameOver = false;
 
@@ -333,6 +324,8 @@ void GameEngine::mainGameLoop() {
                 std::cout << "Player " << playerList.front()->getName() << " is the last player remaining and wins the game!" << std::endl;
                 winner = playerList.front();
                 transition(WIN);  // Transition to win state
+                gameOver = true;  // End the loop
+                continue;
             } else {
                 transition(ASSIGN_REINFORCEMENT);  // Restart the loop from the reinforcement phase
             }
@@ -344,6 +337,7 @@ void GameEngine::mainGameLoop() {
                 std::cout << "Player " << player->getName() << " controls all territories! They win the game!" << std::endl;
                 winner = player;
                 transition(WIN);  // Transition to win state
+                gameOver = true;  // End the loop
                 break;
             }
         }
@@ -470,7 +464,6 @@ void GameEngine::reinforcementPhase() {
 
     cout << "=== End of Reinforcement Phase ===" << endl;
 }
-
 
 // g++ -std=c++11 GameEngineDriver.cpp GameEngine.cpp Map.cpp Player.cpp Orders.cpp
 /* 
