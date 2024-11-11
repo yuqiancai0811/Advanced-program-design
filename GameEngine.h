@@ -44,7 +44,7 @@ public:
     ~GameEngine(); // Destructor to clean up resources
     void setProcessor(CommandProcessor *processor);
      // Method to get the player list for testing
-    vector<Player*> getPlayerList() const;
+    std::vector<Player*> getPlayerList() const; 
 
     // Handles the gameplay phase (assigning reinforcement, issuing orders, executing orders)
     void playGame();
