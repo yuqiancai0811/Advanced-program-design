@@ -381,6 +381,7 @@ Implements the main game loop following the official rules of the Warzone game.
 //     }
 // }
 
+
 void GameEngine::mainGameLoop() {
     std::cout << "=== Main Game Loop ===" << std::endl;
     transition(ASSIGN_REINFORCEMENT);  // Start from the reinforcement phase
@@ -565,38 +566,73 @@ void GameEngine::reinforcementPhase() {
 4) It will call a function/method named issueOrdersPhase() in the game engine.
 */
 
-/* Method with log and limit to round 5 */
+// /* Method with log and limit to round 5 */
+// void GameEngine::issueOrdersPhase() {
+//     cout << "=== Starting Issue Orders Phase ===\n";
+
+//     bool ordersPending;
+//     int round = 1;                    // Track the round number for clarity
+//     // const int maxRounds = 5;          // Set a max round limit to avoid infinite loops
+
+//     // Continue issuing orders in a round-robin manner until no orders are pending or max rounds reached
+//     do {
+//         cout << "\n--- Round " << round++ << " ---\n";
+//         ordersPending = false;
+
+//         for (Player* player : playerList) {
+//             // Check if the player has any orders to issue
+//             if (player->hasMoreOrders()) {
+//                 cout << player->getName() << " is issuing an order...\n";
+//                 player->issueOrder();  // Issue one order for the player
+//                 ordersPending = true;  // Flag that there are still orders pending
+//             } else {
+//                 cout << player->getName() << " has no more orders to issue.\n";
+//             }
+//         }        
+
+//     } while (ordersPending);  // Continue rounds until no orders are pending
+
+//     cout << "=== End of Issue Orders Phase ===\n";
+    
+//     // Transition to the next phase after issuing orders
+//     transition(EXECUTE_ORDERS);
+// }
+std::map<Player*, int> savedReinforcements;
+
 void GameEngine::issueOrdersPhase() {
-    cout << "=== Starting Issue Orders Phase ===\n";
+    std::cout << "=== Starting Issue Orders Phase ===\n";
+
+    // Step 1: Save the initial reinforcement count for each player
+    std::map<Player*, int> savedReinforcements;
+    for (Player* player : playerList) {
+        savedReinforcements[player] = player->getNumberOfReinforcement();
+    }
 
     bool ordersPending;
-    int round = 1;                    // Track the round number for clarity
-    // const int maxRounds = 5;          // Set a max round limit to avoid infinite loops
+    int round = 1;
 
-    // Continue issuing orders in a round-robin manner until no orders are pending or max rounds reached
+    // Continue issuing orders in a round-robin fashion until no orders are pending
     do {
-        cout << "\n--- Round " << round++ << " ---\n";
+        std::cout << "\n--- Round " << round++ << " ---\n";
         ordersPending = false;
 
         for (Player* player : playerList) {
-            // Check if the player has any orders to issue
+            // Check if the player has more orders to issue
             if (player->hasMoreOrders()) {
-                cout << player->getName() << " is issuing an order...\n";
+                std::cout << player->getName() << " is issuing an order...\n";
                 player->issueOrder();  // Issue one order for the player
                 ordersPending = true;  // Flag that there are still orders pending
             } else {
-                cout << player->getName() << " has no more orders to issue.\n";
+                std::cout << player->getName() << " has no more orders to issue.\n";
             }
-        }        
+        }
+    } while (ordersPending);
 
-    } while (ordersPending);  // Continue rounds until no orders are pending
+    std::cout << "=== End of Issue Orders Phase ===\n";
 
-    cout << "=== End of Issue Orders Phase ===\n";
-    
-    // Transition to the next phase after issuing orders
-    transition(EXECUTE_ORDERS);
+    // Store the saved reinforcement data in a member variable if you need to access it later
+    this->savedReinforcements = savedReinforcements;
 }
-
 
 
 /* 
@@ -611,46 +647,79 @@ The game engine should execute all the deploy orders before it executes any othe
 This goes on in round-robin fashion across the players until all the players’ orders have been executed.
 */
 /* Method with log*/
+// void GameEngine::executeOrdersPhase() {
+//     std::cout << "=== Starting Order Execution Phase ===\n";
+
+//     bool ordersRemaining;
+//     int round = 1;  // Track rounds for clarity
+
+//     // Continue executing orders in a round-robin manner until no orders remain
+//     do {
+//         std::cout << "\n--- Execution Round " << round++ << " ---\n";
+//         ordersRemaining = false;  // Reset the flag each round
+
+//         // Loop through each player to execute one order per player in a round-robin fashion
+//         for (Player* player : playerList) {
+//             orderList& orders = player->getOrders();  // Get the player's order list
+
+//             // Check if the player has any orders to execute
+//             if (orders.hasMoreOrders()) {
+//                 Order* currentOrder = orders.getNextOrder();  // Get the next order to execute
+
+//                 // If there is a valid order, execute it and display details
+//                 if (currentOrder != nullptr) {
+//                     currentOrder->execute();
+//                     std::cout << "[LOG] " << player->getName() << " executed order: " 
+//                               << currentOrder->toString() << "\n";
+//                     delete currentOrder;  // Free memory after execution
+//                 }
+
+//                 // Set the flag indicating there are still orders left to execute
+//                 ordersRemaining = true;
+//             } else {
+//                 // No more orders for this player in this round
+//                 std::cout << player->getName() << " has no more orders to execute.\n";
+//             }
+//         }
+//     } while (ordersRemaining);  // Continue until all players have no orders left
+
+//     std::cout << "=== Order Execution Phase Complete ===\n";
+    
+//     // Transition to the next phase (reinforcement) after all orders have been executed
+//     transition(ASSIGN_REINFORCEMENT);
+// }
 void GameEngine::executeOrdersPhase() {
     std::cout << "=== Starting Order Execution Phase ===\n";
+
+    // Restore each player's reinforcement count before executing orders
+    for (Player* player : playerList) {
+        if (savedReinforcements.find(player) != savedReinforcements.end()) {
+            player->setNumberOfReinforcement(savedReinforcements[player]);
+        }
+    }
 
     bool ordersRemaining;
     int round = 1;  // Track rounds for clarity
 
-    // Continue executing orders in a round-robin manner until no orders remain
     do {
         std::cout << "\n--- Execution Round " << round++ << " ---\n";
-        ordersRemaining = false;  // Reset the flag each round
+        ordersRemaining = false;
 
-        // Loop through each player to execute one order per player in a round-robin fashion
         for (Player* player : playerList) {
-            orderList& orders = player->getOrders();  // Get the player's order list
-
-            // Check if the player has any orders to execute
-            if (orders.hasMoreOrders()) {
-                Order* currentOrder = orders.getNextOrder();  // Get the next order to execute
-
-                // If there is a valid order, execute it and display details
-                if (currentOrder != nullptr) {
-                    currentOrder->execute();
-                    std::cout << "[LOG] " << player->getName() << " executed order: " 
-                              << currentOrder->toString() << "\n";
-                    delete currentOrder;  // Free memory after execution
+            if (player->getOrders().hasMoreOrders()) {
+                Order* order = player->getOrders().getNextOrder();
+                if (order) {
+                    order->execute();
+                    ordersRemaining = true;
                 }
-
-                // Set the flag indicating there are still orders left to execute
-                ordersRemaining = true;
             } else {
-                // No more orders for this player in this round
                 std::cout << player->getName() << " has no more orders to execute.\n";
             }
         }
-    } while (ordersRemaining);  // Continue until all players have no orders left
+    } while (ordersRemaining);
 
     std::cout << "=== Order Execution Phase Complete ===\n";
-    
-    // Transition to the next phase (reinforcement) after all orders have been executed
-    transition(ASSIGN_REINFORCEMENT);
 }
+
 
 /*------------------------------- End of Methods for P3 ----------------------------------------*/

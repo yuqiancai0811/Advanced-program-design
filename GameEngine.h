@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Orders.h"
 #include "Cards.h"
+#include <map>  // Include map for temporary storage of reinforcements
 
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
@@ -110,7 +111,7 @@ public:
     void resetGame(); //Not sure if it's part of MainLoop...
     void removeEliminatedPlayers(); //Helper function for mainGameLoop
 
-    // bool checkWinCondition();
+    std::map<Player*, int> savedReinforcements;
     
     // Main game loop
     void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
