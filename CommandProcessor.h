@@ -60,7 +60,7 @@ public:
 
     friend ostream &operator<<(ostream &os, const CommandProcessor &processor); // Overloads << operator
 
-    void setCommandProcessor(CommandProcessor *processor) {}
+   
 
     //Part5: Override the stringToLog function from ILoggable
     string stringToLog() const override;

@@ -43,7 +43,7 @@ public:
 
     GameEngine();  // Constructor to initialize the game
     ~GameEngine(); // Destructor to clean up resources
-
+    void setCommandProcessor(CommandProcessor *processor) {}
      // Method to get the player list for testing
     vector<Player*> getPlayerList() const;
 
