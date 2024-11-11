@@ -35,29 +35,12 @@ This driver function must be in the GameEngineDriver.cpp file.
 void testMainGameLoop() {
     GameEngine gameEngine;
 
-    // Setup players and territories
     gameEngine=gameEngine.startupPhase();  // This should add players and distribute territories
 
     gameEngine.gamestart(gameEngine);
 
-    // Reinforcement phase testing: Check reinforcement counts manually for each player
-    std::cout << "\n=== Testing Reinforcement Phase ===\n";
-    gameEngine.reinforcementPhase();
-    for (Player* player : gameEngine.getPlayerList()) {
-        std::cout << player->getName() << " has " << player->getNumberOfReinforcement() << " units.\n";
-    }
-
-    // Issuing Orders testing: Run issueOrdersPhase() and observe order types
-    std::cout << "\n=== Testing Issuing Orders Phase ===\n";
-    gameEngine.issueOrdersPhase();
-    
-    // Execute Orders testing: Ensure correct behavior during execution
-    std::cout << "\n=== Testing Execution Phase ===\n";
-    gameEngine.executeOrdersPhase();
-
-    // Run the full game loop to simulate until a win condition is met
-    std::cout << "\n=== Full Main Game Loop ===\n";
     gameEngine.mainGameLoop();
+
 }
 
 /*----------------------------------------------------------------*/

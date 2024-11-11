@@ -143,19 +143,6 @@ void deployOrder::execute() {
 
     }
 }
-// void deployOrder::execute() {
-//     if (validate()) {
-//         std::cout << "Origin armies in target territory:" << this->target->getArmies() << "\n";
-        
-//         int newReinforcementCount = this->player->getNumberOfReinforcement() - this->armies;
-//         this->player->setNumberOfReinforcement(newReinforcementCount);  // Only reduce once
-
-//         this->target->setArmies(this->target->getArmies() + this->armies);
-        
-//         std::cout << "Have taken " << this->armies << " from reinforcement pool to the target territory\n";
-//         std::cout << "After the operation:" << this->target->getArmies() << "\n";
-//     }
-// } //Add for testing P3
 
 advanceOrder::advanceOrder(int armies, Territory* source,Territory* target, Player* player) {
     *name = "Advance Order";
