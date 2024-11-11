@@ -119,7 +119,7 @@ deployOrder::~deployOrder(){}
 
 bool deployOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
-        if(this->armies<this->player->getNumberOfReinforcement()) {
+        if(this->armies>this->player->getNumberOfReinforcement()) {
             std::cout<<"Not enough armies in the reinforcement pool";
             return false;
         }
@@ -158,18 +158,21 @@ advanceOrder::~advanceOrder() {
 }
 
 bool advanceOrder::validate() const {
-    //check if source territories belong to the play and target territory is adjacent to source   or not
+    //check if source territories belong to the player and target territory is adjacent to source   or not
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()&&std::find(this->source->getAdjacentTerritories().begin(),this->source->getAdjacentTerritories().end(),this->target)!=this->source->getAdjacentTerritories().end()) {
-       if(this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
-           std::cout<<"Invalid order\n";
-           return false;
-       }
+
+
+
+        if(this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
+            std::cout<<"Invalid order because negotiation\n";
+            return false;
+        }
         else {
             return true;
         }
     }
     else {
-        std::cout<<"Invalid order\n";
+        std::cout<<"Invalid order advance\n";
 
         return false;
     }}
@@ -182,10 +185,15 @@ void advanceOrder::execute() {
 
         //source and target belong to the same player
         if(this->source->getOwner()==this->target->getOwner()) {
+            std::cout<<"Source Owner"<<this->source->getOwner()<<"\n";
+            std::cout<<"Target Owner"<<this->target->getOwner()<<"\n";
+
             this->source->setArmies(this->source->getArmies() - this->armies);
             this->target->setArmies(this->target->getArmies() + this->armies);
+
         }
         else {
+
 
 
             while(this->source->getArmies()>0&&this->target->getArmies()>0) {
@@ -200,7 +208,9 @@ void advanceOrder::execute() {
                 this->source->setArmies(sourceLeft);
 
                 this->target->setArmies(targetLeft);
+
             }
+
 
             if(source->getArmies()>target->getArmies()) {
                 std::cout<<"The attacker captures the territory.";
@@ -212,7 +222,11 @@ void advanceOrder::execute() {
 
             }
             else {
+                std::cout<<"\nSource Army"<<this->source->getArmies();
+                std::cout<<"\nTarget Army"<<this->target->getArmies();
+
                 std::cout<<"The defender defends his/her territory";
+                this->source->setArmies(0);
             }
 
 
@@ -239,19 +253,31 @@ bombOrder::bombOrder(Territory* target, Player* player) {
 }
 
 bool bombOrder::validate() const {
-    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) == this->player->getOwnedTerritories().end()) {
-        for(Territory* t:this->player->getOwnedTerritories()) {
-            if(std::find(t->getAdjacentTerritories().begin(),t->getAdjacentTerritories().end(),this->target) == t->getAdjacentTerritories().end()&&this->player->isNegotiating()==true&&this->target->getOwnerPlayer()->isNegotiating()==true) {
-                std::cout<<"Invalid order\n";
-                return false;
-            }
-            else {
-                return true;
-            }
+    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()) {
+        std::cout<<"\nInvalid order bomb1.5\n";
+
+
+        bool isValidOrder = false; // Flag to track if the order is valid
+
+        for (Territory* t : this->player->getOwnedTerritories()) {
+            std::cout << "\nInvalid order bomb1.6 \n";
+            std::cout << "t is " << t->getName();
+
+            if (std::find(t->getAdjacentTerritories().begin(), t->getAdjacentTerritories().end(), this->target) == t->getAdjacentTerritories().end() &&
+                this->player->isNegotiating() == true &&
+                this->target->getOwnerPlayer()->isNegotiating() == true) {
+                std::cout << "Invalid order bomb1\n";
+                isValidOrder = false;
+                break;  // Exit loop if condition is met
+                } else {
+                    isValidOrder = true;
+                }
         }
+
+        return isValidOrder;
     }
     else {
-        std::cout<<"Invalid order\n";
+        std::cout<<"\nInvalid order bomb2\n";
         return false;
     }
     return false;
@@ -290,7 +316,7 @@ bool blockadeOrder::validate() const {
             return false;
         }    }
     else {
-        std::cout<<"Invalid order\n";
+        std::cout<<"Invalid order blockade\n";
         return false;
     }
 }
@@ -321,21 +347,27 @@ airliftOrder::airliftOrder(int armies,Territory* source,Territory* target,Player
 bool airliftOrder::validate() const {
     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->target) != this->player->getOwnedTerritories().end()&&std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()) {
         if(this->player->getHand().hasCardType("Airlift")) {
+            std::cout<<"valid order airlift\n";
+
             return true;
         }
         else {
+            std::cout<<"Invalid order airlift\n";
+
             return false;
         }
 
     }
     else {
-        std::cout<<"Invalid order\n";
+        std::cout<<"Invalid order airlift\n";
         return false;
     }
 
 }
 
 void airliftOrder::execute() {
+    std::cout<<" order airlift execute\n";
+
     if (validate()) {
         *executed = true;
         std::cout<<"\nSource territory armies:"<<this->source->getArmies();
@@ -363,7 +395,7 @@ bool negotiateOrder::validate() const {
         return true;
     }
     else {
-        std::cout<<"Invalid order\n";
+        std::cout<<"Invalid order negotiation\n";
         return false;
     }
 
