@@ -14,7 +14,9 @@
 #include <algorithm>
 
 // ------------------------------------------------------------------------------------------Territory class methods--------------------------------------------------------------------
-Territory::Territory(std::string name, int x, int y, std::string continent, const std::vector<std::string>& adjNames) : name(name), x(x), y(y), continent(continent), adjacentTerritoryNames(adjNames) {}
+Territory::Territory(std::string name, int x, int y, std::string continent, const std::vector<std::string>& adjNames) : name(name), x(x), y(y), continent(continent), adjacentTerritoryNames(adjNames) {
+    this->armies=0;
+}
     //Constructor(Name + X + Y + Continent + vertor (adjacentTerritoryNames) );
 
 Territory::~Territory() {}
