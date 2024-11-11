@@ -133,25 +133,36 @@ vector<Territory*> Player::toAttack() const {
 /*--------------------------- Update methods for A2_Part3 ------------------------*/
 
 void Player::issueOrder() {
-    // Step 1: Deploy Reinforcements if available
     std::cout << "[LOG] " << name << " attempting to deploy reinforcements...\n";
+
+    // Step 1: Deploy Reinforcements if Available
     if (numberOfReinforcement > 0) {
         std::vector<Territory*> defendList = toDefend();
+        
         if (!defendList.empty()) {
             Territory* territoryToDefend = defendList.front();
-            int unitsToDeploy = std::min(numberOfReinforcement, 5); // Deploy up to 5 units at a time
-            numberOfReinforcement -= unitsToDeploy;
+            
+            // Ensure enough reinforcements for meaningful deployment
+            int unitsToDeploy = std::min(numberOfReinforcement, 5);  // Maximum of 5 units per deployment
+            if (unitsToDeploy > 0) {
+                numberOfReinforcement -= unitsToDeploy;
+                
+                // Create and add a valid deploy order
+                Order* deployOrder = new :: deployOrder(unitsToDeploy, territoryToDefend, this);
+                playerOrders->addOrder(deployOrder);
+                
+                std::cout << "[DEBUG] Order List after adding deployOrder:\n";
+                playerOrders->showAllOrders(); // Assuming showAllOrders() prints the list of orders
+                std::cout << "-----------------------------\n";
 
-            // Create and add deploy order
-            Order* deployOrder = new :: deployOrder(unitsToDeploy, territoryToDefend, this);
-            playerOrders->addOrder(deployOrder);
-            std::cout << "[INFO] " << name << " issues a Deploy Order to " 
-                      << territoryToDefend->getName() << " with " 
-                      << unitsToDeploy << " units. Remaining reinforcements: " 
-                      << numberOfReinforcement << "\n";
-            return;
+                std::cout << "[INFO] " << name << " issues a Deploy Order to " 
+                          << territoryToDefend->getName() << " with " 
+                          << unitsToDeploy << " units. Remaining reinforcements: " 
+                          << numberOfReinforcement << "\n";
+                return;
+            }
         } else {
-            std::cout << "[WARN] " << name << " has reinforcements but no territory to defend.\n";
+            std::cout << "[WARN] " << name << " has reinforcements but no territories to defend.\n";
         }
     } else {
         std::cout << "[WARN] " << name << " has no reinforcements available.\n";
@@ -163,9 +174,13 @@ void Player::issueOrder() {
     for (Territory* defendTerritory : defendList) {
         for (Territory* sourceTerritory : ownedTerritories) {
             if (sourceTerritory != defendTerritory && sourceTerritory->getArmies() > 1) {
-                // Issue an advance order to move troops to defend territory
                 Order* advanceOrder = new :: advanceOrder(1, sourceTerritory, defendTerritory, this);
                 playerOrders->addOrder(advanceOrder);
+
+                std::cout << "[DEBUG] Order List after adding advanceOrder for defend:\n";
+                playerOrders->showAllOrders(); // Assuming showAllOrders() prints the list of orders
+                std::cout << "-----------------------------\n";
+
                 std::cout << "[INFO] " << name << " issues an Advance Order to defend " 
                           << defendTerritory->getName() << " from " 
                           << sourceTerritory->getName() << ".\n";
@@ -179,14 +194,18 @@ void Player::issueOrder() {
     std::vector<Territory*> attackList = toAttack();
     for (Territory* attackTerritory : attackList) {
         for (Territory* sourceTerritory : ownedTerritories) {
-            if (sourceTerritory->getArmies() > 1 && 
-                std::find(sourceTerritory->getAdjacentTerritories().begin(), 
-                          sourceTerritory->getAdjacentTerritories().end(), 
+            if (sourceTerritory->getArmies() > 1 &&
+                std::find(sourceTerritory->getAdjacentTerritories().begin(),
+                          sourceTerritory->getAdjacentTerritories().end(),
                           attackTerritory) != sourceTerritory->getAdjacentTerritories().end()) {
                 
-                // Issue an advance order to move troops to attack
                 Order* advanceOrder = new :: advanceOrder(1, sourceTerritory, attackTerritory, this);
                 playerOrders->addOrder(advanceOrder);
+
+                std::cout << "[DEBUG] Order List after adding advanceOrder for attack:\n";
+                playerOrders->showAllOrders(); // Assuming showAllOrders() prints the list of orders
+                std::cout << "-----------------------------\n";
+
                 std::cout << "[INFO] " << name << " issues an Advance Order to attack " 
                           << attackTerritory->getName() << " from " 
                           << sourceTerritory->getName() << ".\n";
@@ -195,27 +214,24 @@ void Player::issueOrder() {
         }
     }
 
-    // Step 4: Use Cards to Issue Orders
+    // Step 4: Use Cards to Issue Orders (Only if reinforcements and advance orders are exhausted)
     if (!playerHand.getHand().empty()) {
         Card* card = playerHand.getHand().front();
         playerHand.removeCard(*card); // Remove the card from hand after using
         Order* specialOrder = nullptr;
 
+        // Special order logic based on card type
         if (card->getType() == "Bomb") {
             if (!attackList.empty()) {
                 specialOrder = new bombOrder(attackList.front(), this);
                 std::cout << "[INFO] " << name << " issues a Bomb Order on " 
                           << attackList.front()->getName() << ".\n";
-            } else {
-                std::cout << "[WARN] " << name << " has a Bomb card but no target available.\n";
             }
         } else if (card->getType() == "Airlift") {
             if (!ownedTerritories.empty() && !defendList.empty()) {
                 specialOrder = new airliftOrder(5, ownedTerritories.front(), defendList.front(), this);
                 std::cout << "[INFO] " << name << " issues an Airlift Order to move armies to " 
                           << defendList.front()->getName() << ".\n";
-            } else {
-                std::cout << "[WARN] " << name << " has an Airlift card but no valid source or target.\n";
             }
         } else if (card->getType() == "Blockade") {
             if (!defendList.empty()) {
@@ -224,17 +240,6 @@ void Player::issueOrder() {
                 std::cout << "[INFO] " << name << " issues a Blockade Order on " 
                           << defendList.front()->getName() << " with " 
                           << neutralPlayer->getName() << " as the neutral player.\n";
-            } else {
-                std::cout << "[WARN] " << name << " has a Blockade card but no valid territory to blockade.\n";
-            }
-        } else if (card->getType() == "Diplomacy") {
-            Player* enemyPlayer = !attackList.empty() ? attackList.front()->getOwnerPlayer() : nullptr;
-            if (enemyPlayer && enemyPlayer != this) {
-                specialOrder = new negotiateOrder(this, enemyPlayer);
-                std::cout << "[INFO] " << name << " issues a Diplomacy Order with " 
-                          << enemyPlayer->getName() << ".\n";
-            } else {
-                std::cout << "[WARN] " << name << " has a Diplomacy card but no valid enemy player.\n";
             }
         }
 
@@ -249,34 +254,26 @@ void Player::issueOrder() {
     }
 }
 
+
 bool Player::hasMoreOrders() const {
     bool hasReinforcements = (numberOfReinforcement > 0);
-    bool hasDefendTargets = !toDefend().empty();
-    bool hasAttackTargets = !toAttack().empty();
+    bool hasDefendTargets = !toDefend().empty() && hasReinforcements;
+    bool hasAttackTargets = !toAttack().empty() && hasReinforcements;
     bool hasCards = !playerHand.getHand().empty();
 
-    if (hasReinforcements) {
-        std::cout << "[DEBUG] " << name << " has reinforcements available.\n";
-    }
-    if (hasDefendTargets) {
-        std::cout << "[DEBUG] " << name << " has territories to defend.\n";
-    }
-    if (hasAttackTargets) {
-        std::cout << "[DEBUG] " << name << " has territories to attack.\n";
-    }
-    if (hasCards) {
-        std::cout << "[DEBUG] " << name << " has cards available.\n";
-    }
+    // Debugging output to track each condition
+    std::cout << "[DEBUG] Checking hasMoreOrders for " << name << ":\n";
+    std::cout << " - Reinforcements available: " << hasReinforcements << " (Remaining: " << numberOfReinforcement << ")\n";
+    std::cout << " - Defend targets available: " << hasDefendTargets << "\n";
+    std::cout << " - Attack targets available: " << hasAttackTargets << "\n";
+    std::cout << " - Cards available: " << hasCards << "\n";
 
-    // If player has no reinforcements, no defend or attack targets, and no usable cards, they have no more orders.
-    if (!hasReinforcements && !hasDefendTargets && !hasAttackTargets && !hasCards) {
-        std::cout << "[DEBUG] " << name << " has no more orders to issue this turn.\n";
-        return false;
-    }
-    
-    // Otherwise, at least one type of order is possible
-    return true;
+    // Only return true if there's a valid reason to issue an order
+    return hasReinforcements || hasDefendTargets || hasAttackTargets || hasCards;
 }
+
+
+
 
 /*--------------------------- End of Update methods for A2_Part3 ------------------------*/
 
