@@ -95,19 +95,38 @@ void Player::setNumberOfReinforcement(int number) {
 /*-------------------------------------------*/
 // Method to decide where to defend
 vector<Territory*> Player::toDefend() const {
-    return ownedTerritories;  
+    vector<Territory*> defendList;
+    for (Territory* territory : ownedTerritories) {
+        if (territory->getArmies() < 5 || 
+            std::any_of(territory->getAdjacentTerritories().begin(), 
+                        territory->getAdjacentTerritories().end(),
+                        [this](Territory* adj) { return adj->getOwner() != this->getName(); })) {
+            defendList.push_back(territory);
+        }
+    }
+    // Sort by armies to prioritize defending territories with fewer armies
+    std::sort(defendList.begin(), defendList.end(), [](Territory* a, Territory* b) {
+        return a->getArmies() < b->getArmies();
+    });
+    return defendList;
 }
+
+
 
 // Method to decide where to attack
 vector<Territory*> Player::toAttack() const {
     vector<Territory*> attackTargets;
-
-    // Arbitrarily choose adjacent territories for attack
     for (Territory* territory : ownedTerritories) {
         for (Territory* adj : territory->getAdjacentTerritories()) {
-            attackTargets.push_back(adj);
+            if (adj->getOwner() != this->getName()) {
+                attackTargets.push_back(adj);
+            }
         }
     }
+    // Sort by armies to prioritize attacking territories with fewer armies
+    std::sort(attackTargets.begin(), attackTargets.end(), [](Territory* a, Territory* b) {
+        return a->getArmies() < b->getArmies();
+    });
     return attackTargets;
 }
 

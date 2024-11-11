@@ -370,7 +370,7 @@ void GameEngine::mainGameLoop() {
         }
 
         // Safety Check
-        if (roundCount > 50) {  // Set a limit for safety
+        if (roundCount > 10) {  // Set a limit for safety
             std::cout << "[ERROR] Exceeded maximum round limit. Possible infinite loop detected. Terminating game.\n";
             break;
         }

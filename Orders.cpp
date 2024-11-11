@@ -137,7 +137,7 @@ void deployOrder::execute() {
         std::cout<<"Origin armies in target territory:"<<this->target->getArmies()<<"\n";
        this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement() - this->armies);
         this->target->setArmies(this->target->getArmies() + this->armies);
-        this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement()-this->armies);
+        // this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement()-this->armies);
         std::cout<<"Have taken "<<this->armies<<" from reinforcement pool to the target territory\n";
         std::cout<<"After the operation:"<<this->target->getArmies()<<"\n";
 
@@ -180,70 +180,104 @@ bool advanceOrder::validate() const {
 
 
 
+// void advanceOrder::execute() {
+//     if (validate()) {
+//         *executed = true;
+
+//         //source and target belong to the same player
+//         if(this->source->getOwner()==this->target->getOwner()) {
+//             std::cout<<"Source Owner"<<this->source->getOwner()<<"\n";
+//             std::cout<<"Target Owner"<<this->target->getOwner()<<"\n";
+
+//             this->source->setArmies(this->source->getArmies() - this->armies);
+//             this->target->setArmies(this->target->getArmies() + this->armies);
+
+//         }
+//         else {
+
+
+
+//             while(this->source->getArmies()>0&&this->target->getArmies()>0) {
+//                 int sourceKill=this->source->getArmies()*0.6;
+
+//                 int targetKill=this->target->getArmies()*0.7;
+
+//                 int sourceLeft=source->getArmies()-targetKill;
+
+//                 int targetLeft=target->getArmies()-sourceKill;
+
+//                 this->source->setArmies(sourceLeft);
+
+//                 this->target->setArmies(targetLeft);
+
+//             }
+
+
+//             if(source->getArmies()>target->getArmies()) {
+//                 std::cout<<"The attacker captures the territory.";
+//                 this->target->setArmies(source->getArmies());
+//                 this->target->getOwnerPlayer()->removeTerritory(target);
+//                 this->target->setPlayer(player);
+
+//                 this->player->addTerritory(target);
+//                 this->winOrNot=true;
+
+
+//             }
+//             else {
+//                 std::cout<<"\nSource Army"<<this->source->getArmies();
+//                 std::cout<<"\nTarget Army"<<this->target->getArmies();
+
+//                 std::cout<<"The defender defends his/her territory";
+//                 this->source->setArmies(0);
+//             }
+
+
+//         }
+//         if(winOrNot) {
+//             //todo: card need to be given
+//             //..........................
+//             //..........................
+
+//             Card* card=new Card(getRandomCardType());
+//             this->player->getHand().addCard(card);
+//         }
+//     }
+
+// }
 void advanceOrder::execute() {
     if (validate()) {
         *executed = true;
-
-        //source and target belong to the same player
-        if(this->source->getOwner()==this->target->getOwner()) {
-            std::cout<<"Source Owner"<<this->source->getOwner()<<"\n";
-            std::cout<<"Target Owner"<<this->target->getOwner()<<"\n";
-
+        if (this->source->getOwner() == this->target->getOwner()) {
             this->source->setArmies(this->source->getArmies() - this->armies);
             this->target->setArmies(this->target->getArmies() + this->armies);
+        } else {
+            int combatRounds = 0;
+            const int maxCombatRounds = 10; // Limit to prevent infinite loop
 
-        }
-        else {
-
-
-
-            while(this->source->getArmies()>0&&this->target->getArmies()>0) {
-                int sourceKill=this->source->getArmies()*0.6;
-
-                int targetKill=this->target->getArmies()*0.7;
-
-                int sourceLeft=source->getArmies()-targetKill;
-
-                int targetLeft=target->getArmies()-sourceKill;
-
-                this->source->setArmies(sourceLeft);
-
-                this->target->setArmies(targetLeft);
-
+            while (this->source->getArmies() > 0 && this->target->getArmies() > 0 && combatRounds < maxCombatRounds) {
+                int sourceKill = static_cast<int>(this->source->getArmies() * 0.6);
+                int targetKill = static_cast<int>(this->target->getArmies() * 0.7);
+                
+                this->source->setArmies(this->source->getArmies() - targetKill);
+                this->target->setArmies(this->target->getArmies() - sourceKill);
+                
+                combatRounds++;
             }
 
-
-            if(source->getArmies()>target->getArmies()) {
-                std::cout<<"The attacker captures the territory.";
-                this->target->setArmies(source->getArmies());
+            if (this->source->getArmies() > 0 && this->target->getArmies() <= 0) {
+                std::cout << "The attacker captures the territory.\n";
+                this->target->setArmies(this->source->getArmies());
                 this->target->getOwnerPlayer()->removeTerritory(target);
                 this->target->setPlayer(player);
-
                 this->player->addTerritory(target);
-                this->winOrNot=true;
-
-
-            }
-            else {
-                std::cout<<"\nSource Army"<<this->source->getArmies();
-                std::cout<<"\nTarget Army"<<this->target->getArmies();
-
-                std::cout<<"The defender defends his/her territory";
+                this->winOrNot = true;
+            } else {
+                std::cout << "The defender retains control of their territory.\n";
                 this->source->setArmies(0);
             }
-
-
-        }
-        if(winOrNot) {
-            //todo: card need to be given
-            //..........................
-            //..........................
-
-            Card* card=new Card(getRandomCardType());
-            this->player->getHand().addCard(card);
         }
     }
-
 }
 
 
