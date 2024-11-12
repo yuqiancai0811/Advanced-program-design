@@ -79,7 +79,7 @@ public:
     
     
     
-    GameEngine startupPhase();              
+    GameEngine* startupPhase();              
     // Handles the startup phase commands and game setup
     // 1) use the loadmap <filename> command to select a map from a list of map files as stored in a directory,
     // which results in the map being loaded in the game.

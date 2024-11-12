@@ -24,7 +24,7 @@ public:
     Command(const string &cmd);    // Constructor with command input
     Command(const Command &other); // Copy constructor
 
-    string getCommand() const;          // Getter for the command string
+    std::string getCommandString() const;          // Getter for the command string
     void saveEffect(const string &eff); // Sets the effect of the command
 
     Command &operator=(const Command &other); // Assignment operator overload
@@ -54,7 +54,7 @@ public:
     virtual ~CommandProcessor();                    // Destructor to clean up the command list
 
     void setGameEngine(GameEngine *engine);         // Sets the GameEngine context for command validation
-    Command *getCommand();                          // Retrieves a command and validates it
+    void getCommand();                          // Retrieves a command and validates it
     bool validateCommand(const Command *cmd) const; // Validates the command
     void saveCommand(Command *cmd); // Stores a command in the command list 
 
