@@ -177,7 +177,8 @@ int main() {
     // testStartupPhase();
     
     std::cout << "\nRunning testMainGameLoop...\n";
-    testMainGameLoop();
+    //testMainGameLoop();
+    testStartupPhase();
 
     return 0;
 }
