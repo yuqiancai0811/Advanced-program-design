@@ -4,12 +4,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <map>  // Include map for temporary storage of reinforcements
+
 #include "Map.h"
 #include "Player.h"
 #include "Orders.h"
 #include "Cards.h"
-#include <map>  // Include map for temporary storage of reinforcements
-
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
 

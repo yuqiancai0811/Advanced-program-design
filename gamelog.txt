@@ -1,66 +1,86 @@
 CommandProcessor: Commands processed:
- - Command: Loadmap Command
+ - Command: Loadmap
+Effect: Loaded map successfully
 
 
 CommandProcessor: Commands processed:
- - Command: Loadmap Command
+ - Command: Loadmap
+Effect: Loaded map successfully
 
- - Command: Validatemap Command
-
-
-CommandProcessor: Commands processed:
- - Command: Loadmap Command
-
- - Command: Validatemap Command
-
- - Command: Addplayer Command
+ - Command: Validatemap
+Effect: Map validated successfully
 
 
 CommandProcessor: Commands processed:
- - Command: Loadmap Command
+ - Command: Loadmap
+Effect: Loaded map successfully
 
- - Command: Validatemap Command
+ - Command: Validatemap
+Effect: Map validated successfully
 
- - Command: Addplayer Command
+ - Command: Addplayer
+Effect: Player added successfully
 
- - Command: Gamestart Command
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: Game started
 
 
-Command: ValidateMap Command
+GameEngine: State transitions to 'Start'
 
-Order: Null
+GameEngine: State transitions to 'maploaded'
+
+GameEngine: State transitions to 'mapvalidated'
+
+GameEngine: State transitions to 'exit program'
 
 OrderList: Total orders = 1
  - Order 1: Order: deployOrder is not executed
 
 
-CommandProcessor: Commands processed:
- - Command: Loadmap Command
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
 
 
-CommandProcessor: Commands processed:
- - Command: Loadmap Command
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
 
- - Command: Validatemap Command
+ - Order 2: Order: Bomb Order is executed
 
-
-CommandProcessor: Commands processed:
- - Command: Loadmap Command
-
- - Command: Validatemap Command
-
- - Command: Addplayer Command
+ - Order 3: Order: Blockade Order is not executed
 
 
-CommandProcessor: Commands processed:
- - Command: Loadmap Command
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
 
- - Command: Validatemap Command
+ - Order 2: Order: Bomb Order is executed
 
- - Command: Addplayer Command
+ - Order 3: Order: Blockade Order is not executed
 
- - Command: Gamestart Command
+ - Order 4: Order: Negotiate Order is not executed
 
 
-Command: ValidateMap Command
+OrderList: Total orders = 5
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+ - Order 5: Order: Advance Order is not executed
+
 

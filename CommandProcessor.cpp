@@ -67,7 +67,7 @@ ostream &operator<<(ostream &os, const Command &cmd)
 // Part 5: Implement the stringToLog() function for logging command details
 string Command::stringToLog() const
 {
-    return "Command: " + command + "\n";
+    return "Command: " + command + "\nEffect: " + effect + "\n";
 }
 
 // Implementation of CommandProcessor class

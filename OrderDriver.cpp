@@ -3,28 +3,7 @@
 #include "Player.h"
 #include "LoggingObserver.h"
 
-void testOrdersLists() {
-
-    // orderList ordersList;
-    //
-    // // Creating orders
-    // ordersList.addOrder(new deployOrder());
-    // ordersList.addOrder(new advanceOrder());
-    // ordersList.addOrder(new bombOrder());
-    // ordersList.addOrder(new blockadeOrder());
-    // ordersList.addOrder(new airliftOrder());
-    // ordersList.addOrder(new negotiateOrder());
-    //
-    // std::cout << "Orders before execution:\n";
-    // ordersList.showAllOrders();
-    //
-    // // Execute some orders
-    // ordersList.removeOrder(0); // Remove first order (DeployOrder)
-    // ordersList.moveOrder(2, 0); // Move Blockade order to the first position
-    //
-    // std::cout << "\n\nOrders after modifications (move and remove):\n";
-    // ordersList.showAllOrders();
-
+void testOrderExecution() {
     vector<string> adjTerritoryNames1 = {"Territory 2", "Territory 3"}; // Storing the strings
     Territory* territory1 = new Territory("Territory 1", 0, 0, "Continent 1", adjTerritoryNames1);
 
@@ -83,6 +62,6 @@ void testOrdersLists() {
 }
 
 int main() {
-    testOrdersLists();
+ testOrderExecution();
     return 0;
 }

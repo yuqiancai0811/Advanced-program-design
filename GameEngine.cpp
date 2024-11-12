@@ -300,13 +300,13 @@ std::vector<Player*> GameEngine::getPlayerList() const {
 void GameEngine::transition(const string& newState) {
     setcurrentState(newState);
     cout << "Game state changed to: " << getCurrentState() << endl;
-    currentState=getCurrentState();//added by Yuqian Cai
+    currentState=getCurrentState();
      Notify(this); // Part 5: trigger the writing of the entry in the log file 
 }
 
 // Part5: Implementing the stringToLog() function from ILoggable
 string GameEngine::stringToLog() const {
-    return "GameEngine: State transitions to '" + currentState + "'";
+    return "GameEngine: State transitions to '" + currentState + "'\n";
 }
 
 /*

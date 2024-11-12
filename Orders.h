@@ -48,7 +48,7 @@ public:
 
     // Virtual methods for validation and execution
     virtual bool validate() const;
-    virtual void execute();
+    virtual void execute()=0;
 
     // ToString method
     virtual std::string toString() const;
@@ -72,7 +72,7 @@ private:
 
 public:
     deployOrder(int armies, Territory* target, Player* player);
-    deployOrder(const deployOrder& other);
+    //deployOrder(const deployOrder& other);
     deployOrder();
     ~deployOrder();
 
@@ -91,12 +91,12 @@ private:
 public:
     bool winOrNot=false;
     advanceOrder(int armirs,Territory* source,Territory* target, Player* player);
-    advanceOrder(const advanceOrder& other);
+   // advanceOrder(const advanceOrder& other);
     ~advanceOrder();
     bool validate() const override;
-    void battle(int army1,int army2);
+    //void battle(int army1,int army2);
     void execute() override;
-    void getCard();
+   // void getCard();
 };
 
 
