@@ -158,7 +158,9 @@ void CommandProcessor::getCommand()
             
         }
         else if(command == "quit"){
-            
+            cout << "Quit the game"<< endl;
+            handleQuitCommand(cmd);
+        
         }
     }
     else
