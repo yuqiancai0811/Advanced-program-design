@@ -3,7 +3,7 @@
 
 void testLoggingObserver()
 {
-    /// Create a log observer
+    /// Create a log observer for logging messages to a file whenever it receives an update.
     LogObserver *logger = new LogObserver("gamelog.txt");
 
     //-----CommandProcessor::saveCommand() and Command::saveEffect() write in a log file---------------

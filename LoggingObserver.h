@@ -24,7 +24,7 @@ protected:
     Observer();
 };
 
-// LogObserver class for writing to a log file
+// LogObserver class for writing to a log file 
 class LogObserver : public Observer
 {
 public:
@@ -44,8 +44,8 @@ private:
 public:
     Subject();
     ~Subject();
-    virtual void Attach(Observer *o);
+    virtual void Attach(Observer *o); // Attach an observer to this subject.
     virtual void Detach(Observer *o);
-    void Notify(ILoggable *loggable);
+    void Notify(ILoggable *loggable); //alert change, triggering them to update
 };
 #endif // LOGGING_OBSERVER_H

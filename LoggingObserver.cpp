@@ -21,7 +21,8 @@ LogObserver::~LogObserver() {
         logFile.close();
     }
 }
-
+//take an ILoggable object as its parameter, allowing the observer to retrieve the loggable string 
+//from the object and use the override function stringToLog() write it to a log file
 void LogObserver::Update(ILoggable* loggable) {
     if (logFile.is_open()) {
         logFile << loggable->stringToLog() << std::endl;
@@ -41,6 +42,7 @@ void Subject::Attach(Observer* o){
 void Subject::Detach(Observer* o){
   _observers->remove(o);
 };
+//iterates through a list of attached observers and calls their Update method
 void Subject::Notify(ILoggable* loggable){
   list<Observer *>::iterator i = _observers->begin();
   for (list<Observer*>::iterator i = _observers->begin(); i != _observers->end(); ++i)
