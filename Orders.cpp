@@ -156,17 +156,7 @@ void deployOrder::execute() {
 //     }
 // } //Add for testing P3
 
-// // Part5: Override the stringToLog() function from ILoggable specific to the type of order
-// string deployOrder::stringToLog() const {
-//     stringstream log;
-//     log << "Deploy Order: Deploy " << armies << " armies to " << target->getName() << ". ";
-//     if (*executed) {
-//         log << "Executed successfully. Current armies in target: " << target->getArmies();
-//     } else {
-//         log << "Execution failed.";
-//     }
-//     return log.str();
-// }
+
 
 advanceOrder::advanceOrder(int armies, Territory* source,Territory* target, Player* player) {
     *name = "Advance Order";
