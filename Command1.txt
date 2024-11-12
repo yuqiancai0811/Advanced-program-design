@@ -1,6 +1,5 @@
-loadmap somemap.map
+loadmap USA.map
 validatemap
-addplayer player1
-addplayer player2
+addplayer Tony
+addplayer Lucas
 gamestart
-quit
