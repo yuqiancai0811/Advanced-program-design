@@ -217,6 +217,10 @@ void GameEngine::gamestart( GameEngine &game){
     //switch the game to the play phase
     game.transition(PLAY);
 
+    //game.mainGameLoop();
+
+    game.transition(WIN);
+
 }
 
 /*-------------------------------------------------------- End of Phases for Part 2 -------------------------------------------------------------*/

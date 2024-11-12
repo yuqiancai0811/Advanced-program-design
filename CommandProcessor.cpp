@@ -208,8 +208,8 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
     if (command == "validatemap" && gameEngine->getCurrentState() == MAPLODADED) return true;
     if (command == "addplayer" && (gameEngine->getCurrentState() == MAPVALIDATED || gameEngine->getCurrentState() == PLAYERSADDED)) return true;
     if (command == "gamestart" && gameEngine->getCurrentState() == PLAYERSADDED) return true;
-    if (command == "replay" && gameEngine->getCurrentState() == "win") return true;
-    if (command == "quit" && gameEngine->getCurrentState() == "win") return true;
+    if (command == "replay" && gameEngine->getCurrentState() == WIN) return true;
+    if (command == "quit" && gameEngine->getCurrentState() == WIN) return true;
     cout << "Debug in function(validateCommand): Invalid command full command:" << fullCommand << endl;
     cout << "Debug in function(validateCommand): Invalid command:" << command <<";argument "<<argument<< endl;
     return false;

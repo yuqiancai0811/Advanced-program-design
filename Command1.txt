@@ -3,3 +3,4 @@ validatemap
 addplayer Tony
 addplayer Lucas
 gamestart
+quit
