@@ -112,7 +112,6 @@ vector<Territory*> Player::toDefend() const {
 }
 
 
-
 // Method to decide where to attack
 vector<Territory*> Player::toAttack() const {
     vector<Territory*> attackTargets;

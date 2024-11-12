@@ -45,8 +45,6 @@ void testMainGameLoop() {
 
     gameEngine.gamestart(gameEngine);
 
-    gameEngine.mainGameLoop();
-
 }
 
 void testStartupPhase(){
@@ -176,11 +174,11 @@ void testStartupPhase(){
 // Main function that now calls the testStartupPhase function
 int main() {
     std::cout << "Running testStartupPhase...\n";
-    // testStartupPhase();
+    testStartupPhase();
     
     std::cout << "\nRunning testMainGameLoop...\n";
-    //testMainGameLoop();
-    testStartupPhase();
+    testMainGameLoop();
+
 
     return 0;
 }

@@ -217,7 +217,7 @@ void GameEngine::gamestart( GameEngine &game){
     //switch the game to the play phase
     game.transition(PLAY);
 
-    //game.mainGameLoop();
+    game.mainGameLoop();
 
     game.transition(WIN);
 
@@ -317,140 +317,73 @@ Implements the main game loop following the official rules of the Warzone game.
 - Issuing Orders Phase
 - Orders Execution Phase
 */
-// void GameEngine::mainGameLoop() {
-//     std::cout << "=== Main Game Loop ===" << std::endl;
-//     transition(ASSIGN_REINFORCEMENT);  // Start from the reinforcement phase
-//     bool gameOver = false;
-//     int roundCount = 0;
-
-//     while (!gameOver) {
-//         std::cout << "\n--- Game Round " << (roundCount + 1) << " ---\n";
-//         roundCount++;
-
-//         // Reinforcement Phase
-//         if (currentState == ASSIGN_REINFORCEMENT) {
-//             std::cout << "[LOG] Entering Reinforcement Phase..." << std::endl;
-//             reinforcementPhase();
-//             transition(ISSUE_ORDERS);
-//         }
-        
-//         // Issue Orders Phase
-//         else if (currentState == ISSUE_ORDERS) {
-//             std::cout << "[LOG] Entering Issuing Orders Phase..." << std::endl;
-//             issueOrdersPhase();
-//             transition(EXECUTE_ORDERS);
-//         }
-        
-//         // Execute Orders Phase
-//         else if (currentState == EXECUTE_ORDERS) {
-//             std::cout << "[LOG] Entering Orders Execution Phase..." << std::endl;
-//             executeOrdersPhase();
-
-//             // Check and remove players with no territories after execution
-//             removeEliminatedPlayers();
-
-//             // Check if only one player remains
-//             if (playerList.size() == 1) {
-//                 std::cout << "[WIN] Player " << playerList.front()->getName() << " is the last player remaining and wins the game!" << std::endl;
-//                 winner = playerList.front();
-//                 transition(WIN);
-//                 gameOver = true;
-//                 break;
-//             } else {
-//                 std::cout << "[LOG] Transitioning back to reinforcement phase." << std::endl;
-//                 transition(ASSIGN_REINFORCEMENT);
-//             }
-//         }
-
-//         // Secondary Win Condition Check
-//         for (Player* player : playerList) {
-//             if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-//                 std::cout << "[WIN] Player " << player->getName() << " controls all territories! They win the game!" << std::endl;
-//                 winner = player;
-//                 transition(WIN);
-//                 gameOver = true;
-//                 break;
-//             }
-//         }
-
-//         // Safety Check
-//         if (roundCount > 10) {  // Set a limit for safety
-//             std::cout << "[ERROR] Exceeded maximum round limit. Possible infinite loop detected. Terminating game.\n";
-//             break;
-//         }
-//     }
-
-//     if (!gameOver) {
-//         std::cout << "Game ended after " << roundCount << " rounds.\n";
-//     }
-// }
-
-
 void GameEngine::mainGameLoop() {
     std::cout << "=== Main Game Loop ===" << std::endl;
     transition(ASSIGN_REINFORCEMENT);  // Start from the reinforcement phase
     bool gameOver = false;
+    int roundCount = 0;
 
     while (!gameOver) {
-        std::cout << "\n--- New Game Round ---\n";
+        std::cout << "\n--- Game Round " << (roundCount + 1) << " ---\n";
+        roundCount++;
 
         // Reinforcement Phase
         if (currentState == ASSIGN_REINFORCEMENT) {
-            std::cout << "[INFO] Entering Reinforcement Phase..." << std::endl;
+            std::cout << "[LOG] Entering Reinforcement Phase..." << std::endl;
             reinforcementPhase();
             transition(ISSUE_ORDERS);
         }
         
         // Issue Orders Phase
         else if (currentState == ISSUE_ORDERS) {
-            std::cout << "[INFO] Entering Issuing Orders Phase..." << std::endl;
+            std::cout << "[LOG] Entering Issuing Orders Phase..." << std::endl;
             issueOrdersPhase();
             transition(EXECUTE_ORDERS);
         }
         
         // Execute Orders Phase
         else if (currentState == EXECUTE_ORDERS) {
-            std::cout << "[INFO] Entering Orders Execution Phase..." << std::endl;
+            std::cout << "[LOG] Entering Orders Execution Phase..." << std::endl;
             executeOrdersPhase();
+
+            // Check and remove players with no territories after execution
             removeEliminatedPlayers();
 
-            // Check win condition: only one player remains
+            // Check if only one player remains
             if (playerList.size() == 1) {
-                std::cout << "Player " << playerList.front()->getName() << " is the last player remaining and wins the game!" << std::endl;
+                std::cout << "[WIN] Player " << playerList.front()->getName() << " is the last player remaining and wins the game!" << std::endl;
                 winner = playerList.front();
+                transition(WIN);
                 gameOver = true;
                 break;
             } else {
-                // Check if a player controls all territories
-                for (Player* player : playerList) {
-                    if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
-                        std::cout << "Player " << player->getName() << " controls all territories and wins the game!" << std::endl;
-                        winner = player;
-                        gameOver = true;
-                        break;
-                    }
-                }
-                // If no win, go back to the reinforcement phase
-                if (!gameOver) {
-                    transition(ASSIGN_REINFORCEMENT);
-                }
+                std::cout << "[LOG] Transitioning back to reinforcement phase." << std::endl;
+                transition(ASSIGN_REINFORCEMENT);
             }
         }
 
-        // Additional check to prevent infinite loop
-        if (gameOver) {
-            std::cout << "[INFO] Game Over detected in main loop.\n";
+        // Secondary Win Condition Check
+        for (Player* player : playerList) {
+            if (player->getOwnedTerritories().size() == selectedMap->getTerritories().size()) {
+                std::cout << "[WIN] Player " << player->getName() << " controls all territories! They win the game!" << std::endl;
+                winner = player;
+                transition(WIN);
+                gameOver = true;
+                break;
+            }
+        }
+
+        // Safety Check
+        if (roundCount > 10) {  // Set a limit for safety
+            std::cout << "[ERROR] Exceeded maximum round limit. Possible infinite loop detected. Terminating game.\n";
             break;
         }
     }
 
-    if (gameOver) {
-        std::cout << "Game ended successfully." << std::endl;
-    } else {
-        std::cout << "[WARN] Exiting main loop without game over. Possible logic error." << std::endl;
+    if (!gameOver) {
+        std::cout << "Game ended after " << roundCount << " rounds.\n";
     }
 }
-
 
 /* ------------- Helper function for mainGameLoop() ---------------- */
 // Enhanced `removeEliminatedPlayers` Method with Logging
@@ -569,38 +502,6 @@ void GameEngine::reinforcementPhase() {
 3) This phase ends when all players have signified that they don’t have any more orders to issue for this turn. 
 4) It will call a function/method named issueOrdersPhase() in the game engine.
 */
-
-// /* Method with log and limit to round 5 */
-// void GameEngine::issueOrdersPhase() {
-//     cout << "=== Starting Issue Orders Phase ===\n";
-
-//     bool ordersPending;
-//     int round = 1;                    // Track the round number for clarity
-//     // const int maxRounds = 5;          // Set a max round limit to avoid infinite loops
-
-//     // Continue issuing orders in a round-robin manner until no orders are pending or max rounds reached
-//     do {
-//         cout << "\n--- Round " << round++ << " ---\n";
-//         ordersPending = false;
-
-//         for (Player* player : playerList) {
-//             // Check if the player has any orders to issue
-//             if (player->hasMoreOrders()) {
-//                 cout << player->getName() << " is issuing an order...\n";
-//                 player->issueOrder();  // Issue one order for the player
-//                 ordersPending = true;  // Flag that there are still orders pending
-//             } else {
-//                 cout << player->getName() << " has no more orders to issue.\n";
-//             }
-//         }        
-
-//     } while (ordersPending);  // Continue rounds until no orders are pending
-
-//     cout << "=== End of Issue Orders Phase ===\n";
-    
-//     // Transition to the next phase after issuing orders
-//     transition(EXECUTE_ORDERS);
-// }
 std::map<Player*, int> savedReinforcements;
 
 void GameEngine::issueOrdersPhase() {
@@ -651,79 +552,46 @@ The game engine should execute all the deploy orders before it executes any othe
 This goes on in round-robin fashion across the players until all the players’ orders have been executed.
 */
 /* Method with log*/
-// void GameEngine::executeOrdersPhase() {
-//     std::cout << "=== Starting Order Execution Phase ===\n";
-
-//     bool ordersRemaining;
-//     int round = 1;  // Track rounds for clarity
-
-//     // Continue executing orders in a round-robin manner until no orders remain
-//     do {
-//         std::cout << "\n--- Execution Round " << round++ << " ---\n";
-//         ordersRemaining = false;  // Reset the flag each round
-
-//         // Loop through each player to execute one order per player in a round-robin fashion
-//         for (Player* player : playerList) {
-//             orderList& orders = player->getOrders();  // Get the player's order list
-
-//             // Check if the player has any orders to execute
-//             if (orders.hasMoreOrders()) {
-//                 Order* currentOrder = orders.getNextOrder();  // Get the next order to execute
-
-//                 // If there is a valid order, execute it and display details
-//                 if (currentOrder != nullptr) {
-//                     currentOrder->execute();
-//                     std::cout << "[LOG] " << player->getName() << " executed order: " 
-//                               << currentOrder->toString() << "\n";
-//                     delete currentOrder;  // Free memory after execution
-//                 }
-
-//                 // Set the flag indicating there are still orders left to execute
-//                 ordersRemaining = true;
-//             } else {
-//                 // No more orders for this player in this round
-//                 std::cout << player->getName() << " has no more orders to execute.\n";
-//             }
-//         }
-//     } while (ordersRemaining);  // Continue until all players have no orders left
-
-//     std::cout << "=== Order Execution Phase Complete ===\n";
-    
-//     // Transition to the next phase (reinforcement) after all orders have been executed
-//     transition(ASSIGN_REINFORCEMENT);
-// }
 void GameEngine::executeOrdersPhase() {
     std::cout << "=== Starting Order Execution Phase ===\n";
-
-    // Restore each player's reinforcement count before executing orders
-    for (Player* player : playerList) {
-        if (savedReinforcements.find(player) != savedReinforcements.end()) {
-            player->setNumberOfReinforcement(savedReinforcements[player]);
-        }
-    }
 
     bool ordersRemaining;
     int round = 1;  // Track rounds for clarity
 
+    // Continue executing orders in a round-robin manner until no orders remain
     do {
         std::cout << "\n--- Execution Round " << round++ << " ---\n";
-        ordersRemaining = false;
+        ordersRemaining = false;  // Reset the flag each round
 
+        // Loop through each player to execute one order per player in a round-robin fashion
         for (Player* player : playerList) {
-            if (player->getOrders().hasMoreOrders()) {
-                Order* order = player->getOrders().getNextOrder();
-                if (order) {
-                    order->execute();
-                    ordersRemaining = true;
+            orderList& orders = player->getOrders();  // Get the player's order list
+
+            // Check if the player has any orders to execute
+            if (orders.hasMoreOrders()) {
+                Order* currentOrder = orders.getNextOrder();  // Get the next order to execute
+
+                // If there is a valid order, execute it and display details
+                if (currentOrder != nullptr) {
+                    currentOrder->execute();
+                    std::cout << "[LOG] " << player->getName() << " executed order: " 
+                              << currentOrder->toString() << "\n";
+                    delete currentOrder;  // Free memory after execution
                 }
+
+                // Set the flag indicating there are still orders left to execute
+                ordersRemaining = true;
             } else {
+                // No more orders for this player in this round
                 std::cout << player->getName() << " has no more orders to execute.\n";
             }
         }
-    } while (ordersRemaining);
+    } while (ordersRemaining);  // Continue until all players have no orders left
 
     std::cout << "=== Order Execution Phase Complete ===\n";
+    
+    // Transition to the next phase (reinforcement) after all orders have been executed
+    transition(ASSIGN_REINFORCEMENT);
 }
-
 
 /*------------------------------- End of Methods for P3 ----------------------------------------*/
