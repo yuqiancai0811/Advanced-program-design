@@ -228,7 +228,12 @@ void GameEngine::gamestart( GameEngine &game){
 
 void GameEngine::printWelcomeMessage() {
     cout << "Welcome to the Warzone game!\n";
-    cout << "Type 'start' to start the game.\n";
+    cout << "Type the command follow to play the game.\n";
+    cout << "loadmap <mapfile>\n";
+    cout << "addplayer <playername>\n";
+    cout << "gamestart\n";
+    cout << "replay\n";
+    cout << "quit\n";
 }
 
 // Constructor initializes the game state to "START"

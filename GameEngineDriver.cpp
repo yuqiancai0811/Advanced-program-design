@@ -8,21 +8,23 @@
 
 using namespace std;
 
-void testStartupPhase() {
-    GameEngine game;
+//g++ -o main GameEngine.cpp CommandProcessor.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp
+
+// void testStartupPhase() {
+//     GameEngine game;
 
 
 
-    std::string command;
-    while (game.getCurrentState() != "END") {
-        std::cout << "Current game state: " << game.getCurrentState() << std::endl;
-        std::cout << "Enter command (start/play/end): ";
-        std::cin >> command;
-        game.handleUserCommand(command,game);
-    }
-    std::cout << "Exiting the game ";
+//     std::string command;
+//     while (game.getCurrentState() != "END") {
+//         std::cout << "Current game state: " << game.getCurrentState() << std::endl;
+//         std::cout << "Enter command (start/play/end): ";
+//         std::cin >> command;
+//         game.handleUserCommand(command,game);
+//     }
+//     std::cout << "Exiting the game ";
     
-}
+// }
 /* ------------------- testMainGameLoop() for Part3 -------------------*/
 /*
 You must deliver a driver as a free function named testMainGameLoop() that demonstrates that 
@@ -49,18 +51,18 @@ void testMainGameLoop() {
 
 void testStartupPhase(){
     
-    GameEngine* gameEngine=new GameEngine;
+     GameEngine* gameEngine=new GameEngine;
 
-    // Setup players and territories
-    gameEngine = gameEngine->startupPhase();  // This should add players and distribute territories
+     // Setup players and territories
+     gameEngine = gameEngine->startupPhase();  // This should add players and distribute territories
     
-    while(true){
+     while(true){
         gameEngine->commandProcessor->getCommand();
 
-    }
+     }
    
 
-}
+ }
 
 // void testMainGameLoop() {
 //     cout << "=== Test: Main Game Loop for Part 3 ===" << endl;

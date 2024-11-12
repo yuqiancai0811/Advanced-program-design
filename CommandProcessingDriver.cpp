@@ -6,6 +6,9 @@
 using std::cout;
 using std::endl;
 
+//g++ -o main GameEngine.cpp CommandProcessor.cpp CommandProcessingDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp
+
+
 //{"start", "loadmap", "validatemap", "addplayer", "assignReinforcement", "issueOrders", "executeOrders", "win"};
 // Test function to simulate command processing from user input
 void testCommandProcessor() {
