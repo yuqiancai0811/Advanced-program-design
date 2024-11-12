@@ -75,19 +75,12 @@ void testLoggingObserver()
     territory3->setOwner("Player2");
 
     deployOrder *deploy_order = new deployOrder(100, territory1, player1);
-    advanceOrder *advance_order = new advanceOrder(100, territory3, territory1, player2);
     airliftOrder *airlift_order = new airliftOrder(100, territory1, territory3, player1);
     bombOrder *bomb_order = new bombOrder(territory3, player1);
     blockadeOrder *blockade_order = new blockadeOrder(100, player1, player2, territory2);
     negotiateOrder *negotiate_order = new negotiateOrder(player1, player2);
 
-    // Attach logger to orders
-    // deploy_order->Attach(logger);
-    // airlift_order->Attach(logger);
-    // bomb_order->Attach(logger);
-    // blockade_order->Attach(logger);
-    // negotiate_order->Attach(logger);
-    // advance_order->Attach(logger);
+
     //execute part of orders
     deploy_order->execute();
     airlift_order->execute();
@@ -103,10 +96,7 @@ void testLoggingObserver()
     ordersList.addOrder(bomb_order);
     ordersList.addOrder(blockade_order);
     ordersList.addOrder(negotiate_order);
-    ordersList.addOrder(advance_order);
 
-  
-    
 
     std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
 
@@ -122,7 +112,6 @@ void testLoggingObserver()
     delete player1;
     delete player2;
     delete deploy_order;
-    delete advance_order;
     delete airlift_order;
     delete bomb_order;
     delete blockade_order;

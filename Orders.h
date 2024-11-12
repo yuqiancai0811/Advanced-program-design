@@ -48,7 +48,7 @@ public:
 
     // Virtual methods for validation and execution
     virtual bool validate() const;
-    virtual void execute()=0;
+    virtual void execute() = 0;
 
     // ToString method
     virtual std::string toString() const;

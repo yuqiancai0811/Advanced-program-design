@@ -1,5 +1,263 @@
 CommandProcessor: Commands processed:
  - Command: Loadmap
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: 
+
+
+GameEngine: State transitions to 'Start'
+
+GameEngine: State transitions to 'maploaded'
+
+GameEngine: State transitions to 'mapvalidated'
+
+GameEngine: State transitions to 'exit program'
+
+OrderList: Total orders = 1
+ - Order 1: Order: deployOrder is not executed
+
+
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+
+OrderList: Total orders = 5
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+ - Order 5: Order: Advance Order is not executed
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: 
+
+
+GameEngine: State transitions to 'Start'
+
+GameEngine: State transitions to 'maploaded'
+
+GameEngine: State transitions to 'mapvalidated'
+
+GameEngine: State transitions to 'exit program'
+
+OrderList: Total orders = 1
+ - Order 1: Order: deployOrder is not executed
+
+
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+
+OrderList: Total orders = 5
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+ - Order 5: Order: Advance Order is not executed
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: 
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: 
+
+
+GameEngine: State transitions to 'Start'
+
+GameEngine: State transitions to 'maploaded'
+
+GameEngine: State transitions to 'mapvalidated'
+
+GameEngine: State transitions to 'exit program'
+
+OrderList: Total orders = 1
+ - Order 1: Order: deployOrder is not executed
+
+
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+
+OrderList: Total orders = 5
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is not executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+ - Order 5: Order: Advance Order is not executed
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
 Effect: Loaded map successfully
 
 
@@ -82,5 +340,165 @@ OrderList: Total orders = 5
  - Order 4: Order: Negotiate Order is not executed
 
  - Order 5: Order: Advance Order is not executed
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: Game started
+
+
+GameEngine: State transitions to 'Start'
+
+GameEngine: State transitions to 'maploaded'
+
+GameEngine: State transitions to 'mapvalidated'
+
+GameEngine: State transitions to 'exit program'
+
+OrderList: Total orders = 1
+ - Order 1: Order: deployOrder is not executed
+
+
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+
+OrderList: Total orders = 5
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
+
+ - Order 5: Order: Advance Order is not executed
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: Game started
+
+
+GameEngine: State transitions to 'Start'
+
+GameEngine: State transitions to 'maploaded'
+
+GameEngine: State transitions to 'mapvalidated'
+
+GameEngine: State transitions to 'exit program'
+
+OrderList: Total orders = 1
+ - Order 1: Order: deployOrder is not executed
+
+
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is not executed
+
+ - Order 4: Order: Negotiate Order is not executed
 
 

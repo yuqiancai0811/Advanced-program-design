@@ -11,10 +11,15 @@
 #include "GameEngine.h"
 
 // Declarations of test functions
+
+//g++ -o main GameEngine.cpp CommandProcessor.cpp CommandProcessingDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp
 void testCommandProcessor();
+//g++ -o main GameEngine.cpp CommandProcessor.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp
 void testStartupPhase();
 void testMainGameLoop();
+//g++ -o main GameEngine.cpp Cards.cpp CommandProcessor.cpp  Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp OrderDriver.cpp
 void testOrderExecution();
+// g++ -o main GameEngine.cpp Cards.cpp CommandProcessor.cpp  Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp LoggingObserverDriver.cpp
 void testLoggingObserver();
 
 // int main(int argc, char* argv[]) {
