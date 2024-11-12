@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Cards.h"
+#include "CommandProcessor.h"
 #include <iostream>
 #include <vector>
 
@@ -43,6 +44,21 @@ void testMainGameLoop() {
     gameEngine.gamestart(gameEngine);
 
     gameEngine.mainGameLoop();
+
+}
+
+void testStartupPhase(){
+    
+    GameEngine* gameEngine=new GameEngine;
+
+    // Setup players and territories
+    gameEngine = gameEngine->startupPhase();  // This should add players and distribute territories
+    
+    while(true){
+        gameEngine->commandProcessor->getCommand();
+
+    }
+   
 
 }
 
