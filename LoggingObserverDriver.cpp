@@ -26,6 +26,7 @@ void testLoggingObserver()
     gameStartCmd->saveEffect("Game started");
     cmdProcessor.saveCommand(gameStartCmd);
 
+
     // ---------GameEngine::transition() write in a log file--------------------
     GameEngine gameEngine;
     gameEngine.Attach(logger);
@@ -96,26 +97,8 @@ void testLoggingObserver()
     ordersList.addOrder(bomb_order);
     ordersList.addOrder(blockade_order);
     ordersList.addOrder(negotiate_order);
-
-
+    
     std::cout << "Logging completed. Check gamelog.txt for results." << std::endl;
-
-    // Cleanup dynamically allocated resources
-    delete logger;
-    delete loadMapCmd;
-    delete validateMapCmd;
-    delete addPlayerCmd;
-    delete gameStartCmd;
-    delete territory1;
-    delete territory2;
-    delete territory3;
-    delete player1;
-    delete player2;
-    delete deploy_order;
-    delete airlift_order;
-    delete bomb_order;
-    delete blockade_order;
-    delete negotiate_order;
 }
 
 int main()
