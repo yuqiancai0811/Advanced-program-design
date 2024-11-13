@@ -11,8 +11,8 @@
 #include <iostream>
 #include <algorithm>  // For max
 #include "CommandProcessor.h"
-#include <cstdlib>    // For rand() and srand()
-#include <ctime>      // For time()
+#include <cstdlib>    
+#include <ctime>     
 
 using namespace std;
 ///
