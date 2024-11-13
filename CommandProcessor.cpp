@@ -135,27 +135,27 @@ void CommandProcessor::getCommand()
             argument = argument.substr(argument.find_first_not_of(' '));
         }
 
-        cout << "Debug: in function getCommand, comment receive: command:" << command <<";  argument:"<<argument<< endl;
+        // cout << "Debug: in function getCommand, comment receive: command:" << command <<";  argument:"<<argument<< endl;
 
         // Check the game state compatibility for each command
         if(command == "loadmap"){
-            cout << "Debug: in function getCommand calling  handleloadmapCommand"<< endl;
+            // cout << "Debug: in function getCommand calling  handleloadmapCommand"<< endl;
             handleloadmapCommand(cmd);
         }
         else if(command == "validatemap"){
-            cout << "Debug: in function getCommand calling  handlevalidatemap"<< endl;
+            // cout << "Debug: in function getCommand calling  handlevalidatemap"<< endl;
             handleValidateMapCommand(cmd);
         }
         else if(command == "addplayer"){
-            cout << "Debug: in function getCommand calling  handleaddplayer"<< endl;
+            // cout << "Debug: in function getCommand calling  handleaddplayer"<< endl;
             handleAddPlayerCommand(cmd);
         }
         else if(command == "gamestart"){
-            cout << "Debug: in function getCommand calling  handleGameStartCommand"<< endl;
+            // cout << "Debug: in function getCommand calling  handleGameStartCommand"<< endl;
             handleGameStartCommand(cmd);
         }
         else if(command == "replay"){
-            cout << "Debug: in function getCommand calling  handleReplayCommand"<< endl;
+            // cout << "Debug: in function getCommand calling  handleReplayCommand"<< endl;
             handleReplayCommand(cmd);
             
         }
@@ -204,7 +204,7 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
     }
 
    
-    cout << "Debug in function(validateCommand): command receive:" << command <<";argument:"<<argument<< endl;
+    // cout << "Debug in function(validateCommand): command receive:" << command <<";argument:"<<argument<< endl;
     // Validate the command based on the current game state
     if (command == "loadmap" && (gameEngine->getCurrentState() == START || gameEngine->getCurrentState() == MAPLODADED)) {return true;}
     if (command == "validatemap" && gameEngine->getCurrentState() == MAPLODADED) return true;

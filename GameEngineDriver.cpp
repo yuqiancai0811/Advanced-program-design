@@ -10,21 +10,6 @@ using namespace std;
 
 //g++ -o main GameEngine.cpp CommandProcessor.cpp GameEngineDriver.cpp Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp
 
-// void testStartupPhase() {
-//     GameEngine game;
-
-
-
-//     std::string command;
-//     while (game.getCurrentState() != "END") {
-//         std::cout << "Current game state: " << game.getCurrentState() << std::endl;
-//         std::cout << "Enter command (start/play/end): ";
-//         std::cin >> command;
-//         game.handleUserCommand(command,game);
-//     }
-//     std::cout << "Exiting the game ";
-    
-// }
 /* ------------------- testMainGameLoop() for Part3 -------------------*/
 /*
 You must deliver a driver as a free function named testMainGameLoop() that demonstrates that 
@@ -39,11 +24,15 @@ except the issueOrder() method, which is a member of the Player class, implement
 This driver function must be in the GameEngineDriver.cpp file.
 */
 // void testMainGameLoop() {
-//     GameEngine gameEngine;
+//     GameEngine* gameEngine=new GameEngine;
 
-//     gameEngine.startupPhase();  // This should add players and distribute territories
+//      // Setup players and territories
+//      gameEngine = gameEngine->startupPhase();  // This should add players and distribute territories
+    
+//      while(true){
+//         gameEngine->commandProcessor->getCommand();
 
-//     gameEngine.gamestart(gameEngine);
+//      }
 
 // }
 
@@ -58,70 +47,7 @@ void testStartupPhase(){
         gameEngine->commandProcessor->getCommand();
 
      }
-   
-
  }
-
-void testMainGameLoop() {
-    // Step 1: Initialize the game engine and map
-    GameEngine game;
-    Map* map = new Map();
-    game.selectedMap = map;
-
-    // Manually add continents and territories to simulate a game map
-    Continent* continent1 = new Continent("Continent1", 20);
-    Continent* continent2 = new Continent("Continent2", 10);
-    map->addContinent(continent1);
-    map->addContinent(continent2);
-
-    // Territories for testing reinforcement phase and order issuing
-    Territory* territory1 = new Territory("Territory1", 0, 0, "Continent1", {});
-    Territory* territory2 = new Territory("Territory2", 1, 1, "Continent1", {"Territory1"});
-    Territory* territory3 = new Territory("Territory3", 2, 2, "Continent2", {"Territory2"});
-
-    // Link territories as neighbors
-    territory1->addAdjacentTerritory(territory2);
-    territory2->addAdjacentTerritory(territory1);
-    territory2->addAdjacentTerritory(territory3);
-    territory3->addAdjacentTerritory(territory2);
-
-    map->addTerritory(territory1);
-    map->addTerritory(territory2);
-    map->addTerritory(territory3);
-
-    continent1->addTerritory(territory1);
-    continent1->addTerritory(territory2);
-    continent2->addTerritory(territory3);
-
-    // Step 2: Add players to the game
-    Player* player1 = new Player("Player1");
-    Player* player2 = new Player("Player2");
-    game.playerList.push_back(player1);
-    game.playerList.push_back(player2);
-
-    // Step 3: Assign territories
-    player1->addTerritory(territory1);
-    player1->addTerritory(territory2);
-    player2->addTerritory(territory3);
-    territory1->setOwner(player1->getName());
-    territory2->setOwner(player1->getName());
-    territory3->setOwner(player2->getName());
-
-    // Step 4: Give players initial cards and reinforcements
-    Deck deck(2);  // Deck with two sets of cards
-    player1->getHand().addCard(deck.draw());
-    player2->getHand().addCard(deck.draw());
-
-    game.mainGameLoop();
-
-    cout << "\n=== End of Test: Main Game Loop for Part 3 ===" << endl;
-
-    // Cleanup
-    delete map;
-    delete player1;
-    delete player2;
-}
-
 
 /*----------------------------------------------------------------*/
 
