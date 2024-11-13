@@ -283,34 +283,114 @@ bool advanceOrder::validate() const {
 
 
 
+// void advanceOrder::execute() {
+//     if (validate()) {
+//         *executed = true;
+
+//         // If it is not an attack, execute the defend (move) logic
+//         if (this->source->getOwner() == this->target->getOwner()) {
+//             std::cout << "Executing defend (move) order.\n";
+//             // Move armies from the source territory to the target territory
+//             this->source->setArmies(this->source->getArmies() - this->armies);
+//             this->target->setArmies(this->target->getArmies() + this->armies);
+
+//             // Output the result of the move
+//             std::cout << "Moved " << this->armies << " armies from " << this->source->getName()
+//                       << " to " << this->target->getName() << ".\n";
+//             std::cout << "Source territory armies after move: " << this->source->getArmies() << "\n";
+//             std::cout << "Target territory armies after move: " << this->target->getArmies() << "\n";
+
+//         } else {
+//             // Execute the attack logic if it is an attack order
+//             std::cout << "Executing attack order.\n";
+
+//             // Battle simulation loop
+//             while (this->source->getArmies() > 0 && this->target->getArmies() > 0) {
+//                 // Calculate the number of kills by the attacker and defender
+//                 int sourceKill = std::max(1, static_cast<int>(this->source->getArmies() * 0.6));
+//                 int targetKill = std::max(1, static_cast<int>(this->target->getArmies() * 0.7));
+
+//                 // Update the number of armies after kills
+//                 this->source->setArmies(std::max(0, this->source->getArmies() - targetKill));
+//                 this->target->setArmies(std::max(0, this->target->getArmies() - sourceKill));
+
+//                 // Output the result of each battle round
+//                 std::cout << "Battle round result:\n";
+//                 std::cout << "Attacker armies left: " << this->source->getArmies() << "\n";
+//                 std::cout << "Defender armies left: " << this->target->getArmies() << "\n";
+//             }
+
+//             // Determine the result of the battle
+//             if (this->target->getArmies() == 0) {
+//                 // Attacker wins and captures the territory
+//                 std::cout << "The attacker captures the territory " << this->target->getName() << ".\n";
+//                 this->player->addTerritory(this->target);
+//                 this->target->setArmies(this->source->getArmies());
+//                 this->source->setArmies(0);
+//                 this->target->getOwnerPlayer()->removeTerritory(target);
+//                 this->winOrNot = true;
+
+//                 // Output the result of the capture
+//                 std::cout << "Captured territory armies after transfer: " << this->target->getArmies() << "\n";
+//             } else {
+//                 // Defender retains the territory
+//                 std::cout << "Defender retains the territory " << this->target->getName() << ".\n";
+//                 std::cout << "Remaining armies in source territory: " << this->source->getArmies() << "\n";
+//                 std::cout << "Remaining armies in target territory: " << this->target->getArmies() << "\n";
+//                 this->source->setArmies(0);
+//             }
+//         }
+
+//         // Reward a card if the player successfully conquered a territory
+//         if(winOrNot) {
+//             //todo: card need to be given
+//             //..........................
+//             //..........................
+
+//             //Card* card=new Card(getRandomCardType());
+//             //this->player->getHand().addCard(card);
+//         }
+//     } else {
+//         // Order validation failed
+//         std::cout << "Order validation failed. Execution aborted.\n";
+//     }
+// }
+
+/* Improved version*/
 void advanceOrder::execute() {
     if (validate()) {
         *executed = true;
 
-        // If it is not an attack, execute the defend (move) logic
+        // Check if it's a defend (move) order
         if (this->source->getOwner() == this->target->getOwner()) {
             std::cout << "Executing defend (move) order.\n";
-            // Move armies from the source territory to the target territory
-            this->source->setArmies(this->source->getArmies() - this->armies);
-            this->target->setArmies(this->target->getArmies() + this->armies);
 
-            // Output the result of the move
-            std::cout << "Moved " << this->armies << " armies from " << this->source->getName()
-                      << " to " << this->target->getName() << ".\n";
-            std::cout << "Source territory armies after move: " << this->source->getArmies() << "\n";
-            std::cout << "Target territory armies after move: " << this->target->getArmies() << "\n";
+            // Check if there are enough armies to move
+            if (this->source->getArmies() >= this->armies) {
+                // Move armies from source to target
+                this->source->setArmies(this->source->getArmies() - this->armies);
+                this->target->setArmies(this->target->getArmies() + this->armies);
+
+                // Output the result of the move
+                std::cout << "Moved " << this->armies << " armies from " << this->source->getName()
+                          << " to " << this->target->getName() << ".\n";
+                std::cout << "Source territory armies after move: " << this->source->getArmies() << "\n";
+                std::cout << "Target territory armies after move: " << this->target->getArmies() << "\n";
+            } else {
+                // Not enough armies to move
+                std::cout << "Not enough armies to move from " << this->source->getName() << ". Available: "
+                          << this->source->getArmies() << ", Requested: " << this->armies << ".\n";
+            }
 
         } else {
-            // Execute the attack logic if it is an attack order
+            // Execute attack logic
             std::cout << "Executing attack order.\n";
 
             // Battle simulation loop
             while (this->source->getArmies() > 0 && this->target->getArmies() > 0) {
-                // Calculate the number of kills by the attacker and defender
                 int sourceKill = std::max(1, static_cast<int>(this->source->getArmies() * 0.6));
                 int targetKill = std::max(1, static_cast<int>(this->target->getArmies() * 0.7));
 
-                // Update the number of armies after kills
                 this->source->setArmies(std::max(0, this->source->getArmies() - targetKill));
                 this->target->setArmies(std::max(0, this->target->getArmies() - sourceKill));
 
@@ -320,42 +400,30 @@ void advanceOrder::execute() {
                 std::cout << "Defender armies left: " << this->target->getArmies() << "\n";
             }
 
-            // Determine the result of the battle
+            // Determine the battle outcome
             if (this->target->getArmies() == 0) {
-                // Attacker wins and captures the territory
                 std::cout << "The attacker captures the territory " << this->target->getName() << ".\n";
                 this->player->addTerritory(this->target);
                 this->target->setArmies(this->source->getArmies());
                 this->source->setArmies(0);
                 this->target->getOwnerPlayer()->removeTerritory(target);
                 this->winOrNot = true;
-
-                // Output the result of the capture
-                std::cout << "Captured territory armies after transfer: " << this->target->getArmies() << "\n";
             } else {
-                // Defender retains the territory
                 std::cout << "Defender retains the territory " << this->target->getName() << ".\n";
-                std::cout << "Remaining armies in source territory: " << this->source->getArmies() << "\n";
-                std::cout << "Remaining armies in target territory: " << this->target->getArmies() << "\n";
                 this->source->setArmies(0);
             }
         }
 
         // Reward a card if the player successfully conquered a territory
-        if(winOrNot) {
-            //todo: card need to be given
-            //..........................
-            //..........................
-
-            //Card* card=new Card(getRandomCardType());
-            //this->player->getHand().addCard(card);
+        if (winOrNot) {
+            // Card reward (to be implemented)
+            // Card* card = new Card(getRandomCardType());
+            // this->player->getHand().addCard(card);
         }
     } else {
-        // Order validation failed
         std::cout << "Order validation failed. Execution aborted.\n";
     }
 }
-
 
 
 

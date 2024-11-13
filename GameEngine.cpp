@@ -326,6 +326,12 @@ void GameEngine::mainGameLoop() {
     while (!gameOver) {
         std::cout << "\n--- New Game Phase ---\n";
 
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        std::string input;
+        cin>>input;
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
         // Reinforcement Phase
         if (currentState == ASSIGN_REINFORCEMENT) {
             std::cout << "[INFO] Entering Reinforcement Phase..." << std::endl;

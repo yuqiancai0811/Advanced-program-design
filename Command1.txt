@@ -2,5 +2,13 @@ loadmap USA.map
 validatemap
 addplayer Tony
 addplayer Lucas
+addplayer lili
+addplayer leo
+gamestart
+replay
+loadmap USA.map
+validatemap
+addplayer Tony
+addplayer Lucas
 gamestart
 quit

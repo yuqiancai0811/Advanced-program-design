@@ -338,6 +338,7 @@ void CommandProcessor::handleQuitCommand(Command* command) {
 void CommandProcessor::handleReplayCommand(Command* command) {
     cout << "Replay command passed." << endl;
     gameEngine->transition(START);
+    gameEngine->resetGame();
     cout << "New game." << endl;
     cout << "Please setup the game again." << endl;
 }

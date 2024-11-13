@@ -170,36 +170,94 @@ void Player::issueOrder() {
 
     // Step 2: Issue Advance Orders for Defense
     if (!toDefend().empty()) {
-        std::cout << "[LOG] " << name << " attempting to issue Advance Order for defense...\n";
-        std::vector<Territory*> defendList = toDefend();
-        for (Territory* defendTerritory : defendList) {
-            for (Territory* sourceTerritory : ownedTerritories) {
-                    Order* advanceOrder = new :: advanceOrder(1, sourceTerritory, defendTerritory, this);
-                    playerOrders->addOrder(advanceOrder);
-                    // std::cout << "[INFO] " << name << " issues an Advance Order to defend " 
-                    //           << defendTerritory->getName() << " from " 
-                    //           << sourceTerritory->getName() << ".\n";
-                    break;
+    std::cout << "[LOG] " << name << " attempting to issue Advance Order for defense...\n";
+    std::vector<Territory*> defendList = toDefend();
+
+    for (Territory* defendTerritory : defendList) {
+        for (Territory* sourceTerritory : ownedTerritories) {
+            // Check if the pointers are valid before accessing their properties
+            if (sourceTerritory == nullptr || defendTerritory == nullptr) {
+                std::cerr << "[ERROR] Null pointer detected for source or defend territory.\n";
+                continue;
             }
+
+            // Get the list of adjacent territory names for sourceTerritory
+            std::vector<std::string> adjacentTerritories = sourceTerritory->getAdjacentTerritoryNames();
+            std::string defendTerritoryName = defendTerritory->getName();
+
+            // Check if defendTerritory is adjacent to sourceTerritory
+            bool isAdjacent = false;
+            for (const std::string& adjName : adjacentTerritories) {
+                if (adjName == defendTerritoryName) {
+                    isAdjacent = true;
+                    break;
+                }
+            }
+
+            // If the territories are adjacent, create the Advance Order
+            if (isAdjacent) {
+                Order* advanceOrder = new ::advanceOrder(1, sourceTerritory, defendTerritory, this);
+                playerOrders->addOrder(advanceOrder);
+                // std::cout << "[INFO] " << name << " issues an Advance Order to defend "
+                //           << defendTerritory->getName() << " from "
+                //           << sourceTerritory->getName() << ".\n";
+                break;
+            } 
+            // else {
+            //     // Log if the source territory is not adjacent to the defend territory
+            //     std::cout << "[DEBUG] " << sourceTerritory->getName()
+            //               << " is not adjacent to " << defendTerritory->getName() << ". Skipping...\n";
+            // }
         }
     }
+}
+
 
     // Step 3: Issue Advance Orders for Attack
     if (!toAttack().empty()) {
-        std::cout << "[LOG] " << name << " attempting to issue Advance Order for attack...\n";
-        std::vector<Territory*> attackList = toAttack();
-        std::cout << "[DEBUG] Attack list size: " << attackList.size() << std::endl;
-        for (Territory* attackTerritory : attackList) {
-            for (Territory* sourceTerritory : ownedTerritories) {
-                    Order* advanceOrder = new :: advanceOrder(1, sourceTerritory, attackTerritory, this);
-                    playerOrders->addOrder(advanceOrder);
-                    // std::cout << "[INFO] " << name << " issues an Advance Order to attack " 
-                    //           << attackTerritory->getName() << " from " 
-                    //           << sourceTerritory->getName() << ".\n";
-                    break;
+    std::cout << "[LOG] " << name << " attempting to issue Advance Order for attack...\n";
+    std::vector<Territory*> attackList = toAttack();
+    std::cout << "[DEBUG] Attack list size: " << attackList.size() << std::endl;
+
+    for (Territory* attackTerritory : attackList) {
+        for (Territory* sourceTerritory : ownedTerritories) {
+            // Check if the pointers are valid before accessing their properties
+            if (sourceTerritory == nullptr || attackTerritory == nullptr) {
+                std::cerr << "[ERROR] Null pointer detected for source or attack territory.\n";
+                continue;
             }
+
+            // Get the list of adjacent territory names for sourceTerritory
+            std::vector<std::string> adjacentTerritories = sourceTerritory->getAdjacentTerritoryNames();
+            std::string attackTerritoryName = attackTerritory->getName();
+
+            // Check if attackTerritory is adjacent to sourceTerritory
+            bool isAdjacent = false;
+            for (const std::string& adjName : adjacentTerritories) {
+                if (adjName == attackTerritoryName) {
+                    isAdjacent = true;
+                    break;
+                }
+            }
+
+            // If the territories are adjacent, create the Advance Order
+            if (isAdjacent) {
+                Order* advanceOrder = new ::advanceOrder(1, sourceTerritory, attackTerritory, this);
+                playerOrders->addOrder(advanceOrder);
+                // std::cout << "[INFO] " << name << " issues an Advance Order to attack "
+                //           << attackTerritory->getName() << " from "
+                //           << sourceTerritory->getName() << ".\n";
+                break;
+            } 
+            // else {
+            //     // Log if the source territory is not adjacent to the attack territory
+            //     std::cout << "[DEBUG] " << sourceTerritory->getName() 
+            //               << " is not adjacent to " << attackTerritory->getName() << ". Skipping...\n";
+            // }
         }
     }
+}
+
 
     // Step 4: Use Cards to Issue Special Orders when no reinforcements are left
        if (!playerHand.getHand().empty()){
