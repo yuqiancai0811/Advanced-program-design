@@ -175,9 +175,9 @@ void Player::issueOrder() {
             for (Territory* sourceTerritory : ownedTerritories) {
                     Order* advanceOrder = new :: advanceOrder(1, sourceTerritory, defendTerritory, this);
                     playerOrders->addOrder(advanceOrder);
-                    std::cout << "[INFO] " << name << " issues an Advance Order to defend " 
-                              << defendTerritory->getName() << " from " 
-                              << sourceTerritory->getName() << ".\n";
+                    // std::cout << "[INFO] " << name << " issues an Advance Order to defend " 
+                    //           << defendTerritory->getName() << " from " 
+                    //           << sourceTerritory->getName() << ".\n";
                     break;
             }
         }
@@ -192,9 +192,9 @@ void Player::issueOrder() {
             for (Territory* sourceTerritory : ownedTerritories) {
                     Order* advanceOrder = new :: advanceOrder(1, sourceTerritory, attackTerritory, this);
                     playerOrders->addOrder(advanceOrder);
-                    std::cout << "[INFO] " << name << " issues an Advance Order to attack " 
-                              << attackTerritory->getName() << " from " 
-                              << sourceTerritory->getName() << ".\n";
+                    // std::cout << "[INFO] " << name << " issues an Advance Order to attack " 
+                    //           << attackTerritory->getName() << " from " 
+                    //           << sourceTerritory->getName() << ".\n";
                     break;
             }
         }
