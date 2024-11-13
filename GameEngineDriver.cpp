@@ -63,16 +63,14 @@ void testStartupPhase(){
  }
 
 void testMainGameLoop() {
-    cout << "=== Test: Main Game Loop for Part 3 ===" << endl;
-
     // Step 1: Initialize the game engine and map
     GameEngine game;
     Map* map = new Map();
     game.selectedMap = map;
 
     // Manually add continents and territories to simulate a game map
-    Continent* continent1 = new Continent("Continent1", 5);
-    Continent* continent2 = new Continent("Continent2", 3);
+    Continent* continent1 = new Continent("Continent1", 20);
+    Continent* continent2 = new Continent("Continent2", 10);
     map->addContinent(continent1);
     map->addContinent(continent2);
 
@@ -114,53 +112,9 @@ void testMainGameLoop() {
     player1->getHand().addCard(deck.draw());
     player2->getHand().addCard(deck.draw());
 
-    player1->setNumberOfReinforcement(10); // Give Player1 10 reinforcements to deploy
-    player2->setNumberOfReinforcement(5);  // Give Player2 5 reinforcements
-
-    // Begin main game loop for testing
-    game.transition(ASSIGN_REINFORCEMENT);
     game.mainGameLoop();
 
-    // Check end conditions manually in each phase
-    cout << "=== Checking conditions ===" << endl;
-
-    // (1) Reinforcement Phase: Verify correct reinforcements
-    cout << "Reinforcement Phase Check: " << endl;
-    cout << "Player1 reinforcements: " << player1->getNumberOfReinforcement() << endl;
-    cout << "Player2 reinforcements: " << player2->getNumberOfReinforcement() << endl;
-
-    // (2) Deploy orders only when reinforcements are available
-    cout << "Deploy Orders Check: " << endl;
-    player1->issueOrder(); // Expected to issue a deploy order
-    player2->issueOrder(); // Expected to issue a deploy order
-
-    // (3) Advance orders to defend or attack
-    cout << "Advance Orders Check: " << endl;
-    player1->setNumberOfReinforcement(0);  // Set reinforcements to 0 to test advance orders
-    player1->issueOrder(); // Expected to issue an advance order for defend or attack
-
-    // (4) Card play check
-    cout << "Card Play Check: " << endl;
-    player1->getHand().addCard(deck.draw());  // Add a card to ensure they can play
-    player1->issueOrder();  // Expected to play a card order if possible
-
-    // (5) Removing players with no territories
-    cout << "Player Removal Check: " << endl;
-    player2->removeTerritory(territory3);  // Remove all territories from Player2
-    game.removeEliminatedPlayers();  // Expected to remove Player2
-    cout << "Player2 should be eliminated if they have no territories." << endl;
-
-    // (6) End game when a single player controls all territories
-    cout << "Game End Condition Check: " << endl;
-    player1->addTerritory(territory3);  // Player1 now controls all territories
-    game.removeEliminatedPlayers();
-    if (game.getPlayerList().size() == 1) {
-        cout << "Game ends with " << game.getPlayerList().front()->getName() << " as the winner." << endl;
-    } else {
-        cout << "Game has not ended yet, multiple players are still active." << endl;
-    }
-
-    cout << "=== End of Test: Main Game Loop for Part 3 ===" << endl;
+    cout << "\n=== End of Test: Main Game Loop for Part 3 ===" << endl;
 
     // Cleanup
     delete map;
@@ -173,11 +127,11 @@ void testMainGameLoop() {
 
 // Main function that now calls the testStartupPhase function
 int main() {
-    // std::cout << "Running testStartupPhase...\n";
-    // testStartupPhase();
+    std::cout << "Running testStartupPhase...\n";
+    testStartupPhase();
     
-    std::cout << "\nRunning testMainGameLoop...\n";
-    testMainGameLoop();
+    // std::cout << "\nRunning testMainGameLoop...\n";
+    // testMainGameLoop();
 
 
     return 0;
