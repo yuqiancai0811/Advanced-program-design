@@ -628,9 +628,9 @@ void GameEngine::issueOrdersPhase() {
             } else {
                 std::cout << player->getName() << " has no more orders to issue.\n";
             }
+            player->printPlayerInfo();
         }
     } while (ordersPending);
-
     std::cout << "=== End of Issue Orders Phase ===\n";
 
     // Store the saved reinforcement data in a member variable if you need to access it later
