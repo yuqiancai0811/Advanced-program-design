@@ -155,6 +155,8 @@ void CommandProcessor::getCommand()
             handleGameStartCommand(cmd);
         }
         else if(command == "replay"){
+            cout << "Debug: in function getCommand calling  handleReplayCommand"<< endl;
+            handleReplayCommand(cmd);
             
         }
         else if(command == "quit"){

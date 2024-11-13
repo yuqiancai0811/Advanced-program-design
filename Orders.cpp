@@ -13,6 +13,7 @@
 
 using namespace std;
 
+//g++ -o main.exe GameEngine.cpp CommandProcessor.cpp OrderDriver.cpp  Cards.cpp Map.cpp Orders.cpp Player.cpp LoggingObserver.cpp -g
 
 
 // Order class methods
@@ -133,16 +134,41 @@ bool deployOrder::validate() const {
 
 void deployOrder::execute() {
     if (validate()) {
-        std::cout<<"Running deployer order...\n";
-        std::cout<<"Origin armies in target territory:"<<this->target->getArmies()<<"\n";
-       this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement() - this->armies);
-        this->target->setArmies(this->target->getArmies() + this->armies);
-        this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement()-this->armies);
-        std::cout<<"Have taken "<<this->armies<<" from reinforcement pool to the target territory\n";
-        std::cout<<"After the operation:"<<this->target->getArmies()<<"\n";
+        int currentReinforcements = this->player->getNumberOfReinforcement();
+        std::cout << "Order of player: " << this->player->getName() << "\n";
 
+        // Check if there are enough reinforcement units available
+        if (currentReinforcements >= this->armies) {
+            std::cout << "Original armies in the target territory: " << this->target->getArmies() << "\n";
+
+            // Reduce the number of reinforcements and increase the number of armies in the target territory
+            this->player->setNumberOfReinforcement(currentReinforcements - this->armies);
+            this->target->setArmies(this->target->getArmies() + this->armies);
+
+            std::cout << "Deployed " << this->armies << " units from the reinforcement pool to the target territory\n";
+            std::cout << "After deployment, armies in the target territory: " << this->target->getArmies() << "\n";
+
+        } else {
+            std::cout << "Not enough units in the reinforcement pool\n";
+        }
+    } else {
+        std::cout << "Order validation failed.\n";
     }
 }
+
+
+
+// void deployOrder::execute() {
+//     if (validate()) {
+//         std::cout<<"Origin armies in target territory:"<<this->target->getArmies()<<"\n";
+//         this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement() - this->armies);
+//         this->target->setArmies(this->target->getArmies() + this->armies);
+//         this->player->setNumberOfReinforcement(this->player->getNumberOfReinforcement()-this->armies);
+//         std::cout<<"Have taken "<<this->armies<<" from reinforcement pool to the target territory\n";
+//         std::cout<<"After the operation:"<<this->target->getArmies()<<"\n";
+
+//     }
+// }
 // void deployOrder::execute() {
 //     if (validate()) {
 //         std::cout << "Origin armies in target territory:" << this->target->getArmies() << "\n";
@@ -157,7 +183,17 @@ void deployOrder::execute() {
 //     }
 // } //Add for testing P3
 
-
+// // Part5: Override the stringToLog() function from ILoggable specific to the type of order
+// string deployOrder::stringToLog() const {
+//     stringstream log;
+//     log << "Deploy Order: Deploy " << armies << " armies to " << target->getName() << ". ";
+//     if (*executed) {
+//         log << "Executed successfully. Current armies in target: " << target->getArmies();
+//     } else {
+//         log << "Execution failed.";
+//     }
+//     return log.str();
+// }
 
 advanceOrder::advanceOrder(int armies, Territory* source,Territory* target, Player* player) {
     *name = "Advance Order";
@@ -171,27 +207,79 @@ advanceOrder::~advanceOrder() {
     // Destructor body (can be empty)
 }
 
+// bool advanceOrder::validate() const {
+//     //check if source territories belong to the player and target territory is adjacent to source   or not
+//     if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()&&std::find(this->source->getAdjacentTerritories().begin(),this->source->getAdjacentTerritories().end(),this->target)!=this->source->getAdjacentTerritories().end()) {
+
+
+
+//         if(this->player->isNegotiating()==true) {
+//             std::cout<<"Invalid order because negotiation\n";
+//             return false;
+//         }
+//         else {
+
+//             return true;
+//         }
+
+//     }
+//     else {
+//         std::cout<<"Invalid order advance\n";
+
+//         return false;
+//     }}
+
 bool advanceOrder::validate() const {
-    //check if source territories belong to the player and target territory is adjacent to source   or not
-    if(std::find(this->player->getOwnedTerritories().begin(),this->player->getOwnedTerritories().end(),this->source) != this->player->getOwnedTerritories().end()&&std::find(this->source->getAdjacentTerritories().begin(),this->source->getAdjacentTerritories().end(),this->target)!=this->source->getAdjacentTerritories().end()) {
-
-
-
-        if(this->player->isNegotiating()==true) {
-            std::cout<<"Invalid order because negotiation\n";
-            return false;
-        }
-        else {
-
-            return true;
-        }
-
-    }
-    else {
-        std::cout<<"Invalid order advance\n";
-
+    if (this->source == nullptr || this->target == nullptr) {
+        std::cout << "Invalid order: source or target territory is null.\n";
         return false;
-    }}
+    }
+
+    auto ownedTerritories = this->player->getOwnedTerritories();
+    bool sourceBelongsToPlayer = false;
+    for (Territory* territory : ownedTerritories) {
+        if (territory->getName() == this->source->getName()) {
+            sourceBelongsToPlayer = true;
+            break;
+        }
+    }
+
+    if (!sourceBelongsToPlayer) {
+        std::cout << "Invalid order: source territory '" << this->source->getName()
+                  << "' does not belong to player '" << this->player->getName() << "'.\n";
+        return false;
+    }
+
+    // check adjacentTerritory
+    auto adjacentTerritoryNames = this->source->getAdjacentTerritoryNames();
+    std::string targetName = this->target->getName();
+    bool targetIsAdjacent = false;
+
+    for (const std::string& adjacentName : adjacentTerritoryNames) {
+        if (adjacentName == targetName) {
+            targetIsAdjacent = true;
+            break;
+        }
+    }
+
+    
+    if (!targetIsAdjacent) {
+        std::cout << "Invalid order: target territory '" << targetName
+                << "' is not adjacent to source territory '" << this->source->getName() << "'.\n";
+        return false;
+    }
+
+
+ 
+    if (this->player->isNegotiating()) {
+        std::cout << "Invalid order: player '" << this->player->getName()
+                  << "' is currently negotiating. Cannot issue advance order.\n";
+        return false;
+    }
+
+    return true;
+}
+
 
 
 
@@ -199,66 +287,75 @@ void advanceOrder::execute() {
     if (validate()) {
         *executed = true;
 
-        std::cout<<"Running advance order...\n";
-        //source and target belong to the same player
-        if(this->source->getOwner()==this->target->getOwner()) {
-            std::cout<<"Source Owner"<<this->source->getOwner()<<"\n";
-            std::cout<<"Target Owner"<<this->target->getOwner()<<"\n";
-
+        // If it is not an attack, execute the defend (move) logic
+        if (this->source->getOwner() == this->target->getOwner()) {
+            std::cout << "Executing defend (move) order.\n";
+            // Move armies from the source territory to the target territory
             this->source->setArmies(this->source->getArmies() - this->armies);
             this->target->setArmies(this->target->getArmies() + this->armies);
 
-        }
-        else {
+            // Output the result of the move
+            std::cout << "Moved " << this->armies << " armies from " << this->source->getName()
+                      << " to " << this->target->getName() << ".\n";
+            std::cout << "Source territory armies after move: " << this->source->getArmies() << "\n";
+            std::cout << "Target territory armies after move: " << this->target->getArmies() << "\n";
 
+        } else {
+            // Execute the attack logic if it is an attack order
+            std::cout << "Executing attack order.\n";
 
+            // Battle simulation loop
+            while (this->source->getArmies() > 0 && this->target->getArmies() > 0) {
+                // Calculate the number of kills by the attacker and defender
+                int sourceKill = std::max(1, static_cast<int>(this->source->getArmies() * 0.6));
+                int targetKill = std::max(1, static_cast<int>(this->target->getArmies() * 0.7));
 
-            while(this->source->getArmies()>0&&this->target->getArmies()>0) {
-                int sourceKill=this->source->getArmies()*0.6;
+                // Update the number of armies after kills
+                this->source->setArmies(std::max(0, this->source->getArmies() - targetKill));
+                this->target->setArmies(std::max(0, this->target->getArmies() - sourceKill));
 
-                int targetKill=this->target->getArmies()*0.7;
-
-                int sourceLeft=source->getArmies()-targetKill;
-
-                int targetLeft=target->getArmies()-sourceKill;
-
-                this->source->setArmies(sourceLeft);
-
-                this->target->setArmies(targetLeft);
-
+                // Output the result of each battle round
+                std::cout << "Battle round result:\n";
+                std::cout << "Attacker armies left: " << this->source->getArmies() << "\n";
+                std::cout << "Defender armies left: " << this->target->getArmies() << "\n";
             }
 
-
-            if(source->getArmies()>target->getArmies()) {
-                std::cout<<"The attacker captures the territory.";
-                this->target->setArmies(source->getArmies());
+            // Determine the result of the battle
+            if (this->target->getArmies() == 0) {
+                // Attacker wins and captures the territory
+                std::cout << "The attacker captures the territory " << this->target->getName() << ".\n";
+                this->player->addTerritory(this->target);
+                this->target->setArmies(this->source->getArmies());
+                this->source->setArmies(0);
                 this->target->getOwnerPlayer()->removeTerritory(target);
-                this->player->addTerritory(target);
-                this->winOrNot=true;
+                this->winOrNot = true;
 
-
-            }
-            else {
-                std::cout<<"\nSource Army"<<this->source->getArmies();
-                std::cout<<"\nTarget Army"<<this->target->getArmies();
-
-                std::cout<<"The defender defends his/her territory";
+                // Output the result of the capture
+                std::cout << "Captured territory armies after transfer: " << this->target->getArmies() << "\n";
+            } else {
+                // Defender retains the territory
+                std::cout << "Defender retains the territory " << this->target->getName() << ".\n";
+                std::cout << "Remaining armies in source territory: " << this->source->getArmies() << "\n";
+                std::cout << "Remaining armies in target territory: " << this->target->getArmies() << "\n";
                 this->source->setArmies(0);
             }
-
-
         }
+
+        // Reward a card if the player successfully conquered a territory
         if(winOrNot) {
             //todo: card need to be given
             //..........................
             //..........................
 
-            Card* card=new Card(getRandomCardType());
-            this->player->getHand().addCard(card);
+            //Card* card=new Card(getRandomCardType());
+            //this->player->getHand().addCard(card);
         }
+    } else {
+        // Order validation failed
+        std::cout << "Order validation failed. Execution aborted.\n";
     }
-
 }
+
 
 
 
@@ -408,6 +505,11 @@ void airliftOrder::execute() {
 
 //player is the player who issues this order
 negotiateOrder::negotiateOrder(Player* player,Player* enemy) {
+    // std::cout<<"debug in negotiateOrder \n";
+    // std::cout<<"player"<<player->getName();
+    // std::cout<<"enemy"<<enemy->getName();
+
+    std::cout<<"valid order negotiation\n";
     *name = "Negotiate Order";
     this->player=player;
     this->enemy=enemy;

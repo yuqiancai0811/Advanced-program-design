@@ -11,6 +11,8 @@
 #include <iostream>
 #include <algorithm>  // For max
 #include "CommandProcessor.h"
+#include <cstdlib>    // For rand() and srand()
+#include <ctime>      // For time()
 
 using namespace std;
 ///
@@ -342,7 +344,7 @@ void GameEngine::mainGameLoop() {
         else if (currentState == EXECUTE_ORDERS) {
             std::cout << "[INFO] Entering Orders Execution Phase..." << std::endl;
             executeOrdersPhase();
-            removeEliminatedPlayers();
+            removeEliminatedPlayer();
 
             // Check win condition: only one player remains
             if (playerList.size() == 1) {
@@ -397,6 +399,37 @@ void GameEngine::removeEliminatedPlayers() {
         }
     }
 
+    std::cout << "[LOG] Remaining players in the game: ";
+    for (const Player* remainingPlayer : playerList) {
+        std::cout << remainingPlayer->getName() << " ";
+    }
+    std::cout << "\n";
+}
+
+/* ------------- end of `removeEliminatedPlayers` ---------------- */
+
+void GameEngine::removeEliminatedPlayer() {
+    if (playerList.empty()) {
+        std::cout << "[LOG] No players to remove.\n";
+        return;
+    }
+
+    // Seed the random number generator for true randomness each time it's called
+    std::srand(static_cast<unsigned>(std::time(nullptr)));
+
+    // Generate a random index within the bounds of the playerList
+    int randomIndex = std::rand() % playerList.size();
+
+    // Iterator to the randomly selected player
+    auto it = playerList.begin();
+    std::advance(it, randomIndex);
+
+    // Remove and log the player
+    Player* player = *it;
+    eliminatedPlayers.push_back(player);
+    playerList.erase(it);
+
+    // Log remaining players
     std::cout << "[LOG] Remaining players in the game: ";
     for (const Player* remainingPlayer : playerList) {
         std::cout << remainingPlayer->getName() << " ";

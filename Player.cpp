@@ -93,18 +93,19 @@ void Player::setNumberOfReinforcement(int number) {
 }
 
 /*-------------------------------------------*/
-// Method to decide where to defend
-vector<Territory*> Player::toDefend() const {
-    vector<Territory*> defendList;
+std::vector<Territory*> Player::toDefend() const {
+    std::vector<Territory*> defendList;
     for (Territory* territory : ownedTerritories) {
-        if (!territory) continue;  // Skip if the territory is a nullptr
-        // /* Debug */
-        // std::cout << "[toDefend] :Territory: " << territory->getName() 
-        //           << ", Army count: " << territory->getArmies() << std::endl;
         if (territory->getArmies() < 5 || 
             std::any_of(territory->getAdjacentTerritories().begin(), 
                         territory->getAdjacentTerritories().end(),
-                        [this](Territory* adj) { return adj->getOwner() != this->getName(); })) {
+                        [this](Territory* adj) { 
+                            if (adj == nullptr) {
+                                // Skip if adj is a null pointer
+                                return false; 
+                            }
+                            return adj->getOwner() != this->getName();
+                        })) {
             defendList.push_back(territory);
         }
     }

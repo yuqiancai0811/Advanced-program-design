@@ -112,7 +112,7 @@ public:
     void removeEliminatedPlayers(); //Helper function for mainGameLoop
 
     std::map<Player*, int> savedReinforcements;
-    
+    void removeEliminatedPlayer();
     // Main game loop
     void mainGameLoop();            // Main game loop that handles phase transitions and checks win condition
      /* -------------- End of P3 ------------------*/
