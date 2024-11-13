@@ -117,7 +117,6 @@ std::vector<Territory*> Player::toDefend() const {
 }
 
 
-
 // Method to decide where to attack
 vector<Territory*> Player::toAttack() const {
     vector<Territory*> attackTargets;
@@ -129,11 +128,6 @@ vector<Territory*> Player::toAttack() const {
 
             if (adj->getOwner() != this->getName()) {
                 attackTargets.push_back(adj);
-                /* debug code */
-                // std::cout << "[toAttack] " << name << " can attack " << adj->getName() 
-                //           << " (Owned by: " << adj->getOwner() 
-                //           << ", Armies: " << adj->getArmies() << ") from " 
-                //           << territory->getName() << ".\n";
             }
         }
     }
@@ -198,16 +192,8 @@ void Player::issueOrder() {
             if (isAdjacent) {
                 Order* advanceOrder = new ::advanceOrder(1, sourceTerritory, defendTerritory, this);
                 playerOrders->addOrder(advanceOrder);
-                // std::cout << "[INFO] " << name << " issues an Advance Order to defend "
-                //           << defendTerritory->getName() << " from "
-                //           << sourceTerritory->getName() << ".\n";
                 break;
             } 
-            // else {
-            //     // Log if the source territory is not adjacent to the defend territory
-            //     std::cout << "[DEBUG] " << sourceTerritory->getName()
-            //               << " is not adjacent to " << defendTerritory->getName() << ". Skipping...\n";
-            // }
         }
     }
 }
@@ -244,16 +230,8 @@ void Player::issueOrder() {
             if (isAdjacent) {
                 Order* advanceOrder = new ::advanceOrder(1, sourceTerritory, attackTerritory, this);
                 playerOrders->addOrder(advanceOrder);
-                // std::cout << "[INFO] " << name << " issues an Advance Order to attack "
-                //           << attackTerritory->getName() << " from "
-                //           << sourceTerritory->getName() << ".\n";
                 break;
             } 
-            // else {
-            //     // Log if the source territory is not adjacent to the attack territory
-            //     std::cout << "[DEBUG] " << sourceTerritory->getName() 
-            //               << " is not adjacent to " << attackTerritory->getName() << ". Skipping...\n";
-            // }
         }
     }
 }
