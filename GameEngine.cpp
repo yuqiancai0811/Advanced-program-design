@@ -2,17 +2,14 @@
 #include "MapDriver.h"
 #include "Orders.h"
 #include "Player.h"
+#include "CommandProcessor.h"
 #include <iostream>
 #include <limits>
 #include <map>
 #include <queue>
 #include <cstdlib>   // rand, srand
 #include <ctime>     // time
-#include <iostream>
 #include <algorithm>  // For max
-#include "CommandProcessor.h"
-#include <cstdlib>    
-#include <ctime>     
 
 using namespace std;
 ///
