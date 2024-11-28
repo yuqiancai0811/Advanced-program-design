@@ -269,8 +269,8 @@ void GameEngine::mainGameLoop() {
         std::cout << "\n--- New Game Phase ---\n";
 
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        std::string input;
-        cin>>input;
+        //std::string input;
+        //cin>>input;
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
@@ -292,7 +292,7 @@ void GameEngine::mainGameLoop() {
         else if (currentState == EXECUTE_ORDERS) {
             std::cout << "[INFO] Entering Orders Execution Phase..." << std::endl;
             executeOrdersPhase();
-            removeEliminatedPlayer();
+            removeEliminatedPlayers();
 
             // Check win condition: only one player remains
             if (playerList.size() == 1) {
@@ -430,6 +430,7 @@ void GameEngine::reinforcementPhase() {
     // Iterate over each player in the game
     for (Player* player : playerList) {
         // Skip players without territories since they will be eliminated in executeOrdersPhase()
+        
         if (player->getOwnedTerritories().empty()) {
             cout << player->getName() << " has no territories and will be removed at the end of executeOrdersPhase." << endl;
             continue;

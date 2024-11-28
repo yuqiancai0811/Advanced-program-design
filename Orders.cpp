@@ -385,40 +385,67 @@ void advanceOrder::execute() {
         } else {
             // Execute attack logic
             std::cout << "Executing attack order.\n";
+            int sourceKill = std::max(1, static_cast<int>(this->target->getArmies() * 0.7));
+            int targetKill = std::max(1, static_cast<int>(this->armies * 0.6));
 
             // Battle simulation loop
-            while (this->source->getArmies() > 0 && this->target->getArmies() > 0) {
-                int sourceKill = std::max(1, static_cast<int>(this->source->getArmies() * 0.6));
-                int targetKill = std::max(1, static_cast<int>(this->target->getArmies() * 0.7));
+            if (!(this->source->getArmies() >= this->armies)){std::cout << "The attacker do not have enough Arimies.\n";}
 
-                this->source->setArmies(std::max(0, this->source->getArmies() - targetKill));
-                this->target->setArmies(std::max(0, this->target->getArmies() - sourceKill));
+            if (this->source->getArmies() >= this->armies) {
+                
 
+                if (targetKill > this->target->getArmies())
+                {
+                    std::cout << "Defender  armies left: " << target->getArmies() - targetKill <<  "(min: 0 left)\n";
+                    std::cout << "The attacker captures the territory " << this->target->getName() << ".\n";
+
+                    this->target->getOwnerPlayer()->removeTerritory(target);
+                    this->player->addTerritory(this->target);
+                    target->setOwner(player->getName());
+                    target->setPlayer(player);
+
+                    this->target->setArmies(armies - sourceKill);
+                    this->source->setArmies(source->getArmies() - armies);
+                    
+                    
+                    this->winOrNot = true;  
+                    std::cout << "Battle round result:\n";
+                    std::cout << "Source territory armies left: " << source->getArmies() << "\n";
+                    std::cout << "Target territory armies left: " << target->getArmies() << "\n";
+                }
+                // Determine the battle outcome
+                else {
+                std::cout << "Defender retains the territory " << this->target->getName() << ".\n";
+                int targetNewArmies = this->target->getArmies() - targetKill;
+                if (targetNewArmies < 0) {
+                    targetNewArmies = 0; 
+                }
+                this->target->setArmies(targetNewArmies);
+
+                
+                int sourceNewArmies = this->source->getArmies() - sourceKill;
+                if (sourceNewArmies < 0) {
+                    sourceNewArmies = 0; 
+                }
+
+                this->source->setArmies(sourceNewArmies);
                 // Output the result of each battle round
                 std::cout << "Battle round result:\n";
                 std::cout << "Attacker armies left: " << this->source->getArmies() << "\n";
                 std::cout << "Defender armies left: " << this->target->getArmies() << "\n";
             }
+                
 
-            // Determine the battle outcome
-            if (this->target->getArmies() == 0) {
-                std::cout << "The attacker captures the territory " << this->target->getName() << ".\n";
-                this->player->addTerritory(this->target);
-                this->target->setArmies(this->source->getArmies());
-                this->source->setArmies(0);
-                this->target->getOwnerPlayer()->removeTerritory(target);
-                this->winOrNot = true;
-            } else {
-                std::cout << "Defender retains the territory " << this->target->getName() << ".\n";
-                this->source->setArmies(0);
             }
+            
+            
         }
 
         // Reward a card if the player successfully conquered a territory
         if (winOrNot) {
             // Card reward (to be implemented)
-            // Card* card = new Card(getRandomCardType());
-            // this->player->getHand().addCard(card);
+            //Card* card = new Card(getRandomCardType());
+            //this->player->getHand().addCard(card);
         }
     } else {
         std::cout << "Order validation failed. Execution aborted.\n";
@@ -514,13 +541,13 @@ void blockadeOrder::execute() {
     if (validate()) {
         *executed = true;
         std::cout<<"Running the blockade order,\n";
-        std::cout<<"The armies number:"<<this->target->getArmies()<<"\n";
+        // std::cout<<"The armies number:"<<this->target->getArmies()<<"\n";
 
-        this->target->setArmies((this->target->getArmies())*2);
-        this->target->setOwner(this->neutral->getName());
-        this->neutral->addTerritory(this->target);
-        this->player->removeTerritory(this->target);
-        std::cout<<"The armies have doubled:"<<this->target->getArmies()<<"\n";
+        // this->target->setArmies((this->target->getArmies())*2);
+        // this->target->setOwner(this->neutral->getName());
+        // this->neutral->addTerritory(this->target);
+        // this->player->removeTerritory(this->target);
+        // std::cout<<"The armies have doubled:"<<this->target->getArmies()<<"\n";
 
     }
 }
@@ -598,11 +625,11 @@ bool negotiateOrder::validate() const {
 }
 
 void negotiateOrder::execute() {
-    if (validate()) {
-        *executed = true;
-        this->player->setNegotiate(true);
-        this->enemy->setNegotiate(true);
-    }
+    // if (validate()) {
+    //     *executed = true;
+    //     this->player->setNegotiate(true);
+    //     this->enemy->setNegotiate(true);
+    // }
 }
 
 // orderList methods

@@ -13,11 +13,23 @@ void testOrderExecution() {
     vector<string> adjTerritoryNames3 = {"Territory 1", "Territory 2"};
     Territory* territory3 = new Territory("Territory 3", 2, 2, "Continent 2", adjTerritoryNames3);
 
+    
+    territory1->setOwner("Player1");
+    territory2->setOwner("Player1");
+    territory3->setOwner("Player2");
+
     // Create a player and assign territories to the player
     Player* player1 = new Player("Player 1");
+    Player* player2 = new Player("Player 2");
+
+    territory1->setPlayer(player1);
+    territory2->setPlayer(player2);
+    territory3->setPlayer(player2);
+
     player1->addTerritory(territory1);
     player1->addTerritory(territory2);
     player1->setNumberOfReinforcement(1000);
+    
     Card* airlift=new Card("Airlift");
     Card* blockade=new Card("BLOCKADE");
 
@@ -26,11 +38,11 @@ void testOrderExecution() {
 
     territory1->setArmies(100);
     territory2->setArmies(100);
-    territory3->setArmies(1000);
+    territory3->setArmies(2000);
 
 
 
-    Player* player2 = new Player("Player 2");
+    
     player2->addTerritory(territory3);
     player2->setNumberOfReinforcement(1000);
 
@@ -39,26 +51,62 @@ void testOrderExecution() {
     territory2->addAdjacentTerritory(territory3);
     territory3->addAdjacentTerritory(territory2);
 
-    territory1->setOwner("Player1");
-    territory2->setOwner("Player1");
-    territory3->setOwner("Player2");
+    
+
+
+    std::vector<Territory*> list1, list2;
+    
+    list2=player1->getOwnedTerritories();
+
+    for (Territory* territory : list2)
+    {
+        territory->printTerritoryInfo();
+        cout << "Owner of this Territory: "<< territory->getOwner() <<endl;
+    };
+
+    list1=player2->getOwnedTerritories();
+    
+    for (Territory* territory : list1)
+    {
+        territory->printTerritoryInfo();
+        cout << "Owner of this Territory: "<< territory->getOwner() <<endl;
+    };
 
 
     deployOrder* deploy_order = new deployOrder(100,territory1,player1);
-    advanceOrder* advance_order=new advanceOrder(100,territory3,territory1,player2);
+    advanceOrder* advance_order=new advanceOrder(1000,territory3,territory1,player2);
     airliftOrder* airlift_order=new airliftOrder(100,territory1,territory3,player1);
     bombOrder* bomb_order=new bombOrder(territory3,player1);
     blockadeOrder* blockade_order=new blockadeOrder(100,player1,player2,territory2);
     negotiateOrder* negotiate_order=new negotiateOrder(player1,player2);
 
     deploy_order->execute();
-    //advance_order->execute();
-    airlift_order->execute();
-    bomb_order->execute();
-    blockade_order->execute();
-    negotiate_order->execute();
     advance_order->execute();
 
+    
+
+    // airlift_order->execute();
+    // bomb_order->execute();
+    // blockade_order->execute();
+    // negotiate_order->execute();
+    // advance_order->execute();
+
+    
+    list2=player1->getOwnedTerritories();
+    for (Territory* territory : list2)
+    {
+        territory->printTerritoryInfo();
+        cout << "In player1 Owner of this Territory: "<< territory->getOwner() <<endl;
+    };
+
+    list1=player2->getOwnedTerritories();
+    for (Territory* territory : list1)
+    {
+        territory->printTerritoryInfo();
+        cout << "In player2 Owner of this Territory: "<< territory->getOwner() <<endl;
+    };
+
+    
 }
 
 int main() {
