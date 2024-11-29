@@ -153,7 +153,7 @@ void CommandProcessor::getCommand()
         else if(command == "gamestart"){
             // cout << "Debug: in function getCommand calling  handleGameStartCommand"<< endl;
             handleGameStartCommand(cmd);
-        }
+        }//add tournament mode during the gamestart 
         else if(command == "replay"){
             // cout << "Debug: in function getCommand calling  handleReplayCommand"<< endl;
             handleReplayCommand(cmd);
