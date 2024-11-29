@@ -6,6 +6,7 @@
 #include "Map.h"    // For Territory class
 #include "Orders.h" // For Order and orderList classes
 #include "Cards.h"  // For Hand, Deck, and Card classes
+#include "PlayerStrategy.h"
 
 
 class orderList; // Forward declaration for orderList
@@ -18,6 +19,7 @@ private:
     orderList* playerOrders;  // Pointer to list of orders issued by the player
     int numberOfReinforcement; //*Variable for reinforcement units
     bool negotiate;  // Boolean flag for negotiation status
+    PlayerStrategy* strategy;
 
 public:
     // Default constructor
