@@ -7,6 +7,7 @@
 #include <functional>
 #include <map>
 #include "Map.h"
+#include "GameEngine.h"
 
 using namespace std;
 
@@ -153,7 +154,11 @@ void CommandProcessor::getCommand()
         else if(command == "gamestart"){
             // cout << "Debug: in function getCommand calling  handleGameStartCommand"<< endl;
             handleGameStartCommand(cmd);
-        }//add tournament mode during the gamestart 
+        }
+        //As3-part2: add tournament mode during the gamestart 
+        else if(command == "tournament"){
+            handleTournamentCommand(cmd);
+        }
         else if(command == "replay"){
             // cout << "Debug: in function getCommand calling  handleReplayCommand"<< endl;
             handleReplayCommand(cmd);
@@ -191,7 +196,7 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
     }
 
     // Define a list of valid commands
-    const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "replay", "quit"};
+    const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "tournament", "replay", "quit"};
     
     // Check if the command is in the list of valid commands
     bool isCommand = false;
@@ -210,6 +215,7 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
     if (command == "validatemap" && gameEngine->getCurrentState() == MAPLODADED) return true;
     if (command == "addplayer" && (gameEngine->getCurrentState() == MAPVALIDATED || gameEngine->getCurrentState() == PLAYERSADDED)) return true;
     if (command == "gamestart" && gameEngine->getCurrentState() == PLAYERSADDED) return true;
+    if (command == "tournament" && gameEngine->getCurrentState() == PLAYERSADDED) return true;
     if (command == "replay" && gameEngine->getCurrentState() == WIN) return true;
     if (command == "quit" && gameEngine->getCurrentState() == WIN) return true;
     cout << "Debug in function(validateCommand): Invalid command full command:" << fullCommand << endl;
@@ -343,12 +349,9 @@ void CommandProcessor::handleReplayCommand(Command* command) {
     cout << "Please setup the game again." << endl;
 }
 
-
-
 void CommandProcessor::handleGameStartCommand(Command* command){
      gameEngine->gamestart(*gameEngine);
 }; 
-
 
 // Overloading the << operator to print details of the CommandProcessor
 ostream &operator<<(ostream &os, const CommandProcessor &processor)
@@ -439,4 +442,106 @@ ostream &operator<<(ostream &os, const FileCommandProcessorAdapter &adapter)
 {
     os << "FileCommandProcessorAdapter with attached file reader";
     return os;
+}
+
+// ---------------------------------Asg3 part2--------------------------------- :
+//Parses the tournament command arguments into a TournamentParameters struct  
+TournamentParameters CommandProcessor::parseTournamentCommand(const string& arguments) {
+    TournamentParameters params;
+    istringstream iss(arguments);
+    string token;
+    string value;
+
+    // Loop through each part of the argument string
+    while (iss >> token) {
+        // Check for map files list
+        if (token == "-M") {
+            if (!(iss >> value)) break; // Get the next part which should be the map files
+            istringstream mapStream(value);
+            string map;
+            while (getline(mapStream, map, ',')) {
+                params.mapFiles.push_back(map); // Split map files by comma and add to the list
+            }
+        }
+        // Check for player strategies list
+        else if (token == "-P") {
+            if (!(iss >> value)) break; // Get the next part which should be the player strategies
+            istringstream strategyStream(value);
+            string strategy;
+            while (getline(strategyStream, strategy, ',')) {
+                params.playerStrategies.push_back(strategy); // Split strategies by comma and add to the list
+            }
+        }
+        // Check for number of games
+        else if (token == "-G") {
+            if (!(iss >> params.numberOfGames)) break; // Get the number of games directly
+        }
+        // Check for max number of turns
+        else if (token == "-D") {
+            if (!(iss >> params.maxTurns)) break; // Get the max number of turns directly
+        }
+    }
+
+    return params;
+}
+//validates the parsed tournament parameters to ensure they meet expected constraints
+bool CommandProcessor::validateTournamentParameters(const TournamentParameters& params) {
+    // Validate the number of maps
+    if (params.mapFiles.empty() || params.mapFiles.size() > 5) {
+        cout << "Error: Invalid number of maps." << endl;
+        return false;
+    }
+
+    // Validate the player strategies
+    if (params.playerStrategies.size()< 2 || params.playerStrategies.size() > 4) {
+        cout << "Error: Invalid number of player strategies." << endl;
+        return false;
+    }
+
+    // Validate the number of games
+    if (params.numberOfGames < 1 || params.numberOfGames > 5) {
+        cout << "Error: Invalid number of games." << endl;
+        return false;
+    }
+
+    // Validate the max number of turns
+    if (params.maxTurns < 10 || params.maxTurns > 50) {
+        cout << "Error: Invalid max number of turns." << endl;
+        return false;
+    }
+
+    return true;
+}
+
+
+//handleTournamentCommand function
+void CommandProcessor::handleTournamentCommand(Command* command) {
+    // Parse the command to extract tournament parameters
+    std::istringstream iss(command->getCommandString());
+    std::string commandstring;
+    std::string argument;
+
+    iss >> commandstring; // This should capture the "tournament" command
+    std::getline(iss, argument); // This captures the rest of the line as arguments
+
+    if (!argument.empty()) {
+        argument = argument.substr(argument.find_first_not_of(' ')); // Trim leading spaces
+    }
+
+    TournamentParameters params = parseTournamentCommand(argument);
+
+    if (validateTournamentParameters(params)) {
+        gameEngine->startTournament(params);
+        std::string effect = "Tournament started successfully with the following settings: Maps=" +
+                             std::to_string(params.mapFiles.size()) + ", Strategies=" +
+                             std::to_string(params.playerStrategies.size()) + ", Games=" +
+                             std::to_string(params.numberOfGames) + ", Max Turns=" +
+                             std::to_string(params.maxTurns);
+        command->setEffect(effect);
+        cout << effect << endl;
+    } else {
+        cout << "Invalid tournament parameters. Please check the format and try again.\n";
+        std::string effect = "Invalid tournament parameters.";
+        command->setEffect(effect);
+    }
 }

@@ -8,9 +8,13 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 using namespace std;
 class GameEngine; // Forward declaration of GameEngine
+// Asg3_part2: Forward declaration
+struct TournamentParameters;
+
 
 // Command class to encapsulate command data and effects
 class Command : public Subject, public ILoggable
@@ -71,6 +75,12 @@ public:
     void handleGameStartCommand(Command* command); 
     void handleReplayCommand(Command* command); 
     void handleQuitCommand(Command* command);
+    //-------------Asg3_Part2--------------------
+    void handleTournamentCommand(Command* command);
+    TournamentParameters parseTournamentCommand(const std::string& arguments);
+    bool validateTournamentParameters(const TournamentParameters& params);
+
+
 };
 
 // FileLineReader class to read commands from a file

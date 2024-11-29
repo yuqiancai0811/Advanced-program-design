@@ -567,5 +567,89 @@ void GameEngine::executeOrdersPhase() {
     std::cout << "=== Order Execution Phase Complete ===\n";
 }
 
-
 /*------------------------------- End of Methods for P3 ----------------------------------------*/
+
+
+/*------------------------------- Assignement3 _ part2 ----------------------------------------*/
+void GameEngine::startTournament(const TournamentParameters& params) {
+    std::cout << "Starting Tournament..." << std::endl;
+
+    // Iterate over each map file specified in the tournament parameters
+    for (const auto& mapFile : params.mapFiles) {
+        Map* map = new Map(); // Create a new Map instance
+        if (!map->loadMapFromFile(mapFile)) {  // Call the instance method
+            std::cerr << "Failed to load map: " << mapFile << ". Skipping this map." << std::endl;
+            delete map;  // Ensure to delete the created map instance
+            continue;
+        }
+
+        if (!map->validate()) {
+            std::cerr << "Validation failed for map: " << mapFile << ". Skipping this map." << std::endl;
+            delete map;
+            continue;
+        }
+
+        this->selectedMap = map;  // Use the loaded map
+
+        //----------TODO: wait for asg3 part1------------ 
+        // For each player strategy specified
+        // for (const auto& strategy : params.playerStrategies) {
+        //     setupPlayers(strategy); // Setup players according to the specified strategy
+
+        //     // Run the specified number of games
+        //     for (int game = 0; game < params.numberOfGames; ++game) {
+        //         std::cout << "Game " << (game + 1) << "/" << params.numberOfGames
+        //                   << " on map " << mapFile << " using strategy " << strategy << std::endl;
+
+        //         gamestart(*this); // Start the game
+
+        //         // -----------------TODO: Log results after each game-----------------
+        //         // logResults(mapFile, strategy, game);
+        //     }
+        // }
+
+        delete map; // Cleanup the map object after all games for this map are completed
+    }
+
+    displayTournamentResults(); 
+}
+
+// Display overall results after all tournaments are completed
+string GameEngine::displayTournamentResults() {
+        stringstream str;
+        const char separator = ' ';
+        const int mapNameWidth = 25;
+        const int nameWidth = 15;
+
+        str << "Tournament Mode:" << endl;
+        str << "M: ";
+        for (int i = 0; i < params.mapFiles.size(); i++) {
+            str << params.mapFiles.at(i) << ((i != params.mapFiles.size() - 1) ? ',' : ' ');
+        }
+        str << endl << "P: ";
+        for (int i = 0; i < params.playerStrategies.size(); i++) {
+            str << params.playerStrategies.at(i) << ((i != params.playerStrategies.size() - 1) ? ',' : ' ');
+        }
+        str << endl << "G: " << params.numberOfGames << endl << "D: " << params.maxTurns << endl;
+        str << left << setw(mapNameWidth) << setfill(separator) << "Map Name";
+
+        for (int s = 1; s <= params.numberOfGames; s++) {
+            str << left << setw(nameWidth) << setfill(separator) << ("Game " + to_string(s));
+        }
+        str << endl;
+
+        // Assuming tournamentResults contains a vector of results for each map, in the same order as mapFiles
+        for (auto & tournamentResult : tournamentResults) {
+            str << left << setw(mapNameWidth) << setfill(separator) << tournamentResult.at(0);
+
+            for (int j = 1; j < tournamentResult.size(); j++) {
+                str << left << setw(nameWidth) << setfill(separator) << tournamentResult.at(j);
+            }
+            str << endl;
+        }
+        return str.str();
+    }
+
+
+
+

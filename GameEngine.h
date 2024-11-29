@@ -26,6 +26,14 @@ extern const std::string EXECUTE_ORDERS;
 extern const std::string WIN;
 /*---------------------------------------------------------------*/
 
+/*---Assginment 3 Part 2 TournamentParameters definition---*/
+struct TournamentParameters {
+    vector<string> mapFiles;
+    vector<string> playerStrategies;
+    int numberOfGames;
+    int maxTurns;
+};
+
 class GameEngine : public Subject, public ILoggable{
 private:
     
@@ -41,6 +49,10 @@ public:
     string currentState;  // The current state of the game added by Yuqian Cai
     CommandProcessor *commandProcessor;
 
+    /*---Assginment 3 Part 2 attributes---*/
+    TournamentParameters params;
+    vector<vector<string>> tournamentResults; // Simulated results data
+
 
     //Constructor && Destructor
     GameEngine();  // Constructor to initialize the game
@@ -55,12 +67,9 @@ public:
     // Function to draw and play cards
     void playCards(Player* player);
 
-
-
     /*  --------------  Game state part ------------------*/
     // Get the current game state as a string
     std::string getCurrentState();
-
 
     //setter
     void setcurrentState(std::string newGameState);
@@ -68,9 +77,6 @@ public:
     // Helper function to transition between states
     void transition(const std::string& newState);
     void setMap(Map *selectedMap);
-
-    
-
 
 
     /* Assignment 2 -------------- Part 2 ------------------*/
@@ -125,5 +131,11 @@ public:
     void printWelcomeMessage();       // Prints the welcome message when the game starts
     //Part5: Override the stringToLog function from ILoggable
     string stringToLog() const override;
+
+    /*--------------Assignement3 _ Part2-----------------*/
+    void startTournament(const TournamentParameters& params);
+    string displayTournamentResults();
+    
+
 };
 #endif // GAMEENGINE_H
