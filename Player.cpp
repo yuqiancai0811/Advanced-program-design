@@ -51,6 +51,16 @@ bool Player::isNegotiating() const {
     return negotiate;
 }
 
+/*------------- Setter and getter for negotiate partner name ------------*/
+void Player::setNegoPartnerName(const std::string &name) {
+    negoPartnerName = name;
+}
+
+string Player::getNegoPartnerName() const {
+    return negoPartnerName;
+}
+
+
 /* ---------------- Getters ----------------------*/
 string Player::getName() const {
     return name;  // Return player's name

@@ -271,7 +271,7 @@ bool advanceOrder::validate() const {
 
 
  
-    if (this->player->isNegotiating()) {
+    if (this->player->getNegoPartnerName()==this->target->getName()) {
         std::cout << "Invalid order: player '" << this->player->getName()
                   << "' is currently negotiating. Cannot issue advance order.\n";
         return false;
@@ -630,6 +630,12 @@ void negotiateOrder::execute() {
     //     this->player->setNegotiate(true);
     //     this->enemy->setNegotiate(true);
     // }
+    if (validate()) {
+        *executed = true;
+        this->player->setNegoPartnerName(this->enemy->getName());
+        this->enemy->setNegoPartnerName(this->player->getName());
+
+    }
 }
 
 // orderList methods

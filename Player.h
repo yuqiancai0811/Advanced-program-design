@@ -20,6 +20,7 @@ private:
     int numberOfReinforcement; //*Variable for reinforcement units
     bool negotiate;  // Boolean flag for negotiation status
     PlayerStrategy* strategy;
+    std::string negoPartnerName;
 
 public:
     // Default constructor
@@ -36,6 +37,9 @@ public:
 
     // Destructor
     ~Player();
+
+    void setNegoPartnerName(const std::string& name);
+    std::string getNegoPartnerName() const;
 
     // Setter and getter for negotiation status
     void setNegotiate(bool status);
