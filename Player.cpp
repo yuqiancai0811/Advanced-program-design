@@ -385,3 +385,22 @@ void Player::printPlayerInfo() const {
     cout << "Orders: \n";
     playerOrders->showAllOrders();  // Show all the orders in the orderList
 }
+
+//--------------------Add free function for A3_Part1 Neutral Player -----------------//
+void Player::setStrategy(PlayerStrategy* newStrategy) {
+    if (strategy != nullptr) {
+        delete strategy; // Avoid memory leaks by deleting the old strategy
+    }
+    strategy = newStrategy; // Assign the new strategy
+}
+
+PlayerStrategy* Player::getStrategy() const {
+    return strategy; // Return the current strategy (optional)
+}
+
+void Player::handleAttack() {
+    if (dynamic_cast<Neutral*>(strategy)) {
+        std::cout << "Neutral player " << name << " was attacked! Switching to Aggressive strategy.\n";
+        // setStrategy(new Aggressive(this)); // Change to AggressivePlayerStrategy????
+    }
+}

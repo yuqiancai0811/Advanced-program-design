@@ -1,3 +1,6 @@
+#ifndef PLAYER_STRATEGY_H
+#define PLAYER_STRATEGY_H
+
 #include <vector>
 #include <iostream>
 #include <sstream>
@@ -43,10 +46,22 @@ public:
   Order* playAirliftCard();
 };
 
+//-------------------------- Neutral player & Cheater player Part --------------------------//
 class Neutral : public PlayerStrategy {
-  explicit Neutral(Player* player);
+public:
+    explicit Neutral(Player* player); // Constructor
+    void issueOrder() override;       // Does nothing
+    Order* decideCard(Card* card) override; // Does not play cards
+    std::vector<Territory *> toDefend() override; // Empty list
+    std::vector<Territory *> toAttack() override; // Empty list
 };
 
 class Cheater : public PlayerStrategy {
-  explicit Cheater(Player* player);
+public:
+    explicit Cheater(Player* player); // Constructor
+    void issueOrder() override;       // Automatically conquer adjacent territories
+    Order* decideCard(Card* card) override; // Does not play cards
+    std::vector<Territory *> toDefend() override; // All owned territories
+    std::vector<Territory *> toAttack() override; // All adjacent territories
 };
+#endif // PLAYER_STRATEGY_H

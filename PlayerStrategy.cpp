@@ -8,7 +8,6 @@
 #include "Player.h"
 #include "Orders.h"
 #include "PlayerStrategy.h"
-#include "Orders.h"
 
 PlayerStrategy* PlayerStrategy::createStrategy(Player *player, const std::string& strategy) {
 
@@ -42,14 +41,6 @@ Human::Human(Player *player) {
 }
 
 Aggressive::Aggressive(Player *player) {
-  this->player = player;
-}
-
-Neutral::Neutral(Player *player) {
-  this->player = player;
-}
-
-Cheater::Cheater(Player *player) {
   this->player = player;
 }
 
@@ -235,3 +226,98 @@ std::vector<Territory *> Benevolent::toAttack() {
 
 
 // -------------------------------------------------------------------------------End of Benevolent player -----------------------------------------------------------------------
+
+
+//------------------------------------------------ Neutral player & Cheater player by M.M ------------------------------------------------//
+/* NeutralPlayerStrategy
+Behavior:
+- Computer player that never issues any order, nor uses any cards, though it may have or receive cards. 
+- If a Neutral player is attacked, it becomes an Aggressive player.
+*/
+
+Neutral::Neutral(Player* player) {
+    this->player = player;
+}
+
+void Neutral::issueOrder() {
+    std::cout << player->getName() << " (Neutral Player) does not issue any orders.\n";
+}
+
+Order* Neutral::decideCard(Card* card) {
+    std::cout << player->getName() << " (Neutral Player) does not use cards.\n";
+    return nullptr; // Does nothing
+}
+
+std::vector<Territory*> Neutral::toDefend() {
+    std::cout << player->getName() << " (Neutral Player) has no territories to defend.\n";
+    return {}; // Empty list
+}
+
+std::vector<Territory*> Neutral::toAttack() {
+    std::cout << player->getName() << " (Neutral Player) does not attack.\n";
+    return {}; // Empty list
+}
+
+
+/*
+CheaterPlayerStrategy
+Behavior:
+- Automatically conquers all adjacent territories to its own (once per turn).
+- Does not use cards, though it may have or receive cards.
+*/
+Cheater::Cheater(Player* player) {
+    this->player = player;
+}
+
+void Cheater::issueOrder() {
+    std::cout << player->getName() << " (Cheater Player) automatically conquers all adjacent territories!\n";
+
+    for (Territory* ownedTerritory : player->getOwnedTerritories()) {
+        for (Territory* adjacent : ownedTerritory->getAdjacentTerritories()) {
+            if (adjacent->getOwner() != player->getName()) {
+                // Conquer the adjacent territory
+                std::cout << "Conquering territory: " << adjacent->getName() 
+                          << " owned by: " << adjacent->getOwner() << "\n";
+
+                // Change ownership
+                Player* previousOwner = adjacent->getOwnerPlayer();
+                if (previousOwner) {
+                    previousOwner->removeTerritory(adjacent);
+                }
+                adjacent->setOwner(player->getName());
+                adjacent->setPlayer(player);
+                player->addTerritory(adjacent);
+
+                // Optionally reset armies in the conquered territory
+                adjacent->setArmies(1);
+            }
+        }
+    }
+}
+
+Order* Cheater::decideCard(Card* card) {
+    std::cout << player->getName() << " (Cheater Player) does not use cards.\n";
+    return nullptr; // Does nothing
+}
+
+std::vector<Territory*> Cheater::toDefend() {
+    std::cout << player->getName() << " (Cheater Player) defends all owned territories.\n";
+    return player->getOwnedTerritories();
+}
+
+std::vector<Territory*> Cheater::toAttack() {
+    std::cout << player->getName() << " (Cheater Player) targets all adjacent territories.\n";
+    std::vector<Territory*> attackList;
+
+    for (Territory* ownedTerritory : player->getOwnedTerritories()) {
+        for (Territory* adjacent : ownedTerritory->getAdjacentTerritories()) {
+            if (adjacent->getOwner() != player->getName()) {
+                attackList.push_back(adjacent);
+            }
+        }
+    }
+
+    return attackList;
+}
+
+//------------------------------------------------ End of Neutral player & Cheater player  ------------------------------------------------//

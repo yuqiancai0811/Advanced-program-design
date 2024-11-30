@@ -75,6 +75,11 @@ public:
 
     // Print Player's info
     void printPlayerInfo() const;
+
+    //--------------------Add free function for A3_Part1 Neutral Player -----------------//
+    void setStrategy(PlayerStrategy* newStrategy);
+    PlayerStrategy* getStrategy() const; 
+    void handleAttack();
 };
 
 #endif // PLAYER_H
