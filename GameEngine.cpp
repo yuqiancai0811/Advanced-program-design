@@ -316,7 +316,8 @@ void GameEngine::mainGameLoop()
     cout << "=== Main Game Loop ===" << endl;
     transition(ASSIGN_REINFORCEMENT); // Start from the reinforcement phase
     bool gameOver = false;
-    int currentTurn = 0; // Initialize the turn counter flag
+        int currentTurn = 0;  // Initialize the turn counter
+
     cout << "Starting game loop with a max of " << params.maxTurns << " turns." << endl;
     while (!gameOver && currentTurn < params.maxTurns)
     {
@@ -372,11 +373,8 @@ void GameEngine::mainGameLoop()
                     transition(ASSIGN_REINFORCEMENT);
                 }
             }
-            
-        }
-        currentTurn++; // Increment the turn counter after each full round
-        cout << "currentTurn:"<<currentTurn;
 
+        }
 
         // Additional check to prevent infinite loop
         if (gameOver)
@@ -384,6 +382,7 @@ void GameEngine::mainGameLoop()
             cout << "[INFO] Game Over detected in main loop.\n";
             break;
         }
+    currentTurn++;  // Increment the turn counter
     }
 
     if (gameOver)
@@ -571,7 +570,7 @@ map<Player *, int> savedReinforcements;
 void GameEngine::issueOrdersPhase()
 {
     cout << "=== Starting Issue Orders Phase ===\n";
-
+    int phaseTurn = 0;
     // Step 1: Save the initial reinforcement count for each player
     map<Player *, int> savedReinforcements;
     for (Player *player : playerList)
@@ -585,7 +584,12 @@ void GameEngine::issueOrdersPhase()
     // Continue issuing orders in a round-robin fashion until no orders are pending
     do
     {
-        cout << "\n--- Round " << round++ << " ---\n";
+        if (phaseTurn >= params.maxTurns)
+        { // Check if the max number of turns has been reached
+            cout << "[DRAW] Max turns reached for issuing orders. Ending phase.\n";
+            break; // Exit the loop if max turns limit is reached
+        }
+        cout << "\n--- Turn " << round++ << " ---\n";
         ordersPending = false;
 
         for (Player *player : playerList)
@@ -597,6 +601,7 @@ void GameEngine::issueOrdersPhase()
                 player->issueOrder(); // Issue one order for the player
                 ordersPending = true; // Flag that there are still orders pending
             }
+            phaseTurn++; // Increment the turn counter each round
         }
     } while (ordersPending);
     // /* For debug */
@@ -623,6 +628,7 @@ void GameEngine::issueOrdersPhase()
 void GameEngine::executeOrdersPhase()
 {
     cout << "=== Starting Order Execution Phase ===\n";
+    int phaseTurn = 0; // Initialize the phase turn counter
 
     // Restore each player's reinforcement count before executing orders
     for (Player *player : playerList)
@@ -638,8 +644,13 @@ void GameEngine::executeOrdersPhase()
 
     do
     {
-        cout << "\n--- Execution Round " << round++ << " ---\n";
+        cout << "\n--- Execution Turn " << round++ << " ---\n";
         ordersRemaining = false;
+        if (phaseTurn >= params.maxTurns)
+        { // Check if the max number of turns has been reached
+            cout << "[INFO] Max turns reached for executing orders. Ending phase.\n";
+            break; // Exit the loop if max turns limit is reached
+        }
 
         for (Player *player : playerList)
         {
@@ -659,6 +670,8 @@ void GameEngine::executeOrdersPhase()
                 cout << player->getName() << " has no more orders to execute.\n";
             }
         }
+        phaseTurn++; // Increment the turn counter each round
+
     } while (ordersRemaining);
 
     cout << "=== Order Execution Phase Complete ===\n";
@@ -670,10 +683,10 @@ void GameEngine::executeOrdersPhase()
 void GameEngine::startTournament(const TournamentParameters &params)
 {
     cout << "Starting Tournament..." << endl;
-    if (tournamentMode) {
+    if (tournamentMode)
+    {
         setupTournament(params);
         initializeTournamentPlayers(params.playerStrategies);
-
     }
     cout << "Total maps to load: " << params.mapFiles.size() << endl; // Debug: Check how many maps are there to load
 
@@ -683,7 +696,7 @@ void GameEngine::startTournament(const TournamentParameters &params)
     for (const auto &mapFile : params.mapFiles)
     {
         Map *map = new Map();
-        map=map->loadMapFromFile(mapFile);
+        map = map->loadMapFromFile(mapFile);
         this->setMap(map);
 
         // load map
@@ -693,7 +706,9 @@ void GameEngine::startTournament(const TournamentParameters &params)
             this->selectedMap = map;
             delete map;
             continue;
-        } else {
+        }
+        else
+        {
             cout << "Map loaded successfully: " << mapFile << endl; // Confirm map loaded
         }
         // validate map
@@ -702,19 +717,20 @@ void GameEngine::startTournament(const TournamentParameters &params)
             cout << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
-        } else {
+        }
+        else
+        {
             cout << "Map validated successfully: " << mapFile << endl; // Confirm map validated
         }
-
 
         // Simulate the specified number of games
         for (int i = 0; i < params.numberOfGames; ++i)
         {
             // Setup the game environment
-            cout << "Game in round: " << ++i << endl; 
+            cout << "------------------Game in : " << ++i <<"--------------------"<< endl;
             gamestart(*this);
             displayTournamentResults();
-            resetGame(); // Reset the game for the next run
+            // resetGame(); // Reset the game for the next run
         }
 
         // Clean up after all games on this map are done
@@ -785,22 +801,27 @@ void GameEngine::setTournamentMode(bool mode)
     tournamentMode = mode;
 }
 
-//Initializing tournament players with strategies
-void GameEngine::initializeTournamentPlayers(const vector<string>& strategies) {
+// Initializing tournament players with strategies
+void GameEngine::initializeTournamentPlayers(const vector<string> &strategies)
+{
     cout << "Initializing tournament players with strategies:" << endl;
     playerList.clear(); // Clear existing players
 
-    for (const auto& strategyName : strategies) {
+    for (const auto &strategyName : strategies)
+    {
         cout << "  Strategy: " << strategyName << " - ";
-        
+
         // Assuming each player is named after their strategy for clarity in debugging and gameplay
-        Player* player = new Player(strategyName, strategyName);
-        
+        Player *player = new Player(strategyName, strategyName);
+
         // Check if strategy is properly set within the Player constructor
-        if (player->getStrategy() != nullptr) { 
+        if (player->getStrategy() != nullptr)
+        {
             playerList.push_back(player);
             cout << "Initialized successfully" << endl;
-        } else {
+        }
+        else
+        {
             cout << "Initialization failed" << endl;
             delete player; // Clean up if strategy creation failed
         }
@@ -809,6 +830,7 @@ void GameEngine::initializeTournamentPlayers(const vector<string>& strategies) {
     cout << "Total players initialized: " << playerList.size() << endl;
 }
 
-void GameEngine::setupTournament(const TournamentParameters& params) {
-        this->params = params;  // Storing parameters in the class
-    }
+void GameEngine::setupTournament(const TournamentParameters &params)
+{
+    this->params = params; // Storing parameters in the class
+}
