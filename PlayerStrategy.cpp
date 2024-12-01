@@ -44,7 +44,65 @@ PlayerStrategy* PlayerStrategy::createStrategy(Player *player, const std::string
 Human::Human(Player *player) {
   this->player = player;
 }
+std::vector<Territory*> Human::toAttack() {
 
+    std::vector<Territory*> attackList;
+
+    for (Territory* ownedTerritory : player->getOwnedTerritories()) {
+        for (Territory* adjacent : ownedTerritory->getAdjacentTerritories()) {
+            if (adjacent->getOwner() != player->getName()) {
+                attackList.push_back(adjacent);
+            }
+        }
+    }
+
+    return attackList;
+}
+std::vector<Territory *> Human::toDefend() {
+    std::vector<Territory*> defendList;
+
+    std::vector<Territory*>ownedTerritories=player->getOwnedTerritories();
+
+    for (Territory* territory : ownedTerritories) {
+        if (territory == nullptr) {
+            std::cerr << "Error: Null territory pointer in ownedTerritories!" << std::endl;
+            continue; //
+        }
+
+
+        if (territory->getArmies() < 5) {
+            defendList.push_back(territory);
+            continue; //
+        }
+
+
+        bool hasEnemyAdjacent = false;
+        for (Territory* adj : territory->getAdjacentTerritories()) {
+            if (adj == nullptr) {
+                std::cerr << "Error: Null pointer in adjacent territories!" << std::endl;
+                continue;
+            }
+
+            if (adj->getOwner() != player->getName()) {
+                hasEnemyAdjacent = true;
+                break;
+            }
+        }
+
+        if (hasEnemyAdjacent) {
+            defendList.push_back(territory);
+        }
+    }
+
+    std::sort(defendList.begin(), defendList.end(), [](Territory* a, Territory* b) {
+        return a->getArmies() < b->getArmies();
+    });
+    return defendList;
+}
+Order* Human::decideCard(Card* card) {
+
+    return nullptr; // Does nothing
+}
 void Human::issueOrder() {
     Hand playerHand=player->getHand();
     std::cout << player->getName()<<", which order would you like to issue?" << std::endl;
@@ -215,6 +273,28 @@ void Human::issueOrder() {
 
 Aggressive::Aggressive(Player *player) {
   this->player = player;
+}
+Order* Aggressive::decideCard(Card* card) {
+
+    return nullptr; // Does nothing
+}
+std::vector<Territory*> Aggressive::toAttack() {
+
+    std::vector<Territory*> attackList;
+
+    for (Territory* ownedTerritory : player->getOwnedTerritories()) {
+        for (Territory* adjacent : ownedTerritory->getAdjacentTerritories()) {
+            if (adjacent->getOwner() != player->getName()) {
+                attackList.push_back(adjacent);
+            }
+        }
+    }
+
+    return attackList;
+}
+std::vector<Territory *> Aggressive::toDefend() {
+    // does not defend
+    return {};
 }
 void Aggressive::issueOrder() {
     //issue order for attack
