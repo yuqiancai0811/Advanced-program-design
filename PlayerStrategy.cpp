@@ -532,6 +532,29 @@ std::vector<Territory *> Benevolent::toAttack() {
   return {};
 }
 
+// Temporary decideCard()
+Order* Benevolent::decideCard(Card* card) {
+    if (!card) {
+        std::cout << "No card provided. Benevolent player takes no action.\n";
+        return nullptr;
+    }
+
+    std::cout << "Benevolent player does not use aggressive cards like " << card->getType() << ".\n";
+
+    // Benevolent players may only use certain types of cards (e.g., Reinforcement cards).
+    if (card->getType() == "Reinforcement") {
+        std::cout << "Benevolent player uses a Reinforcement card.\n";
+        // Implement logic for Reinforcement card.
+        // Example: Create a specific order using this card.
+        // Return an order if appropriate.
+        return nullptr; // Replace with the actual order object if needed.
+    }
+
+    // Benevolent player does not use other cards.
+    std::cout << "Benevolent player chooses not to use this card.\n";
+    return nullptr;
+}
+
 
 
 // -------------------------------------------------------------------------------End of Benevolent player -----------------------------------------------------------------------
