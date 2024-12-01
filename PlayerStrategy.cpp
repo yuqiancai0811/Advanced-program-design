@@ -118,8 +118,12 @@ void Human::issueOrder() {
                 std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
             }
             std::cin>>indexOfTerritory;
+            //std::cout<<"Original territory army number:"<<player->getOwnedTerritories()[indexOfTerritory]->getArmies()<<endl;
+
             deployOrder* deploy_order=new deployOrder(numberTODeploy,player->getOwnedTerritories()[indexOfTerritory],player);
-            player->getOrders().addOrder(deploy_order);
+            deploy_order->execute();
+            //std::cout<<"After deploy:"<<player->getOwnedTerritories()[indexOfTerritory]->getArmies()<<endl;
+            //player->getOrders().addOrder(deploy_order);
             break;
         }
         case 2: {
@@ -141,7 +145,8 @@ void Human::issueOrder() {
             }
             std::cin>>indexOfAdj;
             advanceOrder* advance_order=new advanceOrder(numberTOAdvance,player->getOwnedTerritories()[indexOfTerritory],player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[indexOfAdj],player);
-            player->getOrders().addOrder(advance_order);
+            advance_order->execute();
+            //player->getOrders().addOrder(advance_order);
             break;
         }
         case 3: {
@@ -182,7 +187,8 @@ void Human::issueOrder() {
                 std::cin>>firstindex;
                 std::cin>>secondindex;
                 bombOrder* bomb_order=new bombOrder(player->getOwnedTerritories()[firstindex]->getAdjacentTerritories()[secondindex],player);
-                player->getOrders().addOrder(bomb_order);
+                bomb_order->execute();
+                //player->getOrders().addOrder(bomb_order);
 
 
 
@@ -219,7 +225,8 @@ void Human::issueOrder() {
                 std::cout<<"Please select the territory you want to blockade:"<<endl;
                 std::cin>>indexOfTerritory;
                 blockadeOrder* blockade_order=new blockadeOrder(numberOfArmies,player,player->getOwnedTerritories()[indexOfTerritory]);
-                player->getOrders().addOrder(blockade_order);
+                blockade_order->execute();
+                //player->getOrders().addOrder(blockade_order);
 
             }
             else {
@@ -259,7 +266,8 @@ void Human::issueOrder() {
                 std::cout<<"Please select the target territory you want to take armies to:"<<endl;
                 std::cin>>indexOfTerritory2;
                 airliftOrder* airlift_order=new airliftOrder(numberOfArmies,player->getOwnedTerritories()[indexOfTerritory1],player->getOwnedTerritories()[indexOfTerritory2],player);
-                player->getOrders().addOrder(airlift_order);
+                airlift_order->execute();
+                //player->getOrders().addOrder(airlift_order);
             }
             else {
                 std::cout<<"There is no airlift card in hand, you can not play bomb order"<<endl;
@@ -311,7 +319,7 @@ void Aggressive::issueOrder() {
         //do the deploy order if there is reinforcement left in the pool
         //add all the armies into first territory
         deployOrder* deploy_order=new deployOrder(player->getNumberOfReinforcement(),player->getOwnedTerritories()[0],player);
-
+        deploy_order->execute();
     }
     //attack all the adjacent territory that not belongs to player
     //if there is no place to attack, advance teh armies to another territory then do teh same thing until there is no armies left
