@@ -34,7 +34,7 @@ Command &Command::operator=(const Command &other)
 }
 
 // Getter for the command string
-std::string Command::getCommandString() const
+string Command::getCommandString() const
 {
     return command;
 }
@@ -86,7 +86,6 @@ CommandProcessor::~CommandProcessor()
     commands.clear();
 }
 
-
 // void GameEngine::setCommandProcessor(CommandProcessor *processor) {
 //     this->commandProcessor = processor;
 // }
@@ -102,7 +101,7 @@ string CommandProcessor::readCommand()
 {
     string cmd;
     cout << "Enter command: ";
-    std::getline(std::cin, cmd);
+    getline(cin, cmd);
     return cmd;
 }
 
@@ -121,53 +120,60 @@ void CommandProcessor::getCommand()
     if (validateCommand(cmd))
     {
         // Parse the command and argument
-        
-        std::string fullCommand = cmd->getCommandString();
-        //fullCommand = fullCommand.substr(fullCommand.find_first_not_of(' '), fullCommand.find_last_not_of(' ') - fullCommand.find_first_not_of(' ') + 1);
-        std::istringstream iss(fullCommand);
-        std::string command;
-        std::string argument;
+
+        string fullCommand = cmd->getCommandString();
+        // fullCommand = fullCommand.substr(fullCommand.find_first_not_of(' '), fullCommand.find_last_not_of(' ') - fullCommand.find_first_not_of(' ') + 1);
+        istringstream iss(fullCommand);
+        string command;
+        string argument;
 
         iss >> command;
-        std::getline(iss, argument);
+        getline(iss, argument);
 
-        if (!argument.empty()) {
+        if (!argument.empty())
+        {
             // remove spaces at the beginning of the argument
             argument = argument.substr(argument.find_first_not_of(' '));
         }
 
         // cout << "Debug: in function getCommand, comment receive: command:" << command <<";  argument:"<<argument<< endl;
 
+        // As3-part2: add tournament mode during the game start
+        if (command == "tournament")
+        {
+            handleTournamentCommand(cmd);
+        }
         // Check the game state compatibility for each command
-        if(command == "loadmap"){
+        else if (command == "loadmap")
+        {
             // cout << "Debug: in function getCommand calling  handleloadmapCommand"<< endl;
             handleloadmapCommand(cmd);
         }
-        else if(command == "validatemap"){
+        else if (command == "validatemap")
+        {
             // cout << "Debug: in function getCommand calling  handlevalidatemap"<< endl;
             handleValidateMapCommand(cmd);
         }
-        else if(command == "addplayer"){
+        else if (command == "addplayer")
+        {
             // cout << "Debug: in function getCommand calling  handleaddplayer"<< endl;
             handleAddPlayerCommand(cmd);
         }
-        else if(command == "gamestart"){
+        else if (command == "gamestart")
+        {
             // cout << "Debug: in function getCommand calling  handleGameStartCommand"<< endl;
             handleGameStartCommand(cmd);
         }
-        //As3-part2: add tournament mode during the gamestart 
-        else if(command == "tournament"){
-            handleTournamentCommand(cmd);
-        }
-        else if(command == "replay"){
+
+        else if (command == "replay")
+        {
             // cout << "Debug: in function getCommand calling  handleReplayCommand"<< endl;
             handleReplayCommand(cmd);
-            
         }
-        else if(command == "quit"){
-            cout << "Quit the game"<< endl;
+        else if (command == "quit")
+        {
+            cout << "Quit the game" << endl;
             handleQuitCommand(cmd);
-        
         }
     }
     else
@@ -181,23 +187,24 @@ void CommandProcessor::getCommand()
 
 // Validates if the command matches a list of known valid commands
 bool CommandProcessor::validateCommand(const Command *cmd) const
-{   
-    std::string fullCommand = cmd->getCommandString();
-    std::istringstream iss(fullCommand);
-    std::string command;
-    std::string argument;
+{
+    string fullCommand = cmd->getCommandString();
+    istringstream iss(fullCommand);
+    string command;
+    string argument;
 
     iss >> command;
-    std::getline(iss, argument);
+    getline(iss, argument);
 
-    if (!argument.empty()) {
+    if (!argument.empty())
+    {
         // remove spaces at the beginning of the argument
         argument = argument.substr(argument.find_first_not_of(' '));
     }
 
     // Define a list of valid commands
     const string validCommands[] = {"loadmap", "validatemap", "addplayer", "gamestart", "tournament", "replay", "quit"};
-    
+
     // Check if the command is in the list of valid commands
     bool isCommand = false;
     for (const auto &validCmd : validCommands)
@@ -208,91 +215,107 @@ bool CommandProcessor::validateCommand(const Command *cmd) const
         }
     }
 
-   
     // cout << "Debug in function(validateCommand): command receive:" << command <<";argument:"<<argument<< endl;
     // Validate the command based on the current game state
-    if (command == "loadmap" && (gameEngine->getCurrentState() == START || gameEngine->getCurrentState() == MAPLODADED)) {return true;}
-    if (command == "validatemap" && gameEngine->getCurrentState() == MAPLODADED) return true;
-    if (command == "addplayer" && (gameEngine->getCurrentState() == MAPVALIDATED || gameEngine->getCurrentState() == PLAYERSADDED)) return true;
-    if (command == "gamestart" && gameEngine->getCurrentState() == PLAYERSADDED) return true;
-    if (command == "tournament" && gameEngine->getCurrentState() == PLAYERSADDED) return true;
-    if (command == "replay" && gameEngine->getCurrentState() == WIN) return true;
-    if (command == "quit" && gameEngine->getCurrentState() == WIN) return true;
+    if (command == "tournament" && gameEngine->getCurrentState() == START)
+        return true;
+    if (command == "loadmap" && (gameEngine->getCurrentState() == START || gameEngine->getCurrentState() == MAPLODADED))
+    {
+        return true;
+    }
+    if (command == "validatemap" && gameEngine->getCurrentState() == MAPLODADED)
+        return true;
+    if (command == "addplayer" && (gameEngine->getCurrentState() == MAPVALIDATED || gameEngine->getCurrentState() == PLAYERSADDED))
+        return true;
+    if (command == "gamestart" && gameEngine->getCurrentState() == PLAYERSADDED)
+        return true;
+    if (command == "replay" && gameEngine->getCurrentState() == WIN)
+        return true;
+    if (command == "quit" && gameEngine->getCurrentState() == WIN)
+        return true;
     cout << "Debug in function(validateCommand): Invalid command full command:" << fullCommand << endl;
-    cout << "Debug in function(validateCommand): Invalid command:" << command <<";argument "<<argument<< endl;
+    cout << "Debug in function(validateCommand): Invalid command:" << command << ";argument " << argument << endl;
     return false;
 }
 
 // Handler for loadmap command - prompts the user for map name and loads it
-void CommandProcessor::handleloadmapCommand(Command* command){
-    std::istringstream iss(command->getCommandString());
-    std::string commandstring;
-    std::string argument;
+void CommandProcessor::handleloadmapCommand(Command *command)
+{
+    istringstream iss(command->getCommandString());
+    string commandstring;
+    string argument;
 
     iss >> commandstring;
-    std::getline(iss, argument);
+    getline(iss, argument);
 
-    if (!argument.empty()) {
+    if (!argument.empty())
+    {
         // remove spaces at the beginning of the argument
         argument = argument.substr(argument.find_first_not_of(' '));
     }
-    
-   
+
     // Load map and set state based on result
     Map objectr;
-    gameEngine->selectedMap=objectr.loadMapFromFile(argument);
-    
+    gameEngine->selectedMap = objectr.loadMapFromFile(argument);
+
     bool result = (gameEngine->selectedMap == nullptr);
-    if (!result) {
+    if (!result)
+    {
         cout << "Map " << argument << " loaded successfully!\n";
         gameEngine->transition(MAPLODADED);
-        
-        std::string effect="Map loading successfully! Map name:";
+
+        string effect = "Map loading successfully! Map name:";
         effect.append(argument);
         command->setEffect(effect);
-    } else {
+    }
+    else
+    {
         cout << "Failed to load the map. Please try again.\n";
-        command->setEffect("Failed loading the map.");//---------------
+        command->setEffect("Failed loading the map."); //---------------
     }
 }
 
-void CommandProcessor::handleValidateMapCommand(Command* command) {
+void CommandProcessor::handleValidateMapCommand(Command *command)
+{
     // Parse the command to extract information for potential logging or debugging
-    std::istringstream iss(command->getCommandString()); //---------------
+    istringstream iss(command->getCommandString()); //---------------
 
     cout << "Validating the map...\n";
-          
-    // Call the validate function on the selected map to check if it meets the required criteria
-    bool mapValidated = (gameEngine->selectedMap->validate()); 
 
-    if (mapValidated) {
+    // Call the validate function on the selected map to check if it meets the required criteria
+    bool mapValidated = (gameEngine->selectedMap->validate());
+
+    if (mapValidated)
+    {
         // If the map is validated successfully, transition the game state to MAPVALIDATED
         cout << "Map validated successfully!\n";
         gameEngine->transition(MAPVALIDATED);
 
-        std::string effect = "Map validation successful!"; //---------------
+        string effect = "Map validation successful!"; //---------------
         command->setEffect(effect);                        //---------------
-
-    } else {
+    }
+    else
+    {
         cout << "Map validation failed. Please load a valid map.\n";
-        std::string effect = "Map validation failed. Please load a valid map."; //---------------
-        command->setEffect(effect); //---------------
+        string effect = "Map validation failed. Please load a valid map."; //---------------
+        command->setEffect(effect);                                             //---------------
     }
 }
 
-
-void CommandProcessor::handleAddPlayerCommand(Command* command) {
+void CommandProcessor::handleAddPlayerCommand(Command *command)
+{
     // Parse the command to extract the player name argument
-    std::istringstream iss(command->getCommandString());
-    std::string commandstring;
-    std::string argument;
+    istringstream iss(command->getCommandString());
+    string commandstring;
+    string argument;
 
     // Extract command and argument from the input string
     iss >> commandstring;
-    std::getline(iss, argument);
-    std::string playerName = argument;
+    getline(iss, argument);
+    string playerName = argument;
 
-    if (!argument.empty()) {
+    if (!argument.empty())
+    {
         // Remove leading spaces from the argument to get the exact player name
         argument = argument.substr(argument.find_first_not_of(' '));
     }
@@ -304,44 +327,48 @@ void CommandProcessor::handleAddPlayerCommand(Command* command) {
 
     // Display the total number of players in the game
     cout << "Total number of players: " << gameEngine->playerList.size() << endl;
-    
+
     // Iterate over the player list to display each player's name
-    for (Player* player : gameEngine->playerList) {
+    for (Player *player : gameEngine->playerList)
+    {
         cout << "Player: " << player->getName() << " \n";
     }
 
     // -----------------------------------------------------
-    std::string effect = "Player " + playerName + " added successfully. Total players: " + std::to_string(gameEngine->playerList.size());
-    command->setEffect(effect); 
-    // -----------------------------------------------------    
+    string effect = "Player " + playerName + " added successfully. Total players: " + to_string(gameEngine->playerList.size());
+    command->setEffect(effect);
+    // -----------------------------------------------------
 }
 
-
-void CommandProcessor::handleQuitCommand(Command* command) {
+void CommandProcessor::handleQuitCommand(Command *command)
+{
     // Check if the current state of the game engine is WIN
-    if (gameEngine->getCurrentState() == WIN) {
+    if (gameEngine->getCurrentState() == WIN)
+    {
         // Output message indicating game is exiting
         cout << "Exiting the game." << endl;
 
         // -----------------------------------------------------
-        std::string effect = "Game exited successfully.";
+        string effect = "Game exited successfully.";
         command->setEffect(effect); // Store effect in the command for logging or further use
         // -----------------------------------------------------
         // Exit the program as the game is in the WIN state
-        exit(0);  
-    } else {
+        exit(0);
+    }
+    else
+    {
         // Output message indicating that quit command is not allowed in the current state
         cout << "Quit command is only valid in the WIN state." << endl;
 
         // -----------------------------------------------------
-        std::string effect = "Quit command failed. Current state: " + gameEngine->getCurrentState();
+        string effect = "Quit command failed. Current state: " + gameEngine->getCurrentState();
         command->setEffect(effect); // Store the failure effect in the command
         // -----------------------------------------------------
     }
 }
 
-
-void CommandProcessor::handleReplayCommand(Command* command) {
+void CommandProcessor::handleReplayCommand(Command *command)
+{
     cout << "Replay command passed." << endl;
     gameEngine->transition(START);
     gameEngine->resetGame();
@@ -349,9 +376,10 @@ void CommandProcessor::handleReplayCommand(Command* command) {
     cout << "Please setup the game again." << endl;
 }
 
-void CommandProcessor::handleGameStartCommand(Command* command){
-     gameEngine->gamestart(*gameEngine);
-}; 
+void CommandProcessor::handleGameStartCommand(Command *command)
+{
+    gameEngine->gamestart(*gameEngine);
+};
 
 // Overloading the << operator to print details of the CommandProcessor
 ostream &operator<<(ostream &os, const CommandProcessor &processor)
@@ -414,7 +442,7 @@ string FileLineReader::readLine()
 // Implementation of FileCommandProcessorAdapter class
 
 // Constructor that initializes the CommandProcessor with a file reader for reading commands from a file
-FileCommandProcessorAdapter::FileCommandProcessorAdapter(GameEngine *engine, const std::string &fileName): CommandProcessor(engine), fileReader(new FileLineReader(fileName)) {}
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(GameEngine *engine, const string &fileName) : CommandProcessor(engine), fileReader(new FileLineReader(fileName)) {}
 
 // Destructor to clean up the file reader
 FileCommandProcessorAdapter::~FileCommandProcessorAdapter()
@@ -445,67 +473,136 @@ ostream &operator<<(ostream &os, const FileCommandProcessorAdapter &adapter)
 }
 
 // ---------------------------------Asg3 part2--------------------------------- :
-//Parses the tournament command arguments into a TournamentParameters struct  
-TournamentParameters CommandProcessor::parseTournamentCommand(const string& arguments) {
-    TournamentParameters params;
+// handleTournamentCommand function
+void CommandProcessor::handleTournamentCommand(Command *command)
+{
+    cout << "Debug: Entering handleTournamentCommand." << endl;
+    gameEngine->setTournamentMode(true);
+    cout << "Debug: Tournament mode set to true." << endl;
+
+    // Parse the command to extract tournament parameters
+    istringstream iss(command->getCommandString());
+    string commandstring;
+    string argument;
+
+    iss >> commandstring;   // This should capture the "tournament" command
+    getline(iss, argument); // This captures the rest of the line as arguments
+
+    if (!argument.empty())
+    {
+        argument = argument.substr(argument.find_first_not_of(' ')); // Trim leading spaces
+    }
+
+    TournamentParameters params = parseTournamentCommand(argument);
+    // Output the detailed parameters
+    cout << "Debug: Parsed Tournament Parameters:" << endl;
+    cout << "  Maps: ";
+    for (const auto &map : params.mapFiles)
+    {
+        cout << map << " ";
+    }
+    cout << endl;
+
+    cout << "  Player Strategies: ";
+    for (const auto &strategy : params.playerStrategies)
+    {
+        cout << strategy << " ";
+    }
+    cout << endl;
+
+    cout << "  Number of Games: " << params.numberOfGames << endl;
+    cout << "  Max Number of Turns: " << params.maxTurns << endl;
+
+    if (validateTournamentParameters(params))
+    {
+        gameEngine->startTournament(params);
+        string effect = "Tournament started successfully with the following settings: Maps=" +
+                        to_string(params.mapFiles.size()) + ", Strategies=" +
+                        to_string(params.playerStrategies.size()) + ", Games=" +
+                        to_string(params.numberOfGames) + ", Max Turns=" +
+                        to_string(params.maxTurns);
+        command->setEffect(effect);
+        cout << effect << endl;
+    }
+    else
+    {
+        cout << "Invalid tournament parameters. Please check the format and try again.\n";
+        string effect = "Invalid tournament parameters.";
+        command->setEffect(effect);
+    }
+}
+// Parses the tournament command arguments into a TournamentParameters struct
+TournamentParameters CommandProcessor::parseTournamentCommand(const string &arguments)
+{
     istringstream iss(arguments);
     string token;
-    string value;
+    TournamentParameters params;
+    params.numberOfGames = 0; // Default initialization
+    params.maxTurns = 0;      // Default initialization
 
-    // Loop through each part of the argument string
-    while (iss >> token) {
-        // Check for map files list
-        if (token == "-M") {
-            if (!(iss >> value)) break; // Get the next part which should be the map files
-            istringstream mapStream(value);
-            string map;
-            while (getline(mapStream, map, ',')) {
-                params.mapFiles.push_back(map); // Split map files by comma and add to the list
+    map<string, vector<string> *> flagMap = {
+        {"-M", &params.mapFiles},
+        {"-P", &params.playerStrategies}};
+
+    map<string, int *> intFlagMap = {
+        {"-G", &params.numberOfGames},
+        {"-D", &params.maxTurns}};
+
+    string currentFlag;
+
+    while (iss >> token)
+    {
+        cout << "Processing token: " << token << endl; // Debug output
+        if (token[0] == '-')
+        { // Check if it's a flag
+            currentFlag = token;
+            cout << "Current flag: " << currentFlag << endl; // Debug output
+        }
+        else
+        {
+            if (!currentFlag.empty() && flagMap.find(currentFlag) != flagMap.end())
+            {
+                flagMap[currentFlag]->push_back(token);
+                cout << "Added to vector under flag " << currentFlag << ": " << token << endl; // Debug output
             }
-        }
-        // Check for player strategies list
-        else if (token == "-P") {
-            if (!(iss >> value)) break; // Get the next part which should be the player strategies
-            istringstream strategyStream(value);
-            string strategy;
-            while (getline(strategyStream, strategy, ',')) {
-                params.playerStrategies.push_back(strategy); // Split strategies by comma and add to the list
+            else if (!currentFlag.empty() && intFlagMap.find(currentFlag) != intFlagMap.end())
+            {
+                *(intFlagMap[currentFlag]) = stoi(token);
+                cout << "Set integer under flag " << currentFlag << ": " << token << endl; // Debug output
             }
-        }
-        // Check for number of games
-        else if (token == "-G") {
-            if (!(iss >> params.numberOfGames)) break; // Get the number of games directly
-        }
-        // Check for max number of turns
-        else if (token == "-D") {
-            if (!(iss >> params.maxTurns)) break; // Get the max number of turns directly
         }
     }
 
     return params;
 }
-//validates the parsed tournament parameters to ensure they meet expected constraints
-bool CommandProcessor::validateTournamentParameters(const TournamentParameters& params) {
+
+// validates the parsed tournament parameters to ensure they meet expected constraints
+bool CommandProcessor::validateTournamentParameters(const TournamentParameters &params)
+{
     // Validate the number of maps
-    if (params.mapFiles.empty() || params.mapFiles.size() > 5) {
+    if (params.mapFiles.empty() || params.mapFiles.size() > 5)
+    {
         cout << "Error: Invalid number of maps." << endl;
         return false;
     }
 
     // Validate the player strategies
-    if (params.playerStrategies.size()< 2 || params.playerStrategies.size() > 4) {
+    if (params.playerStrategies.size() < 2 || params.playerStrategies.size() > 4)
+    {
         cout << "Error: Invalid number of player strategies." << endl;
         return false;
     }
 
     // Validate the number of games
-    if (params.numberOfGames < 1 || params.numberOfGames > 5) {
+    if (params.numberOfGames < 1 || params.numberOfGames > 5)
+    {
         cout << "Error: Invalid number of games." << endl;
         return false;
     }
 
     // Validate the max number of turns
-    if (params.maxTurns < 10 || params.maxTurns > 50) {
+    if (params.maxTurns < 10 || params.maxTurns > 50)
+    {
         cout << "Error: Invalid max number of turns." << endl;
         return false;
     }
@@ -513,35 +610,4 @@ bool CommandProcessor::validateTournamentParameters(const TournamentParameters& 
     return true;
 }
 
-
-//handleTournamentCommand function
-void CommandProcessor::handleTournamentCommand(Command* command) {
-    // Parse the command to extract tournament parameters
-    std::istringstream iss(command->getCommandString());
-    std::string commandstring;
-    std::string argument;
-
-    iss >> commandstring; // This should capture the "tournament" command
-    std::getline(iss, argument); // This captures the rest of the line as arguments
-
-    if (!argument.empty()) {
-        argument = argument.substr(argument.find_first_not_of(' ')); // Trim leading spaces
-    }
-
-    TournamentParameters params = parseTournamentCommand(argument);
-
-    if (validateTournamentParameters(params)) {
-        gameEngine->startTournament(params);
-        std::string effect = "Tournament started successfully with the following settings: Maps=" +
-                             std::to_string(params.mapFiles.size()) + ", Strategies=" +
-                             std::to_string(params.playerStrategies.size()) + ", Games=" +
-                             std::to_string(params.numberOfGames) + ", Max Turns=" +
-                             std::to_string(params.maxTurns);
-        command->setEffect(effect);
-        cout << effect << endl;
-    } else {
-        cout << "Invalid tournament parameters. Please check the format and try again.\n";
-        std::string effect = "Invalid tournament parameters.";
-        command->setEffect(effect);
-    }
-}
+// tournament -M USA.map Europe.map -P Aggressive, Benevolent, Neutral, Cheater -G 3 -D 17

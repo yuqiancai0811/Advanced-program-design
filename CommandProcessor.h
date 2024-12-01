@@ -80,7 +80,6 @@ public:
     TournamentParameters parseTournamentCommand(const std::string& arguments);
     bool validateTournamentParameters(const TournamentParameters& params);
 
-
 };
 
 // FileLineReader class to read commands from a file
