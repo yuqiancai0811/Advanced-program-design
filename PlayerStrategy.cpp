@@ -477,11 +477,6 @@ void Benevolent::issueOrder() {
     }
 }
   
-Order* Benevolent::decideCard(Card* card) {
-
-    return nullptr; // Does nothing
-}
-
 std::vector<Territory *> Benevolent::toDefend() {
     std::vector<Territory*> defendList;
 

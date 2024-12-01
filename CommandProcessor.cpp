@@ -621,4 +621,4 @@ bool CommandProcessor::validateTournamentParameters(const TournamentParameters &
     return true;
 }
 
-// tournament -M USA.map Europe.map -P Aggressive Benevolent Neutral Cheater -G 3 -D 17
+// tournament -M USA.map Europe.map -P Aggressive Benevolent Neutral Cheater -G 3 -D 11

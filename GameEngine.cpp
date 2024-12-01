@@ -694,16 +694,15 @@ void GameEngine::startTournament(const TournamentParameters &params)
 
             AssignTerritories();
             // Play the game with specific conditions
-            for (int turn = 0; turn < params.maxTurns; ++turn) {
-               mainGameLoop();
-            }
+            // for (int turn = 0; turn < params.maxTurns; ++turn) {
+            //    mainGameLoop();
+            // }
 
             // // Collect results from this game
             // string result = isDraw() ? "draw" : checkWinState()->getName();
             // tournamentResults.push_back(result);
             displayTournamentResults();
-
-            resetGame(); // Reset the game for the next run
+            // resetGame(); // Reset the game for the next run
         }
 
         // Clean up after all games on this map are done
