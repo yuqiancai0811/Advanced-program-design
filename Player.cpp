@@ -9,6 +9,17 @@ using namespace std;
 Player::Player() 
     : name("Unnamed Player"), playerHand(Hand()), playerOrders(new orderList()), numberOfReinforcement(0), negotiate(false) {}
 
+// New Constructor
+Player::Player(const std::string& name, const std::string& strategyType)
+    : name(name), playerHand(Hand()), playerOrders(new orderList()), numberOfReinforcement(0), negotiate(false) {
+    // Initialize the strategy using the factory method
+    strategy = PlayerStrategy::createStrategy(this, strategyType);
+    if (!strategy) {
+        throw std::invalid_argument("Invalid strategy type provided: " + strategyType);
+    }
+    std::cout << "Player " << name << " initialized with strategy: " << strategyType << std::endl;
+}
+
 // Parameterized constructor
 Player::Player(const string& name) 
     : name(name), playerHand(Hand()), playerOrders(new orderList()), numberOfReinforcement(0), negotiate(false) {}
@@ -40,6 +51,7 @@ Player& Player::operator=(const Player& other) {
 // Destructor
 Player::~Player() {
     delete playerOrders;  // Free allocated memory for playerOrders
+    delete strategy; // Clean up the strategy
 }
 
 /* ------------ Setter and getter for negotiate used in P4 -----------*/

@@ -25,7 +25,10 @@ private:
 public:
     // Default constructor
     Player();
-
+    
+    // New Constructor
+    Player(const std::string& name, const std::string& strategyType);
+    
     // Parameterized constructor
     Player(const std::string& name);
 
