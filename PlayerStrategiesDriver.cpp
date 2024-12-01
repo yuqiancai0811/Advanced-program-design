@@ -54,10 +54,24 @@ void testPlayerStrategies() {
     aggressive->addTerritory(a6);
     human->issueOrder();
 
-    //-------------------------- Neutral player & Cheater player testing Part --------------------------//
+  //-------------------------- Neutral player & Cheater player testing Part --------------------------//
     // Create a Neutral Player
     Player* neutralPlayer = new Player("NeutralPlayer");
     neutralPlayer->setStrategy(new Neutral(neutralPlayer));
+
+    // Add territories for Neutral Player
+    Territory* n1 = new Territory("NeutralTerritory1", 9, 9, "Continent1", {});
+    Territory* n2 = new Territory("NeutralTerritory2", 10, 10, "Continent1", {});
+    Territory* n3 = new Territory("NeutralTerritory3", 11, 11, "Continent1", {});
+    n1->addAdjacentTerritory(n2);
+    n2->addAdjacentTerritory(n1);
+    n2->addAdjacentTerritory(n3);
+    n3->addAdjacentTerritory(n2);
+
+    neutralPlayer->addTerritory(n1);
+    neutralPlayer->addTerritory(n2);
+    neutralPlayer->addTerritory(n3);
+
     std::cout << "\nNeutral Player Behavior:\n";
     neutralPlayer->issueOrder(); // Should do nothing
 
@@ -95,21 +109,12 @@ void testPlayerStrategies() {
     std::cout << "Territory2 is now owned by: " << t2->getOwner() << "\n";
     std::cout << "Territory3 is now owned by: " << t3->getOwner() << "\n";
 
-    // Clean up dynamically allocated memory
-    delete neutralPlayer;
-    delete cheaterPlayer;
-    delete t1;
-    delete t2;
-    delete t3;
-
-    std::cout << "\nTesting completed.\n";
-
     //----------------------------Benevolent player testing part ------------------------
     Player* benevolent = new Player("BenevolentPlayer");
     benevolent->setStrategy(new Benevolent(benevolent));
-    Territory* b1=new Territory("TerritoryB1", 10, 0, "Continent1", {});
-    Territory* b2=new Territory("TerritoryB2", 11, 0, "Continent1", {});
-    Territory* b3=new Territory("TerritoryB3", 12, 0, "Continent1", {});
+    Territory* b1 = new Territory("TerritoryB1", 10, 0, "Continent1", {});
+    Territory* b2 = new Territory("TerritoryB2", 11, 0, "Continent1", {});
+    Territory* b3 = new Territory("TerritoryB3", 12, 0, "Continent1", {});
     b1->addAdjacentTerritory(b2);
     b1->addAdjacentTerritory(a6);
     b1->addAdjacentTerritory(b3);
@@ -120,6 +125,41 @@ void testPlayerStrategies() {
     benevolent->addTerritory(b1);
     benevolent->addTerritory(b2);
     benevolent->addTerritory(b3);
+
+    // Clean up dynamically allocated memory
+    delete human;
+    delete aggressive;
+
+    // Delete territories assigned to Human
+    delete a1;
+    delete a2;
+    delete a3;
+
+    // Delete territories assigned to Aggressive
+    delete a4;
+    delete a5;
+    delete a6;
+
+    // Delete territories for Benevolent player
+    delete benevolent;
+    delete b1;
+    delete b2;
+    delete b3;
+
+    // Clean up dynamically allocated memory for Neutral player (already done above)
+    delete neutralPlayer;
+    delete n1;
+    delete n2;
+    delete n3;
+
+    // Clean up dynamically allocated memory for Cheater player (already done above)
+    delete cheaterPlayer;
+    delete t1;
+    delete t2;
+    delete t3;
+
+    std::cout << "\nTesting completed.\n";
+
 
 }
 
