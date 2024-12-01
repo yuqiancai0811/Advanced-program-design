@@ -310,11 +310,17 @@ void Aggressive::issueOrder() {
     int temp=0;
     Territory* territoryTemp;
     int indexOfTerritory;
-    for (Territory* a:player->getOwnedTerritories()) {
-        temp=temp+a->getArmies();
-        a->setArmies(0);
+    // for (Territory* a:player->getOwnedTerritories()) {
+    //     temp=temp+a->getArmies();
+    //     a->setArmies(0);
+    // }
+    // player->getOwnedTerritories()[0]->setArmies(temp);
+    for(int i=1;i<player->getOwnedTerritories().size();i++) {
+        int temp=player->getOwnedTerritories()[i]->getArmies();
+        advanceOrder* ad=new advanceOrder(temp,player->getOwnedTerritories()[i],player->getOwnedTerritories()[0],player);
+        ad->execute();
     }
-    player->getOwnedTerritories()[0]->setArmies(temp);
+
     if(player->getNumberOfReinforcement()>0) {
         //do the deploy order if there is reinforcement left in the pool
         //add all the armies into first territory
