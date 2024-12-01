@@ -3,6 +3,7 @@
 #include "Orders.h"
 #include "Player.h"
 #include "CommandProcessor.h"
+#include <iomanip>
 #include <iostream>
 #include <limits>
 #include <map>

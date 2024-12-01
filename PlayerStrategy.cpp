@@ -15,25 +15,30 @@ PlayerStrategy* PlayerStrategy::createStrategy(Player *player, const std::string
   for(auto& c : strategy){strategy_name += (char)std::tolower(c);}
 
 
-  // if(strategy_name == "human") {
-  //   return new Human(player);
-  // } else if(strategy_name == "aggressive") {
-  //   return new Aggressive(player);
-  // } else if(strategy_name == "benevolent") {
-  //   return new Benevolent(player);
-  // } else if(strategy_name == "neutral") {
-  //   return new Neutral(player);
-  // } else if (strategy_name == "cheater") {
-  //   return new Cheater(player);
-  // } else if (strategy_name == "random") {
-  //   if (rand() % 2 == 0) {
-  //     return new Aggressive(player);
-  //   } else {
-  //     return new Benevolent(player);
-  //   }
-  // } else {
-  //   throw std::runtime_error("Invalid strategy name");
-  // }
+  if(strategy_name == "human") {
+    return new Human(player);
+  } 
+  else if(strategy_name == "aggressive") {
+    return new Neutral(player);
+  } 
+  else if(strategy_name == "benevolent") {
+    return new Benevolent(player);
+  } 
+  else if(strategy_name == "neutral") {
+    return new Neutral(player);
+  } 
+  else if (strategy_name == "cheater") {
+    return new Cheater(player);
+  } 
+  else if (strategy_name == "random") {
+    if (rand() % 2 == 0) {
+      return new Neutral(player);
+    } else {
+      return new Benevolent(player);
+    }
+  } else {
+    throw std::runtime_error("Invalid strategy name");
+  }
 }
 
 Human::Human(Player *player) {
