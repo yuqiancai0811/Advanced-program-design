@@ -211,6 +211,62 @@ void Human::issueOrder() {
 Aggressive::Aggressive(Player *player) {
   this->player = player;
 }
+void Aggressive::issueOrder() {
+    //issue order for attack
+    std::vector<Territory*> attackList;
+    // std::vector<Territory*> defendList;
+    attackList=player->toAttack();
+    int temp=0;
+    Territory* territoryTemp;
+    int indexOfTerritory;
+    for (Territory* a:player->getOwnedTerritories()) {
+        temp=temp+a->getArmies();
+        a->setArmies(0);
+    }
+    player->getOwnedTerritories()[0]->setArmies(temp);
+    if(player->getNumberOfReinforcement()>0) {
+        //do the deploy order if there is reinforcement left in the pool
+        //add all the armies into first territory
+        deployOrder* deploy_order=new deployOrder(player->getNumberOfReinforcement(),player->getOwnedTerritories()[0],player);
+
+    }
+    //attack all the adjacent territory that not belongs to player
+    //if there is no place to attack, advance teh armies to another territory then do teh same thing until there is no armies left
+
+    int count=0;
+    for(Territory* a:player->getOwnedTerritories()) {
+        if(a->getArmies()>0&&attackList.size()>0) {
+            for(Territory*b:attackList) {
+                //try to attack all the territory in the attack list
+                //if the territory is not adjacent with a, it can not pass the validation, won't affect the result
+                advanceOrder* attackOrder=new advanceOrder(player->getOwnedTerritories()[count]->getArmies(),player->getOwnedTerritories()[count],b,player);
+                if(attackOrder->validate()==true) {
+                    attackOrder->execute();
+
+                    //delete this territory from the attack list
+                    auto it = std::find(attackList.begin(), attackList.end(), b);
+                    if (it != attackList.end()) {
+                        attackList.erase(it);
+                    }
+
+                }
+            }
+            advanceOrder* advance_order=new advanceOrder(player->getOwnedTerritories()[count]->getArmies(),player->getOwnedTerritories()[count],player->getOwnedTerritories()[count+1],player);
+            advance_order->execute();
+            count++;
+        }
+        else {
+            std::cout<<"This aggressive player runs out his/her armies "<<endl;
+            break;
+        }
+
+
+
+    }
+
+
+}
+
 
 
 // -------------------------------------------------------------------------------Benevolent player by Lucas----------------------------------------------------------------------------------------------------------
