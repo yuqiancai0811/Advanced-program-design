@@ -516,12 +516,13 @@ void CommandProcessor::handleTournamentCommand(Command *command)
 
     if (validateTournamentParameters(params))
     {
-        gameEngine->startTournament(params);
+        
         string effect = "Tournament started successfully with the following settings: Maps=" +
                         to_string(params.mapFiles.size()) + ", Strategies=" +
                         to_string(params.playerStrategies.size()) + ", Games=" +
                         to_string(params.numberOfGames) + ", Max Turns=" +
                         to_string(params.maxTurns);
+        gameEngine->startTournament(params);
         command->setEffect(effect);
         cout << effect << endl;
     }
