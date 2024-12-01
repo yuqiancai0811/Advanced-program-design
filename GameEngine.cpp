@@ -151,9 +151,9 @@ void GameEngine::randomizeOrderOfPlay()
 
 void GameEngine::gamestart(GameEngine &game)
 {
-     //ASG3_part2: Tournament Mode adding players:
-     if(tournamentMode)
-     {initializeTournamentPlayers(params.playerStrategies);}
+    //  //ASG3_part2: Tournament Mode adding players:
+    //  if(tournamentMode)
+    //  {initializeTournamentPlayers(params.playerStrategies);}
 
     game.AssignTerritories(); // fairly distribute all the territories to the players
 
@@ -666,6 +666,11 @@ void GameEngine::executeOrdersPhase()
 void GameEngine::startTournament(const TournamentParameters &params)
 {
     cout << "Starting Tournament..." << endl;
+    if (tournamentMode) {
+        initializeTournamentPlayers(params.playerStrategies);
+    }
+    cout << "Total maps to load: " << params.mapFiles.size() << endl; // Debug: Check how many maps are there to load
+
     vector<string> tournamentResults;
 
     // Loop through each map in the parameters
@@ -678,6 +683,8 @@ void GameEngine::startTournament(const TournamentParameters &params)
             cout << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
+        } else {
+            cout << "Map loaded successfully: " << mapFile << endl; // Confirm map loaded
         }
         // validate map
         if (!map->validate())
@@ -685,7 +692,10 @@ void GameEngine::startTournament(const TournamentParameters &params)
             cout << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
+        } else {
+            cout << "Map validated successfully: " << mapFile << endl; // Confirm map validated
         }
+
 
         this->selectedMap = map; // Set the loaded map
 
@@ -767,11 +777,27 @@ void GameEngine::setTournamentMode(bool mode)
     tournamentMode = mode;
 }
 
+//Initializing tournament players with strategies
 void GameEngine::initializeTournamentPlayers(const vector<string>& strategies) {
+    cout << "Initializing tournament players with strategies:" << endl;
     playerList.clear(); // Clear existing players
+
     for (const auto& strategyName : strategies) {
-        Player* player = new Player();
-        player->setStrategy(PlayerStrategy::createStrategy(player, strategyName)); // Assume createStrategy handles strategy creation
-        playerList.push_back(player);
+        cout << "  Strategy: " << strategyName << " - ";
+        
+        // Assuming each player is named after their strategy for clarity in debugging and gameplay
+        Player* player = new Player(strategyName, strategyName);
+        
+        // Check if strategy is properly set within the Player constructor
+        if (player->getStrategy() != nullptr) { 
+            playerList.push_back(player);
+            cout << "Initialized successfully" << endl;
+        } else {
+            cout << "Initialization failed" << endl;
+            delete player; // Clean up if strategy creation failed
+        }
     }
+
+    cout << "Total players initialized: " << playerList.size() << endl;
 }
+

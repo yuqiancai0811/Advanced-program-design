@@ -3,3 +3,5 @@ Tournament Results:
 Map1 Win Loss Win 
 Map2 Loss Draw Win 
 
+
+tournament -M USA.map Europe.map -P Aggressive Benevolent Neutral Cheater -G 3 -D 11
