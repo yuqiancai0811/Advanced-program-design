@@ -13,6 +13,19 @@ void testPlayerStrategies() {
     //--------------------------Human player and aggressive player testing part--------------------------
     std::cout << "\n--- Testing Human and Aggressive Strategies ---\n";
     Player* human = new Player("Human");
+    Card* airlift=new Card("Airlift");
+    Card* bomb=new Card("Bomb");
+    Card* blockade=new Card("Blockade");
+    Card* diplomacy=new Card("Diplomacy");
+    Card* reinforcement=new Card("Reinforcement");
+
+
+    human->getHand().addCard(airlift);
+    human->getHand().addCard(bomb);
+    human->getHand().addCard(blockade);
+    human->getHand().addCard(diplomacy);
+    human->getHand().addCard(reinforcement);
+
     human->setStrategy(new Human(human));
     std::cout << "Created Human player with Human strategy.\n";
 
@@ -20,33 +33,42 @@ void testPlayerStrategies() {
     aggressive->setStrategy(new Aggressive(aggressive));
     std::cout << "Created Aggressive player with Aggressive strategy.\n";
 
-    Territory* a1 = new Territory("TerritoryA1", 3, 3, "Continent1", {});
-    Territory* a2 = new Territory("TerritoryA2", 4, 4, "Continent1", {});
-    Territory* a3 = new Territory("TerritoryA3", 5, 5, "Continent1", {});
-    Territory* a4 = new Territory("TerritoryA4", 6, 6, "Continent1", {});
-    Territory* a5 = new Territory("TerritoryA5", 7, 7, "Continent1", {});
-    Territory* a6 = new Territory("TerritoryA6", 8, 8, "Continent1", {});
+    Territory* a1 = new Territory("TerritoryA1", 3, 3, "Continent1", {"TerritoryA2","TerritoryA3","TerritoryA5"});
+    Territory* a2 = new Territory("TerritoryA2", 4, 4, "Continent1", {"TerritoryA1","TerritoryA3","TerritoryA4"});
+    Territory* a3 = new Territory("TerritoryA3", 5, 5, "Continent1", {"TerritoryA1","TerritoryA2","TerritoryA6"});
+    Territory* a4 = new Territory("TerritoryA4", 6, 6, "Continent1", {"TerritoryA5","TerritoryA6","TerritoryA2"});
+    Territory* a5 = new Territory("TerritoryA5", 7, 7, "Continent1", {"TerritoryA4","TerritoryA6","TerritoryA1"});
+    Territory* a6 = new Territory("TerritoryA6", 8, 8, "Continent1", {"TerritoryA4","TerritoryA5","TerritoryA3"});
     std::cout << "Created 6 territories for Human and Aggressive players.\n";
 
     // Add adjacent territories
     a1->addAdjacentTerritory(a2);
     a1->addAdjacentTerritory(a3);
     a1->addAdjacentTerritory(a5);
+
     a2->addAdjacentTerritory(a3);
     a2->addAdjacentTerritory(a1);
     a2->addAdjacentTerritory(a4);
+
     a3->addAdjacentTerritory(a1);
     a3->addAdjacentTerritory(a2);
     a3->addAdjacentTerritory(a6);
+
+
+
     a4->addAdjacentTerritory(a2);
     a4->addAdjacentTerritory(a5);
     a4->addAdjacentTerritory(a6);
+
     a5->addAdjacentTerritory(a1);
     a5->addAdjacentTerritory(a4);
     a5->addAdjacentTerritory(a6);
+
     a6->addAdjacentTerritory(a3);
     a6->addAdjacentTerritory(a4);
     a6->addAdjacentTerritory(a5);
+
+
     std::cout << "Set up adjacency between territories.\n";
 
     human->addTerritory(a1);
