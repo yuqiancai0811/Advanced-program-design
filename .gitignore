@@ -1,0 +1,15 @@
+# Ignore compiled files
+a.out
+*.o
+*.out
+*.class
+
+# Ignore debugging-related files
+*.dSYM
+
+# Ignore VSCode settings
+.vscode/
+
+# Ignore temporary files
+*.tmp
+*.log
