@@ -354,21 +354,57 @@ void Player::issueOrder() {
 
 /*------------------------------------------------------*/
 
+// bool Player::hasMoreOrders() const {
+//     bool hasReinforcements = (numberOfReinforcement > 0);
+//     bool hasDefendTargets = !toDefend().empty() && hasReinforcements;
+//     bool hasAttackTargets = !toAttack().empty() && hasReinforcements;
+//     bool hasCards = !playerHand.getHand().empty();
+
+//     // // Debugging output to track each condition
+//     // std::cout << "[DEBUG] Checking hasMoreOrders for " << name << ":\n";
+//     // std::cout << " - Reinforcements available: " << hasReinforcements << " (Remaining: " << numberOfReinforcement << ")\n";
+//     // std::cout << " - Defend targets available: " << hasDefendTargets << "\n";
+//     // std::cout << " - Attack targets available: " << hasAttackTargets << "\n";
+//     // std::cout << " - Cards available: " << hasCards << "\n";
+
+//     // Only return true if there's a valid reason to issue an order
+//     return hasReinforcements || hasDefendTargets || hasAttackTargets || hasCards;
+// }
+
 bool Player::hasMoreOrders() const {
     bool hasReinforcements = (numberOfReinforcement > 0);
-    bool hasDefendTargets = !toDefend().empty() && hasReinforcements;
-    bool hasAttackTargets = !toAttack().empty() && hasReinforcements;
     bool hasCards = !playerHand.getHand().empty();
 
-    // // Debugging output to track each condition
-    // std::cout << "[DEBUG] Checking hasMoreOrders for " << name << ":\n";
-    // std::cout << " - Reinforcements available: " << hasReinforcements << " (Remaining: " << numberOfReinforcement << ")\n";
-    // std::cout << " - Defend targets available: " << hasDefendTargets << "\n";
-    // std::cout << " - Attack targets available: " << hasAttackTargets << "\n";
-    // std::cout << " - Cards available: " << hasCards << "\n";
-
-    // Only return true if there's a valid reason to issue an order
-    return hasReinforcements || hasDefendTargets || hasAttackTargets || hasCards;
+    // Determine behavior based on strategy
+    if (dynamic_cast<Human*>(strategy)) {
+        // Human strategy: Check both attack and defend targets
+        bool hasDefendTargets = !strategy->toDefend().empty();
+        bool hasAttackTargets = !strategy->toAttack().empty();
+        return hasReinforcements || hasDefendTargets || hasAttackTargets || hasCards;
+    }
+    else if (dynamic_cast<Aggressive*>(strategy)) {
+        // Aggressive strategy: Only check attack targets
+        bool hasAttackTargets = !strategy->toAttack().empty();
+        return hasReinforcements || hasAttackTargets;
+    }
+    else if (dynamic_cast<Benevolent*>(strategy)) {
+        // Benevolent strategy: Only check defend targets
+        bool hasDefendTargets = !strategy->toDefend().empty();
+        return hasReinforcements || hasDefendTargets;
+    }
+    else if (dynamic_cast<Neutral*>(strategy)) {
+        // Neutral strategy: Always false unless under attack
+        return false;
+    }
+    else if (dynamic_cast<Cheater*>(strategy)) {
+        // Cheater strategy: Always true (can always "attack")
+        return true;
+    }
+    else {
+        // Default fallback for unknown strategy
+        std::cerr << "[ERROR] Unknown strategy type for player: " << name << std::endl;
+        return false;
+    }
 }
 
 
