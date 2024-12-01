@@ -52,6 +52,8 @@ public:
     /*---Assginment 3 Part 2 attributes---*/
     TournamentParameters params;
     vector<vector<string>> tournamentResults; // Simulated results data
+    bool tournamentMode = false;
+
 
 
     //Constructor && Destructor
@@ -135,7 +137,9 @@ public:
     /*--------------Assignement3 _ Part2-----------------*/
     void startTournament(const TournamentParameters& params);
     string displayTournamentResults();
-    
+    bool isTournamentMode() const;
+    void setTournamentMode(bool mode);
+    void updateTournamentResults(const vector<vector<string>>& newResults) ;
 
 };
 #endif // GAMEENGINE_H
