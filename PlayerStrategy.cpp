@@ -120,6 +120,7 @@ void Human::issueOrder() {
             std::cin>>indexOfTerritory;
             deployOrder* deploy_order=new deployOrder(numberTODeploy,player->getOwnedTerritories()[indexOfTerritory],player);
             player->getOrders().addOrder(deploy_order);
+            break;
         }
         case 2: {
             //add advance order
@@ -141,7 +142,7 @@ void Human::issueOrder() {
             std::cin>>indexOfAdj;
             advanceOrder* advance_order=new advanceOrder(numberTOAdvance,player->getOwnedTerritories()[indexOfTerritory],player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[indexOfAdj],player);
             player->getOrders().addOrder(advance_order);
-
+            break;
         }
         case 3: {
             //add bomb order
@@ -189,6 +190,7 @@ void Human::issueOrder() {
             else {
                 std::cout<<"There is no bomb card in hand, you can not play bomb order"<<endl;
             }
+            break;
         }
         case 4: {
             //add blockade order
@@ -223,6 +225,7 @@ void Human::issueOrder() {
             else {
                 std::cout<<"There is no blockade card in hand, you can not play bomb order"<<endl;
             }
+            break;
         }
 
         case 5: {
@@ -261,6 +264,7 @@ void Human::issueOrder() {
             else {
                 std::cout<<"There is no airlift card in hand, you can not play bomb order"<<endl;
             }
+            break;
         }
 
 
