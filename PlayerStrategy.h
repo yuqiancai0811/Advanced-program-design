@@ -17,6 +17,7 @@ class PlayerStrategy {
 public:
   Player* player = nullptr;
 public:
+  virtual ~PlayerStrategy() {} // Virtual destructor
   virtual void issueOrder() = 0;
   virtual Order* decideCard(Card*) = 0;
   virtual std::vector<Territory *> toDefend() = 0;

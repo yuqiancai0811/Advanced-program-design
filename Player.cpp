@@ -399,8 +399,18 @@ PlayerStrategy* Player::getStrategy() const {
 }
 
 void Player::handleAttack() {
+    // Check if the current strategy is Neutral
     if (dynamic_cast<Neutral*>(strategy)) {
         std::cout << "Neutral player " << name << " was attacked! Switching to Aggressive strategy.\n";
-        // setStrategy(new Aggressive(this)); // Change to AggressivePlayerStrategy????
+
+        // Safely delete the old strategy before setting a new one
+        delete strategy;
+
+        // Switch to Aggressive strategy
+        strategy = new Aggressive(this);
+
+        // Confirm the strategy change
+        std::cout << "Player " << name << " is now using Aggressive strategy.\n";
     }
 }
+
