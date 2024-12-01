@@ -40,6 +40,174 @@ Human::Human(Player *player) {
   this->player = player;
 }
 
+void Human::issueOrder() {
+    Hand playerHand=player->getHand();
+    std::cout << player->getName()<<", which order would you like to issue?" << std::endl;
+    std::cout <<"The List of order:\n1.Deploy\n2.Advance\n3.Bomb\n4.Blockade\n5.Airlift\n6.Negotiate"<< std::endl;
+    int choice;
+    std::cin>>choice;
+    switch(choice) {
+        case 1: {
+            //add deploy order
+            int numberTODeploy;
+            int indexOfTerritory;
+            std::cout<<"Please enter number of armies you want to deploy:"<<endl;
+            std::cin>>numberTODeploy;
+            std::cout<<"Please select the territory you want to deploy to:"<<endl;
+            for(int i=0;i<player->getOwnedTerritories().size();i++) {
+                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+            }
+            std::cin>>indexOfTerritory;
+            deployOrder* deploy_order=new deployOrder(numberTODeploy,player->getOwnedTerritories()[indexOfTerritory],player);
+            player->getOrders().addOrder(deploy_order);
+        }
+        case 2: {
+            //add advance order
+            int numberTOAdvance;
+            int indexOfTerritory;
+            int indexOfAdj;
+
+            std::cout<<"Please enter number of armies you want to advance:"<<endl;
+            std::cin>>numberTOAdvance;
+            std::cout<<"Select a territory as armies resource"<<endl;
+            for(int i=0;i<player->getOwnedTerritories().size();i++) {
+                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+            }
+            std::cin>>indexOfTerritory;
+            std::cout<<"Select an adjacent territory of your source territory:"<<endl;
+            for(int i=0;i<player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories().size();i++) {
+                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[i] << "\n";
+            }
+            std::cin>>indexOfAdj;
+            advanceOrder* advance_order=new advanceOrder(numberTOAdvance,player->getOwnedTerritories()[indexOfTerritory],player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[indexOfAdj],player);
+            player->getOrders().addOrder(advance_order);
+
+        }
+        case 3: {
+            //add bomb order
+            //There should be bomb card to play bomb order
+
+            //check if there is bomb card in player's hand
+            bool haveOrNot=playerHand.hasCardType("Bomb");
+
+
+            if(haveOrNot) {
+                //have bomb card, keep forward
+                //find the index of the bomb card in hand and then remove it from hand
+                for(int i=0;i<playerHand.getHand().size();i++) {
+                    Card* card=playerHand.getHand()[i];
+                    if(card->getType()=="Bomb") {
+                        playerHand.removeCard(*card);
+                        break;
+
+                    }
+                }
+                //removed card, do the bomb order now
+                Territory* target;
+                //display all the valid target territory
+                for(int i=0;i< player->getOwnedTerritories().size();i++) {
+                    for(int j=0;j<player->getOwnedTerritories()[i]->getAdjacentTerritories().size();i++) {
+                        for(Territory* a:player->getOwnedTerritories()) {
+                            if(a!=player->getOwnedTerritories()[i]->getAdjacentTerritories()[j]) {
+                                std::cout << "Territory with two index " << i << " and " << j << "\n";
+                            }
+
+                        }
+                    }
+                }
+                std::cout<<"Please enter the two index:"<<endl;
+                int firstindex;
+                int secondindex;
+                std::cin>>firstindex;
+                std::cin>>secondindex;
+                bombOrder* bomb_order=new bombOrder(player->getOwnedTerritories()[firstindex]->getAdjacentTerritories()[secondindex],player);
+                player->getOrders().addOrder(bomb_order);
+
+
+
+            }
+            else {
+                std::cout<<"There is no bomb card in hand, you can not play bomb order"<<endl;
+            }
+        }
+        case 4: {
+            //add blockade order
+            bool haveOrNot=playerHand.hasCardType("Blockade");
+
+
+            if(haveOrNot) {
+                //have blockade card, keep forward
+                //find the index of the blockade card in hand and then remove it from hand
+                for(int i=0;i<playerHand.getHand().size();i++) {
+                    Card* card=playerHand.getHand()[i];
+                    if(card->getType()=="Blockade") {
+                        playerHand.removeCard(*card);
+                        break;
+
+                    }
+                }
+                //removed card, do the blockade order now
+                int numberOfArmies;
+                int indexOfTerritory;
+                std::cout<<"Please enter number of armies :"<<endl;
+                std::cin>>numberOfArmies;
+                for(int i=0;i<player->getOwnedTerritories().size();i++) {
+                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+                }
+                std::cout<<"Please select the territory you want to blockade:"<<endl;
+                std::cin>>indexOfTerritory;
+                blockadeOrder* blockade_order=new blockadeOrder(numberOfArmies,player,player->getOwnedTerritories()[indexOfTerritory]);
+                player->getOrders().addOrder(blockade_order);
+
+            }
+            else {
+                std::cout<<"There is no blockade card in hand, you can not play bomb order"<<endl;
+            }
+        }
+
+        case 5: {
+            //add airlift order
+            bool haveOrNot=playerHand.hasCardType("Airlift");
+
+
+            if(haveOrNot) {
+                //have airlift card, keep forward
+                //find the index of the airlift card in hand and then remove it from hand
+                for(int i=0;i<playerHand.getHand().size();i++) {
+                    Card* card=playerHand.getHand()[i];
+                    if(card->getType()=="Airlift") {
+                        playerHand.removeCard(*card);
+                        break;
+
+                    }
+                }
+                //removed card, do the airlift order now
+                int numberOfArmies;
+                int indexOfTerritory1;
+                int indexOfTerritory2;
+
+                std::cout<<"Please enter number of armies you want to airlift:"<<endl;
+                std::cin>>numberOfArmies;
+                for(int i=0;i<player->getOwnedTerritories().size();i++) {
+                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+                }
+                std::cout<<"Please select the source territory you want to take armies out:"<<endl;
+                std::cin>>indexOfTerritory1;
+                std::cout<<"Please select the target territory you want to take armies to:"<<endl;
+                std::cin>>indexOfTerritory2;
+                airliftOrder* airlift_order=new airliftOrder(numberOfArmies,player->getOwnedTerritories()[indexOfTerritory1],player->getOwnedTerritories()[indexOfTerritory2],player);
+                player->getOrders().addOrder(airlift_order);
+            }
+            else {
+                std::cout<<"There is no airlift card in hand, you can not play bomb order"<<endl;
+            }
+        }
+
+
+    }
+
+}
+
 Aggressive::Aggressive(Player *player) {
   this->player = player;
 }

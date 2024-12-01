@@ -25,7 +25,12 @@ public:
 };
 
 class Human : public PlayerStrategy {
- explicit Human(Player* player);
+public:
+  explicit Human(Player* player);
+  void issueOrder() override;
+  Order* decideCard(Card* card) override;
+  std::vector<Territory *> toDefend() override;
+  std::vector<Territory *> toAttack() override;
 };
 
 class Aggressive : public PlayerStrategy {
