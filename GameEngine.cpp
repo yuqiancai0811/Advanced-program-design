@@ -288,8 +288,9 @@ void GameEngine::transition(const string &newState)
 // Part5: Implementing the stringToLog() function from ILoggable
 string GameEngine::stringToLog() const
 {
-    if (tournamentMode)return displayTournamentResults();
-    
+    if (tournamentMode)
+        return displayTournamentResults();
+
     else
     {
         return "GameEngine: State transitions to '" + currentState + "'";
@@ -637,7 +638,7 @@ void GameEngine::executeOrdersPhase()
                 if (order)
                 {
                     cout << "\n"
-                              << player->getName() << " is executing the order.\n";
+                         << player->getName() << " is executing the order.\n";
                     order->execute();
                     ordersRemaining = true;
                 }
@@ -655,40 +656,50 @@ void GameEngine::executeOrdersPhase()
 /*------------------------------- End of Methods for P3 ----------------------------------------*/
 
 /*----------------------TODO--------- Assignement3 _ part2 ----------------------------------------*/
-void GameEngine::startTournament(const TournamentParameters& params) {
+void GameEngine::startTournament(const TournamentParameters &params)
+{
     cout << "Starting Tournament..." << endl;
     vector<string> tournamentResults;
 
     // Loop through each map in the parameters
-    for (const auto& mapFile : params.mapFiles) {
-        Map* map = new Map();
-        if (!map->loadMapFromFile(mapFile)) {
+    for (const auto &mapFile : params.mapFiles)
+    {
+        Map *map = new Map();
+        // load map
+        if (!map->loadMapFromFile(mapFile))
+        {
             cout << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
         }
-
-        if (!map->validate()) {
+        // validate map
+        if (!map->validate())
+        {
             cout << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
         }
 
-        this->selectedMap = map;  // Set the loaded map
+        this->selectedMap = map; // Set the loaded map
 
         // Simulate the specified number of games
-        for (int i = 0; i < params.numberOfGames; ++i) {
-            // // Setup the game environment
-            // setupPlayers(params.playerStrategies);  // Assuming this sets up players based on strategies
+        for (int i = 0; i < params.numberOfGames; ++i)
+        {
+            // Setup the game environment
+            // sets up players based on strategies
+            for (auto &allPlayerStrategie : params.playerStrategies)
+            {
+                new Player(allPlayerStrategie, allPlayerStrategie);
+            }
             // assignCardsEvenly();
-            // distributeTerritories();
-            // mainGameLoop(params.maxTurns);  // Play the game with the specified max turns
+            AssignTerritories();
+            mainGameLoop(); // Play the game with the specified max turns
 
             // // Collect results from this game
             // string result = isDraw() ? "draw" : checkWinState()->getName();
             // tournamentResults.push_back(result);
 
-            resetGame();  // Reset the game for the next run
+            resetGame(); // Reset the game for the next run
         }
 
         // Clean up after all games on this map are done
@@ -697,7 +708,6 @@ void GameEngine::startTournament(const TournamentParameters& params) {
 
     cout << "Tournament completed." << endl;
     displayTournamentResults();
-
 }
 
 // Display overall results after all tournaments are completed
@@ -745,9 +755,10 @@ string GameEngine::displayTournamentResults() const
     return str.str();
     // Notify(this);
 }
-void GameEngine::updateTournamentResults(const vector<vector<string>>& newResults) {
+void GameEngine::updateTournamentResults(const vector<vector<string>> &newResults)
+{
     this->tournamentResults = newResults;
-    Notify(this );  // Notify observers that there's new data to log
+    Notify(this); // Notify observers that there's new data to log
 }
 
 bool GameEngine::isTournamentMode() const
