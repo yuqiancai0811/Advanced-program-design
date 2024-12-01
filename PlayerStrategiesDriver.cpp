@@ -13,6 +13,7 @@ void testPlayerStrategies() {
     //--------------------------Human player and aggressive player testing part--------------------------
     std::cout << "\n--- Testing Human and Aggressive Strategies ---\n";
     Player* human = new Player("Human");
+    human->setNumberOfReinforcement(100);
     Card* airlift=new Card("Airlift");
     Card* bomb=new Card("Bomb");
     Card* blockade=new Card("Blockade");
@@ -31,6 +32,7 @@ void testPlayerStrategies() {
 
     Player* aggressive = new Player("Aggressive");
     aggressive->setStrategy(new Aggressive(aggressive));
+    aggressive->setNumberOfReinforcement(100);
     std::cout << "Created Aggressive player with Aggressive strategy.\n";
 
     Territory* a1 = new Territory("TerritoryA1", 3, 3, "Continent1", {"TerritoryA2","TerritoryA3","TerritoryA5"});
