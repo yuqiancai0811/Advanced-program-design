@@ -115,7 +115,7 @@ void Human::issueOrder() {
             std::cin>>numberTODeploy;
             std::cout<<"Please select the territory you want to deploy to:"<<endl;
             for(int i=0;i<player->getOwnedTerritories().size();i++) {
-                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
             }
             std::cin>>indexOfTerritory;
             deployOrder* deploy_order=new deployOrder(numberTODeploy,player->getOwnedTerritories()[indexOfTerritory],player);
@@ -132,12 +132,12 @@ void Human::issueOrder() {
             std::cin>>numberTOAdvance;
             std::cout<<"Select a territory as armies resource"<<endl;
             for(int i=0;i<player->getOwnedTerritories().size();i++) {
-                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
             }
             std::cin>>indexOfTerritory;
             std::cout<<"Select an adjacent territory of your source territory:"<<endl;
             for(int i=0;i<player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories().size();i++) {
-                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[i] << "\n";
+                std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[i]->getName() << "\n";
             }
             std::cin>>indexOfAdj;
             advanceOrder* advance_order=new advanceOrder(numberTOAdvance,player->getOwnedTerritories()[indexOfTerritory],player->getOwnedTerritories()[indexOfTerritory]->getAdjacentTerritories()[indexOfAdj],player);
@@ -252,7 +252,7 @@ void Human::issueOrder() {
                 std::cout<<"Please enter number of armies you want to airlift:"<<endl;
                 std::cin>>numberOfArmies;
                 for(int i=0;i<player->getOwnedTerritories().size();i++) {
-                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
                 }
                 std::cout<<"Please select the source territory you want to take armies out:"<<endl;
                 std::cin>>indexOfTerritory1;
