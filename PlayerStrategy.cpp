@@ -19,7 +19,7 @@ PlayerStrategy* PlayerStrategy::createStrategy(Player *player, const std::string
     return new Human(player);
   } 
   else if(strategy_name == "aggressive") {
-    return new Neutral(player);
+    return new Aggressive(player);
   } 
   else if(strategy_name == "benevolent") {
     return new Benevolent(player);
