@@ -230,7 +230,7 @@ void Human::issueOrder() {
 
             }
             else {
-                std::cout<<"There is no blockade card in hand, you can not play bomb order"<<endl;
+                std::cout<<"There is no blockade card in hand, you can not play blockade order"<<endl;
             }
             break;
         }
@@ -270,7 +270,7 @@ void Human::issueOrder() {
                 //player->getOrders().addOrder(airlift_order);
             }
             else {
-                std::cout<<"There is no airlift card in hand, you can not play bomb order"<<endl;
+                std::cout<<"There is no airlift card in hand, you can not play airlift order"<<endl;
             }
             break;
         }
