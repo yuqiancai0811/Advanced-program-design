@@ -151,6 +151,10 @@ void GameEngine::randomizeOrderOfPlay()
 
 void GameEngine::gamestart(GameEngine &game)
 {
+     //ASG3_part2: Tournament Mode adding players:
+     if(tournamentMode)
+     {initializeTournamentPlayers(params.playerStrategies);}
+
     game.AssignTerritories(); // fairly distribute all the territories to the players
 
     for (Player *player : game.playerList)
@@ -289,19 +293,8 @@ void GameEngine::transition(const string &newState)
 string GameEngine::stringToLog() const
 {
     if (tournamentMode)
-    {
-        stringstream str;
-        str << "Tournament Results:" << endl;
-        for (const auto &result : tournamentResults)
-        {
-            for (const auto &entry : result)
-            {
-                str << entry << " ";
-            }
-            str << endl;
-        }
-        return str.str();
-    }
+        return displayTournamentResults();
+
     else
     {
         return "GameEngine: State transitions to '" + currentState + "'";
@@ -321,8 +314,9 @@ void GameEngine::mainGameLoop()
     cout << "=== Main Game Loop ===" << endl;
     transition(ASSIGN_REINFORCEMENT); // Start from the reinforcement phase
     bool gameOver = false;
+    int currentTurn = 0; // Initialize the turn counter flag
 
-    while (!gameOver)
+    while (!gameOver &&  currentTurn < params.maxTurns)
     {
         cout << "\n--- New Game Phase ---\n";
 
@@ -376,7 +370,9 @@ void GameEngine::mainGameLoop()
                     transition(ASSIGN_REINFORCEMENT);
                 }
             }
+            
         }
+        currentTurn++; // Increment the turn counter after each full round
 
         // Additional check to prevent infinite loop
         if (gameOver)
@@ -649,7 +645,7 @@ void GameEngine::executeOrdersPhase()
                 if (order)
                 {
                     cout << "\n"
-                              << player->getName() << " is executing the order.\n";
+                         << player->getName() << " is executing the order.\n";
                     order->execute();
                     ordersRemaining = true;
                 }
@@ -667,45 +663,52 @@ void GameEngine::executeOrdersPhase()
 /*------------------------------- End of Methods for P3 ----------------------------------------*/
 
 /*----------------------TODO--------- Assignement3 _ part2 ----------------------------------------*/
-void GameEngine::startTournament(const TournamentParameters& params) {
+void GameEngine::startTournament(const TournamentParameters &params)
+{
     cout << "Starting Tournament..." << endl;
+    vector<string> tournamentResults;
 
-    for (const auto& mapFile : params.mapFiles) {
-        Map* map = new Map();
-        if (!map->loadMapFromFile(mapFile)) {
-            cerr << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
+    // Loop through each map in the parameters
+    for (const auto &mapFile : params.mapFiles)
+    {
+        Map *map = new Map();
+        // load map
+        if (!map->loadMapFromFile(mapFile))
+        {
+            cout << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
+            delete map;
+            continue;
+        }
+        // validate map
+        if (!map->validate())
+        {
+            cout << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
         }
 
-        if (!map->validate()) {
-            cerr << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
-            delete map;
-            continue;
+        this->selectedMap = map; // Set the loaded map
+
+        // Simulate the specified number of games
+        for (int i = 0; i < params.numberOfGames; ++i)
+        {
+            // Setup the game environment
+           
+            gamestart(*this);
+            displayTournamentResults();
+            resetGame(); // Reset the game for the next run
         }
 
-        // Set the loaded and validated map as the selected map
-        this->selectedMap = map;
-        cout << "Map " << mapFile << " loaded and validated successfully. Starting game on this map." << endl;
-
-        // Here you would typically set up players based on the tournament parameters
-        // For demonstration, assume players are already set up in the GameEngine instance
-
-        // Simulate games for the given map
-        this->gamestart(*this);  // Assuming you've prepared the GameEngine instance accordingly
-
-        // Clean up the map after use
+        // Clean up after all games on this map are done
         delete map;
-        this->selectedMap = nullptr;
     }
+
     cout << "Tournament completed." << endl;
     displayTournamentResults();
-
 }
 
-
 // Display overall results after all tournaments are completed
-string GameEngine::displayTournamentResults()
+string GameEngine::displayTournamentResults() const
 {
     stringstream str;
     const char separator = ' ';
@@ -749,9 +752,10 @@ string GameEngine::displayTournamentResults()
     return str.str();
     // Notify(this);
 }
-void GameEngine::updateTournamentResults(const vector<vector<string>>& newResults) {
+void GameEngine::updateTournamentResults(const vector<vector<string>> &newResults)
+{
     this->tournamentResults = newResults;
-    Notify(this );  // Notify observers that there's new data to log
+    Notify(this); // Notify observers that there's new data to log
 }
 
 bool GameEngine::isTournamentMode() const
@@ -761,4 +765,13 @@ bool GameEngine::isTournamentMode() const
 void GameEngine::setTournamentMode(bool mode)
 {
     tournamentMode = mode;
+}
+
+void GameEngine::initializeTournamentPlayers(const vector<string>& strategies) {
+    playerList.clear(); // Clear existing players
+    for (const auto& strategyName : strategies) {
+        Player* player = new Player();
+        player->setStrategy(PlayerStrategy::createStrategy(player, strategyName)); // Assume createStrategy handles strategy creation
+        playerList.push_back(player);
+    }
 }

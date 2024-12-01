@@ -13,6 +13,7 @@
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
 
+
 class CommandProcessor;
 
 /*-------------------- Phases for Part 3 -------------------------*/
@@ -29,7 +30,7 @@ extern const std::string WIN;
 /*---Assginment 3 Part 2 TournamentParameters definition---*/
 struct TournamentParameters {
     vector<string> mapFiles;
-    vector<string> playerStrategies;
+    vector<string> playerStrategies;// should save players (with strategy)in playerlist
     int numberOfGames;
     int maxTurns;
 };
@@ -136,10 +137,11 @@ public:
 
     /*--------------Assignement3 _ Part2-----------------*/
     void startTournament(const TournamentParameters& params);
-    string displayTournamentResults();
+    string displayTournamentResults() const;
     bool isTournamentMode() const;
     void setTournamentMode(bool mode);
     void updateTournamentResults(const vector<vector<string>>& newResults) ;
+    void initializeTournamentPlayers(const vector<string>& strategies);
 
 };
 #endif // GAMEENGINE_H

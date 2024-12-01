@@ -481,8 +481,6 @@ void Benevolent::issueOrder() {
     }
 }
   
-
-
 std::vector<Territory *> Benevolent::toDefend() {
     std::vector<Territory*> defendList;
 
