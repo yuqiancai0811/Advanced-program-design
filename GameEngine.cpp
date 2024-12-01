@@ -155,9 +155,9 @@ void GameEngine::gamestart(GameEngine &game)
     //  if(tournamentMode)
     //  {initializeTournamentPlayers(params.playerStrategies);}
 
-    game.AssignTerritories(); // fairly distribute all the territories to the players
+    this->AssignTerritories(); // fairly distribute all the territories to the players
 
-    for (Player *player : game.playerList)
+    for (Player *player : this->playerList)
     {
         vector<Territory *> ownedTerritory;
         ownedTerritory = (player->getOwnedTerritories());
@@ -167,10 +167,10 @@ void GameEngine::gamestart(GameEngine &game)
             cout << "Owner of this Territory: " << terr->getOwner() << endl;
         }
     }
-    game.randomizeOrderOfPlay(); // determine randomly the order of play of the players in the game
+    this->randomizeOrderOfPlay(); // determine randomly the order of play of the players in the game
 
     // let each player draw 2 initial cards from the deck using the deck’s draw() method
-    for (Player *player : game.playerOder)
+    for (Player *player : this->playerOder)
     {
         player->getHand().addCard(deck.draw());
         player->getHand().addCard(deck.draw());
@@ -677,17 +677,21 @@ void GameEngine::startTournament(const TournamentParameters &params)
     for (const auto &mapFile : params.mapFiles)
     {
         Map *map = new Map();
+        map=map->loadMapFromFile(mapFile);
+        this->setMap(map);
+
         // load map
-        if (!map->loadMapFromFile(mapFile))
+        if (this->selectedMap == nullptr)
         {
             cout << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
+            this->selectedMap = map;
             delete map;
             continue;
         } else {
             cout << "Map loaded successfully: " << mapFile << endl; // Confirm map loaded
         }
         // validate map
-        if (!map->validate())
+        if (!this->selectedMap->validate())
         {
             cout << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
@@ -696,8 +700,6 @@ void GameEngine::startTournament(const TournamentParameters &params)
             cout << "Map validated successfully: " << mapFile << endl; // Confirm map validated
         }
 
-
-        this->selectedMap = map; // Set the loaded map
 
         // Simulate the specified number of games
         for (int i = 0; i < params.numberOfGames; ++i)
