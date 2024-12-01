@@ -29,7 +29,6 @@ class Human : public PlayerStrategy {
 public:
   explicit Human(Player* player);
   void issueOrder() override;
-  Order* decideCard(Card* card) override;
   std::vector<Territory *> toDefend() override;
   std::vector<Territory *> toAttack() override;
 };
@@ -38,7 +37,6 @@ class Aggressive : public PlayerStrategy {
 public:
   explicit Aggressive(Player* player);
   void issueOrder() override;
-  Order* decideCard(Card* card) override;
   std::vector<Territory *> toDefend() override;
   std::vector<Territory *> toAttack() override;
 };
