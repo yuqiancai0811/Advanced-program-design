@@ -19,7 +19,7 @@ public:
 public:
   virtual ~PlayerStrategy() {} // Virtual destructor
   virtual void issueOrder() = 0;
-  virtual Order* decideCard(Card*) = 0;
+  // virtual Order* decideCard(Card*) = 0;
   virtual std::vector<Territory *> toDefend() = 0;
   virtual std::vector<Territory *> toAttack() = 0;
   static PlayerStrategy* createStrategy(Player* player, const std::string& strategy);
@@ -45,7 +45,7 @@ class Benevolent : public PlayerStrategy {
 public:
   explicit Benevolent(Player* player);
   void issueOrder() override;
-  Order* decideCard(Card* card) override;
+  // Order* decideCard(Card* card) override;
   std::vector<Territory *> toDefend() override;
   std::vector<Territory *> toAttack() override;
 
@@ -60,7 +60,7 @@ class Neutral : public PlayerStrategy {
 public:
     explicit Neutral(Player* player); // Constructor
     void issueOrder() override;       // Does nothing
-    Order* decideCard(Card* card) override; // Does not play cards
+    // Order* decideCard(Card* card) override; // Does not play cards
     std::vector<Territory *> toDefend() override; // Empty list
     std::vector<Territory *> toAttack() override; // Empty list
 };
@@ -69,7 +69,7 @@ class Cheater : public PlayerStrategy {
 public:
     explicit Cheater(Player* player); // Constructor
     void issueOrder() override;       // Automatically conquer adjacent territories
-    Order* decideCard(Card* card) override; // Does not play cards
+    // Order* decideCard(Card* card) override; // Does not play cards
     std::vector<Territory *> toDefend() override; // All owned territories
     std::vector<Territory *> toAttack() override; // All adjacent territories
 };
