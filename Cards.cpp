@@ -146,9 +146,13 @@ Deck::~Deck()
 
 Card *Deck::draw()
 {
-    if (cards.empty())
-    {
-        throw runtime_error("Deck is empty!");
+    // if (cards.empty())
+    // {
+    //     throw runtime_error("Deck is empty!");
+    // }
+    if (cards.empty()) {
+        std::cout << "[ERROR] Deck is empty! No card to draw.\n";
+        return nullptr; // Return nullptr instead of throwing an exception
     }
 
     // // Method that shuffles the deck of cards
