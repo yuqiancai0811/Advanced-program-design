@@ -52,6 +52,7 @@ void testPlayerStrategies() {
     aggressive->addTerritory(a4);
     aggressive->addTerritory(a5);
     aggressive->addTerritory(a6);
+    human->issueOrder();
 
     //-------------------------- Neutral player & Cheater player testing Part --------------------------//
     // Create a Neutral Player
@@ -104,6 +105,21 @@ void testPlayerStrategies() {
     std::cout << "\nTesting completed.\n";
 
     //----------------------------Benevolent player testing part ------------------------
+    Player* benevolent = new Player("BenevolentPlayer");
+    benevolent->setStrategy(new Benevolent(benevolent));
+    Territory* b1=new Territory("TerritoryB1", 10, 0, "Continent1", {});
+    Territory* b2=new Territory("TerritoryB2", 11, 0, "Continent1", {});
+    Territory* b3=new Territory("TerritoryB3", 12, 0, "Continent1", {});
+    b1->addAdjacentTerritory(b2);
+    b1->addAdjacentTerritory(a6);
+    b1->addAdjacentTerritory(b3);
+    b2->addAdjacentTerritory(b1);
+    b2->addAdjacentTerritory(b3);
+    b3->addAdjacentTerritory(b1);
+    b3->addAdjacentTerritory(b2);
+    benevolent->addTerritory(b1);
+    benevolent->addTerritory(b2);
+    benevolent->addTerritory(b3);
 
 }
 
