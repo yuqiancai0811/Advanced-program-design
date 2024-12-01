@@ -29,6 +29,8 @@ extern const string PLAY = "play";
 extern const string WIN = "win";
 /*---------------------------------------------------------------*/
 
+TournamentParameters params;
+
 // Setter for associating CommandProcessor with GameEngine
 void GameEngine::setProcessor(CommandProcessor *processor)
 {
@@ -315,8 +317,8 @@ void GameEngine::mainGameLoop()
     transition(ASSIGN_REINFORCEMENT); // Start from the reinforcement phase
     bool gameOver = false;
     int currentTurn = 0; // Initialize the turn counter flag
-
-    while (!gameOver &&  currentTurn < params.maxTurns)
+    cout << "Starting game loop with a max of " << params.maxTurns << " turns." << endl;
+    while (!gameOver && currentTurn < params.maxTurns)
     {
         cout << "\n--- New Game Phase ---\n";
 
@@ -373,6 +375,8 @@ void GameEngine::mainGameLoop()
             
         }
         currentTurn++; // Increment the turn counter after each full round
+        cout << "currentTurn:"<<currentTurn;
+
 
         // Additional check to prevent infinite loop
         if (gameOver)
@@ -667,7 +671,9 @@ void GameEngine::startTournament(const TournamentParameters &params)
 {
     cout << "Starting Tournament..." << endl;
     if (tournamentMode) {
+        setupTournament(params);
         initializeTournamentPlayers(params.playerStrategies);
+
     }
     cout << "Total maps to load: " << params.mapFiles.size() << endl; // Debug: Check how many maps are there to load
 
@@ -705,7 +711,7 @@ void GameEngine::startTournament(const TournamentParameters &params)
         for (int i = 0; i < params.numberOfGames; ++i)
         {
             // Setup the game environment
-           
+            cout << "Game in round: " << ++i << endl; 
             gamestart(*this);
             displayTournamentResults();
             resetGame(); // Reset the game for the next run
@@ -803,3 +809,6 @@ void GameEngine::initializeTournamentPlayers(const vector<string>& strategies) {
     cout << "Total players initialized: " << playerList.size() << endl;
 }
 
+void GameEngine::setupTournament(const TournamentParameters& params) {
+        this->params = params;  // Storing parameters in the class
+    }

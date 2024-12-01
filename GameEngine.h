@@ -142,6 +142,6 @@ public:
     void setTournamentMode(bool mode);
     void updateTournamentResults(const vector<vector<string>>& newResults) ;
     void initializeTournamentPlayers(const vector<string>& strategies);
-
+    void setupTournament(const TournamentParameters& params) ;
 };
 #endif // GAMEENGINE_H
