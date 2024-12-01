@@ -622,10 +622,18 @@ void Cheater::issueOrder() {
     std::cout << player->getName() << " (Cheater Player) automatically conquers all adjacent territories!\n";
 
     for (Territory* ownedTerritory : player->getOwnedTerritories()) {
+        if (ownedTerritory == nullptr) {
+            continue; // Skip null territories
+        }
+
         for (Territory* adjacent : ownedTerritory->getAdjacentTerritories()) {
+            if (adjacent == nullptr) {
+                continue; // Skip null adjacent territories
+            }
+
             if (adjacent->getOwner() != player->getName()) {
                 // Conquer the adjacent territory
-                std::cout << "Conquering territory: " << adjacent->getName() 
+                std::cout << "Conquering territory: " << adjacent->getName()
                           << " owned by: " << adjacent->getOwner() << "\n";
 
                 // Change ownership
@@ -659,7 +667,15 @@ std::vector<Territory*> Cheater::toAttack() {
     std::vector<Territory*> attackList;
 
     for (Territory* ownedTerritory : player->getOwnedTerritories()) {
+        if (ownedTerritory == nullptr) {
+            continue; // Skip null territories
+        }
+
         for (Territory* adjacent : ownedTerritory->getAdjacentTerritories()) {
+            if (adjacent == nullptr) {
+                continue; // Skip null adjacent territories
+            }
+
             if (adjacent->getOwner() != player->getName()) {
                 attackList.push_back(adjacent);
             }
