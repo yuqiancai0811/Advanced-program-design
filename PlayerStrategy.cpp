@@ -471,9 +471,16 @@ void Benevolent::issueOrder() {
 
           } 
         else if (card->getType() == "Airlift") {
-          specialOrder = new airliftOrder(5, player->getOwnedTerritories().front(), toDefend().front(), player);
-          std::cout << "[INFO] " << player->getName() << " issues an Airlift Order.\n";
-          } 
+        //   specialOrder = new airliftOrder(5, player->getOwnedTerritories().front(), toDefend().front(), player);
+        //   std::cout << "[INFO] " << player->getName() << " issues an Airlift Order.\n";
+        //   } 
+            if (!player->getOwnedTerritories().empty() && !toDefend().empty()) {
+                specialOrder = new airliftOrder(5, player->getOwnedTerritories().front(), toDefend().front(), player);
+                std::cout << "[INFO] " << player->getName() << " issues an Airlift Order.\n";
+            } else {
+                std::cout << "[WARN] Unable to issue Airlift Order: No owned or defendable territories available.\n";
+            }
+        }
         else if (card->getType() == "Blockade") {
           std::cout << "[INFO] " << player->getName() << " is Benevolent can not issue Blockade\n";
                 
