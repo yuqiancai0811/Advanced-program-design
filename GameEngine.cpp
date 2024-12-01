@@ -151,6 +151,10 @@ void GameEngine::randomizeOrderOfPlay()
 
 void GameEngine::gamestart(GameEngine &game)
 {
+     //ASG3_part2: Tournament Mode adding players:
+     if(tournamentMode)
+     {initializeTournamentPlayers(params.playerStrategies);}
+
     game.AssignTerritories(); // fairly distribute all the territories to the players
 
     for (Player *player : game.playerList)
@@ -310,8 +314,9 @@ void GameEngine::mainGameLoop()
     cout << "=== Main Game Loop ===" << endl;
     transition(ASSIGN_REINFORCEMENT); // Start from the reinforcement phase
     bool gameOver = false;
+    int currentTurn = 0; // Initialize the turn counter flag
 
-    while (!gameOver)
+    while (!gameOver &&  currentTurn < params.maxTurns)
     {
         cout << "\n--- New Game Phase ---\n";
 
@@ -365,7 +370,9 @@ void GameEngine::mainGameLoop()
                     transition(ASSIGN_REINFORCEMENT);
                 }
             }
+            
         }
+        currentTurn++; // Increment the turn counter after each full round
 
         // Additional check to prevent infinite loop
         if (gameOver)
@@ -686,23 +693,10 @@ void GameEngine::startTournament(const TournamentParameters &params)
         for (int i = 0; i < params.numberOfGames; ++i)
         {
             // Setup the game environment
-            // sets up players based on strategies
-            for (auto &allPlayerStrategie : params.playerStrategies)
-            {
-                new Player(allPlayerStrategie, allPlayerStrategie);
-            }
-
-            AssignTerritories();
-            // Play the game with specific conditions
-            // for (int turn = 0; turn < params.maxTurns; ++turn) {
-            //    mainGameLoop();
-            // }
-
-            // // Collect results from this game
-            // string result = isDraw() ? "draw" : checkWinState()->getName();
-            // tournamentResults.push_back(result);
+           
+            gamestart(*this);
             displayTournamentResults();
-            // resetGame(); // Reset the game for the next run
+            resetGame(); // Reset the game for the next run
         }
 
         // Clean up after all games on this map are done
@@ -771,4 +765,13 @@ bool GameEngine::isTournamentMode() const
 void GameEngine::setTournamentMode(bool mode)
 {
     tournamentMode = mode;
+}
+
+void GameEngine::initializeTournamentPlayers(const vector<string>& strategies) {
+    playerList.clear(); // Clear existing players
+    for (const auto& strategyName : strategies) {
+        Player* player = new Player();
+        player->setStrategy(PlayerStrategy::createStrategy(player, strategyName)); // Assume createStrategy handles strategy creation
+        playerList.push_back(player);
+    }
 }

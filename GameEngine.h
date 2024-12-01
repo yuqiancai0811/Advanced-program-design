@@ -30,7 +30,7 @@ extern const std::string WIN;
 /*---Assginment 3 Part 2 TournamentParameters definition---*/
 struct TournamentParameters {
     vector<string> mapFiles;
-    vector<string> playerStrategies;
+    vector<string> playerStrategies;// should save players (with strategy)in playerlist
     int numberOfGames;
     int maxTurns;
 };
@@ -141,6 +141,7 @@ public:
     bool isTournamentMode() const;
     void setTournamentMode(bool mode);
     void updateTournamentResults(const vector<vector<string>>& newResults) ;
+    void initializeTournamentPlayers(const vector<string>& strategies);
 
 };
 #endif // GAMEENGINE_H
