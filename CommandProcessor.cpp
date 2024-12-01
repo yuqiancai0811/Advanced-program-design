@@ -1,5 +1,6 @@
 #include "CommandProcessor.h"
 #include <iostream>
+#include <set>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -579,6 +580,9 @@ TournamentParameters CommandProcessor::parseTournamentCommand(const string &argu
 // validates the parsed tournament parameters to ensure they meet expected constraints
 bool CommandProcessor::validateTournamentParameters(const TournamentParameters &params)
 {
+     // Define valid strategies
+    const set<string> validStrategies = {"Aggressive", "Benevolent", "Neutral", "Cheater", "Human", "aggressive", "benevolent", "neutral", "cheater", "human"};
+
     // Validate the number of maps
     if (params.mapFiles.empty() || params.mapFiles.size() > 5)
     {
@@ -586,11 +590,18 @@ bool CommandProcessor::validateTournamentParameters(const TournamentParameters &
         return false;
     }
 
-    // Validate the player strategies
+    // Validate the player strategies : 1)numbers
     if (params.playerStrategies.size() < 2 || params.playerStrategies.size() > 4)
     {
         cout << "Error: Invalid number of player strategies." << endl;
         return false;
+    }
+    //2):valid strategies
+    for (const auto& strategy : params.playerStrategies) {
+        if (validStrategies.find(strategy) == validStrategies.end()) {
+            cout << "Invalid player strategy: " << strategy << endl;
+            return false;
+        }
     }
 
     // Validate the number of games

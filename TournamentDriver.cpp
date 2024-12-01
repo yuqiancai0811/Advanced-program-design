@@ -11,19 +11,22 @@
 #include <string>
 #include <sstream>
 
-int main()
-{
-    GameEngine gameEngine;
-    LogObserver logger("tournament_results.txt");
-    gameEngine.Attach(&logger);
-    gameEngine.setTournamentMode(true);
 
-    // Example setup and execution of a tournament
-    gameEngine.updateTournamentResults({{"Map1", "Win", "Loss", "Win"},
-                                        {"Map2", "Loss", "Draw", "Win"}});
-    string tournamentResults = gameEngine.displayTournamentResults();
-    std::cout << tournamentResults;
-    // Detach the logger when done
-    gameEngine.Detach(&logger);
+void testTournament() {
+    GameEngine* gameEngine=new GameEngine;
+
+     // Setup players and territories
+     gameEngine = gameEngine->startupPhase();  // This should add players and distribute territories
+    
+     while(true){
+        gameEngine->commandProcessor->getCommand();
+
+     }
+     
+}
+
+int main() {
+    testTournament();
     return 0;
 }
+

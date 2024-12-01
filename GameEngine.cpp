@@ -326,11 +326,6 @@ void GameEngine::mainGameLoop()
     {
         cout << "\n--- New Game Phase ---\n";
 
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // string input;
-        // cin>>input;
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
         // Reinforcement Phase
         if (currentState == ASSIGN_REINFORCEMENT)
         {
@@ -671,42 +666,43 @@ void GameEngine::executeOrdersPhase()
 
 /*------------------------------- End of Methods for P3 ----------------------------------------*/
 
-/*------------------------------- Assignement3 _ part2 ----------------------------------------*/
-void GameEngine::startTournament(const TournamentParameters &params)
-{
+/*----------------------TODO--------- Assignement3 _ part2 ----------------------------------------*/
+void GameEngine::startTournament(const TournamentParameters& params) {
     cout << "Starting Tournament..." << endl;
 
-    // Iterate over each map file specified in the tournament parameters
-    for (const auto &mapFile : params.mapFiles) {
-        cout << "Attempting to load map: " << mapFile << endl;
-        Map *map = new Map(); // Create a new Map instance
-
+    for (const auto& mapFile : params.mapFiles) {
+        Map* map = new Map();
         if (!map->loadMapFromFile(mapFile)) {
             cerr << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
-            delete map; // Ensure to delete the created map instance
+            delete map;
             continue;
-        } else {
-            cout << "Map loaded successfully: " << mapFile << endl;
         }
 
         if (!map->validate()) {
             cerr << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
-        } else {
-            cout << "Map validated successfully: " << mapFile << endl;
         }
 
-        this->selectedMap = map; // Use the loaded map
+        // Set the loaded and validated map as the selected map
+        this->selectedMap = map;
+        cout << "Map " << mapFile << " loaded and validated successfully. Starting game on this map." << endl;
 
-        // Simulate games
-        // simulateGamesForMap(map, params);
+        // Here you would typically set up players based on the tournament parameters
+        // For demonstration, assume players are already set up in the GameEngine instance
 
-        delete map; // Cleanup the map object after all games for this map are completed
+        // Simulate games for the given map
+        this->gamestart(*this);  // Assuming you've prepared the GameEngine instance accordingly
+
+        // Clean up the map after use
+        delete map;
+        this->selectedMap = nullptr;
     }
-
+    cout << "Tournament completed." << endl;
     displayTournamentResults();
+
 }
+
 
 // Display overall results after all tournaments are completed
 string GameEngine::displayTournamentResults()
