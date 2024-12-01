@@ -99,10 +99,7 @@ std::vector<Territory *> Human::toDefend() {
     });
     return defendList;
 }
-Order* Human::decideCard(Card* card) {
 
-    return nullptr; // Does nothing
-}
 void Human::issueOrder() {
     Hand playerHand=player->getHand();
     std::cout << player->getName()<<", which order would you like to issue?" << std::endl;
@@ -274,10 +271,7 @@ void Human::issueOrder() {
 Aggressive::Aggressive(Player *player) {
   this->player = player;
 }
-Order* Aggressive::decideCard(Card* card) {
 
-    return nullptr; // Does nothing
-}
 std::vector<Territory*> Aggressive::toAttack() {
 
     std::vector<Territory*> attackList;
