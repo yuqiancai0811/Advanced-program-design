@@ -288,20 +288,8 @@ void GameEngine::transition(const string &newState)
 // Part5: Implementing the stringToLog() function from ILoggable
 string GameEngine::stringToLog() const
 {
-    if (tournamentMode)
-    {
-        stringstream str;
-        str << "Tournament Results:" << endl;
-        for (const auto &result : tournamentResults)
-        {
-            for (const auto &entry : result)
-            {
-                str << entry << " ";
-            }
-            str << endl;
-        }
-        return str.str();
-    }
+    if (tournamentMode)return displayTournamentResults();
+    
     else
     {
         return "GameEngine: State transitions to '" + currentState + "'";
@@ -669,43 +657,51 @@ void GameEngine::executeOrdersPhase()
 /*----------------------TODO--------- Assignement3 _ part2 ----------------------------------------*/
 void GameEngine::startTournament(const TournamentParameters& params) {
     cout << "Starting Tournament..." << endl;
+    vector<string> tournamentResults;
 
+    // Loop through each map in the parameters
     for (const auto& mapFile : params.mapFiles) {
         Map* map = new Map();
         if (!map->loadMapFromFile(mapFile)) {
-            cerr << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
+            cout << "Failed to load map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
         }
 
         if (!map->validate()) {
-            cerr << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
+            cout << "Validation failed for map: " << mapFile << ". Skipping this map." << endl;
             delete map;
             continue;
         }
 
-        // Set the loaded and validated map as the selected map
-        this->selectedMap = map;
-        cout << "Map " << mapFile << " loaded and validated successfully. Starting game on this map." << endl;
+        this->selectedMap = map;  // Set the loaded map
 
-        // Here you would typically set up players based on the tournament parameters
-        // For demonstration, assume players are already set up in the GameEngine instance
+        // Simulate the specified number of games
+        for (int i = 0; i < params.numberOfGames; ++i) {
+            // // Setup the game environment
+            // setupPlayers(params.playerStrategies);  // Assuming this sets up players based on strategies
+            // assignCardsEvenly();
+            // distributeTerritories();
+            // mainGameLoop(params.maxTurns);  // Play the game with the specified max turns
 
-        // Simulate games for the given map
-        this->gamestart(*this);  // Assuming you've prepared the GameEngine instance accordingly
+            // // Collect results from this game
+            // string result = isDraw() ? "draw" : checkWinState()->getName();
+            // tournamentResults.push_back(result);
 
-        // Clean up the map after use
+            resetGame();  // Reset the game for the next run
+        }
+
+        // Clean up after all games on this map are done
         delete map;
-        this->selectedMap = nullptr;
     }
+
     cout << "Tournament completed." << endl;
     displayTournamentResults();
 
 }
 
-
 // Display overall results after all tournaments are completed
-string GameEngine::displayTournamentResults()
+string GameEngine::displayTournamentResults() const
 {
     stringstream str;
     const char separator = ' ';

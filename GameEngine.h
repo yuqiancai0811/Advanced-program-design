@@ -13,6 +13,7 @@
 #include "CommandProcessor.h"
 #include "LoggingObserver.h"
 
+
 class CommandProcessor;
 
 /*-------------------- Phases for Part 3 -------------------------*/
@@ -136,7 +137,7 @@ public:
 
     /*--------------Assignement3 _ Part2-----------------*/
     void startTournament(const TournamentParameters& params);
-    string displayTournamentResults();
+    string displayTournamentResults() const;
     bool isTournamentMode() const;
     void setTournamentMode(bool mode);
     void updateTournamentResults(const vector<vector<string>>& newResults) ;
