@@ -6,9 +6,52 @@
 #include "Cards.h"
 
 void testPlayerStrategies() {
+
     // Create players with different strategies
     std::cout << "Testing Player Strategies...\n";
 
+    //--------------------------Human player and aggressive player testing part--------------------------
+    Player* human=new Player("Human");
+    human->setStrategy(new Human(human));
+
+    Player* aggressive=new Player("Aggressive");
+    aggressive->setStrategy(new Aggressive(aggressive));
+
+
+    Territory* a1=new Territory("TerritoryA1",3,3,"Continent1",{});
+    Territory* a2=new Territory("TerritoryA2",4,4,"Continent1",{});
+    Territory* a3=new Territory("TerritoryA3",5,5,"Continent1",{});
+    Territory* a4=new Territory("TerritoryA4",6,6,"Continent1",{});
+    Territory* a5=new Territory("TerritoryA5",7,7,"Continent1",{});
+    Territory* a6=new Territory("TerritoryA6",8,8,"Continent1",{});
+    a1->addAdjacentTerritory(a2);
+    a1->addAdjacentTerritory(a3);
+    a1->addAdjacentTerritory(a5);
+    a2->addAdjacentTerritory(a3);
+    a2->addAdjacentTerritory(a1);
+    a2->addAdjacentTerritory(a4);
+    a3->addAdjacentTerritory(a1);
+    a3->addAdjacentTerritory(a2);
+    a3->addAdjacentTerritory(a6);
+
+
+    a4->addAdjacentTerritory(a2);
+    a4->addAdjacentTerritory(a5);
+    a4->addAdjacentTerritory(a6);
+    a5->addAdjacentTerritory(a1);
+    a5->addAdjacentTerritory(a4);
+    a5->addAdjacentTerritory(a6);
+    a6->addAdjacentTerritory(a3);
+    a6->addAdjacentTerritory(a4);
+    a6->addAdjacentTerritory(a5);
+
+    human->addTerritory(a1);
+    human->addTerritory(a2);
+    human->addTerritory(a3);
+
+    aggressive->addTerritory(a4);
+    aggressive->addTerritory(a5);
+    aggressive->addTerritory(a6);
 
     //-------------------------- Neutral player & Cheater player testing Part --------------------------//
     // Create a Neutral Player
@@ -59,6 +102,9 @@ void testPlayerStrategies() {
     delete t3;
 
     std::cout << "\nTesting completed.\n";
+
+    //----------------------------Benevolent player testing part ------------------------
+
 }
 
 int main() {
