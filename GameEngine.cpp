@@ -732,20 +732,19 @@ void GameEngine::startTournament(const TournamentParameters &params)
             gamestart(*this);
             string winner = this->winner->getName();
             mapResults.push_back(winner); // Store the winner
-            cout << displayTournamentResults();
-            
-            resetGame(); // Reset the game for the next run
+            resetGame();                  // Reset the game for the next run
         }
         getMapResults().push_back(mapResults);
 
-    for (const auto& results : getMapResults()) {
-        for (const auto& result : results) {
-            cout << result << "          ";
+        for (const auto &results : getMapResults())
+        {
+            for (const auto &result : results)
+            {
+                cout << result << "          ";
+            }
+            cout << endl;
         }
-        cout << endl;
     }
-    }
-  
 
     cout << "Tournament completed." << endl;
     displayTournamentResults();
@@ -782,11 +781,9 @@ string GameEngine::displayTournamentResults() const
         str << left << setw(nameWidth) << setfill(separator) << ("Game " + to_string(s));
     }
     str << endl;
-    
+
     return str.str();
-
 }
-
 
 bool GameEngine::isTournamentMode() const
 {
@@ -830,4 +827,3 @@ void GameEngine::setupTournament(const TournamentParameters &params)
 {
     this->params = params; // Storing parameters in the class
 }
-

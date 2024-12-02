@@ -6,6 +6,8 @@ tournament -M USA.map -P Benevolent Cheater -G 2 -D 11
 tournament -M USA.map -P Aggressive Cheater -G 3 -D 11 
 
 OK:
-tournament -M Europe.map -P Neutral Cheater -G 3 -D 11 
+tournament -M Europe.map -P Neutral Cheater -G 3 -D 15 
+tournament -M USA.map -P Neutral Cheater -G 3 -D 12 
 
-tournament -M USA.map -P Benevolent Cheater -G 2 -D 17
+
+tournament -M USA.map -P Benevolent Cheater -G 2 -D 12

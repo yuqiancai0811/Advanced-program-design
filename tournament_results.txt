@@ -12,7 +12,7 @@ Tournament Mode:
 M: USA.map 
 P: Benevolent,Cheater 
 G: 2
-D: 17
+D: 12
 Map Name                 Game 1         Game 2         
 USA.map          Cheater          Cheater    
 
