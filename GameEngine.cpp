@@ -316,7 +316,7 @@ void GameEngine::mainGameLoop()
     cout << "=== Main Game Loop ===" << endl;
     transition(ASSIGN_REINFORCEMENT); // Start from the reinforcement phase
     bool gameOver = false;
-        int currentTurn = 0;  // Initialize the turn counter
+    int currentTurn = 0; // Initialize the turn counter
 
     cout << "Starting game loop with a max of " << params.maxTurns << " turns." << endl;
     while (!gameOver && currentTurn < params.maxTurns)
@@ -373,7 +373,6 @@ void GameEngine::mainGameLoop()
                     transition(ASSIGN_REINFORCEMENT);
                 }
             }
-
         }
 
         // Additional check to prevent infinite loop
@@ -382,7 +381,7 @@ void GameEngine::mainGameLoop()
             cout << "[INFO] Game Over detected in main loop.\n";
             break;
         }
-    currentTurn++;  // Increment the turn counter
+        currentTurn++; // Increment the turn counter
     }
 
     if (gameOver)
@@ -485,7 +484,7 @@ void GameEngine::resetGame()
     // }
 
     // Reset other game-related data
-    playerOder.clear();   // Clear the player order vector
+    playerOder.clear(); // Clear the player order vector
     // currentState = START; // Reset the state to START
 
     // Optionally reset the deck or other components if needed
@@ -602,7 +601,7 @@ void GameEngine::issueOrdersPhase()
                 ordersPending = true; // Flag that there are still orders pending
             }
         }
-                    phaseTurn++; // Increment the turn counter each round
+        phaseTurn++; // Increment the turn counter each round
     } while (ordersPending);
     // /* For debug */
     // for (Player* player : playerList) {
@@ -722,22 +721,35 @@ void GameEngine::startTournament(const TournamentParameters &params)
         {
             cout << "Map validated successfully: " << mapFile << endl; // Confirm map validated
         }
+        vector<string> mapResults;
+        mapResults.push_back(mapFile); // Store the map name
 
         // Simulate the specified number of games
         for (int i = 0; i < params.numberOfGames; ++i)
         {
             // Setup the game environment
-            cout << "------------------Game in : " << i <<"--------------------"<< endl;
+            cout << "------------------------------------------------------Game in : " << i + 1 << "---------------------------------------------------" << endl;
             gamestart(*this);
-            cout<<displayTournamentResults();
+            string winner = this->winner->getName();
+            mapResults.push_back(winner); // Store the winner
+            cout << displayTournamentResults();
+            
             resetGame(); // Reset the game for the next run
-
         }
-        resetGame();
+        getMapResults().push_back(mapResults);
+
+    for (const auto& results : getMapResults()) {
+        for (const auto& result : results) {
+            cout << result << "          ";
+        }
+        cout << endl;
     }
+    }
+  
 
     cout << "Tournament completed." << endl;
     displayTournamentResults();
+    Notify(this);
 }
 
 // Display overall results after all tournaments are completed
@@ -770,26 +782,11 @@ string GameEngine::displayTournamentResults() const
         str << left << setw(nameWidth) << setfill(separator) << ("Game " + to_string(s));
     }
     str << endl;
-
-    // Assuming tournamentResults contains a vector of results for each map, in the same order as mapFiles
-    for (auto &tournamentResult : tournamentResults)
-    {
-        str << left << setw(mapNameWidth) << setfill(separator) << tournamentResult.at(0);
-
-        for (int j = 1; j < tournamentResult.size(); j++)
-        {
-            str << left << setw(nameWidth) << setfill(separator) << tournamentResult.at(j);
-        }
-        str << endl;
-    }
+    
     return str.str();
-    // Notify(this);
+
 }
-void GameEngine::updateTournamentResults(const vector<vector<string>> &newResults)
-{
-    this->tournamentResults = newResults;
-    Notify(this); // Notify observers that there's new data to log
-}
+
 
 bool GameEngine::isTournamentMode() const
 {
@@ -833,3 +830,4 @@ void GameEngine::setupTournament(const TournamentParameters &params)
 {
     this->params = params; // Storing parameters in the class
 }
+

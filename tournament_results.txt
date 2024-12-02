@@ -1,13 +1,19 @@
-GameEngine: State transitions to 'START'
-Tournament Results:
-Map1 Win Loss Win 
-Map2 Loss Draw Win 
+Tournament Mode:
+M: Europe.map 
+P: Neutral,Cheater 
+G: 3
+D: 11
 
+Map Name                 Game 1         Game 2         Game 3         
+Europe.map          Cheater          Cheater          Cheater     
 
-tournament -M USA.map Europe.map -P Aggressive Benevolent Neutral Cheater -G 3 -D 11
-tournament -M USA.map Europe.map -P Benevolent Neutral Cheater -G 3 -D 11
-tournament -M USA.map Europe.map -P Neutral Cheater -G 3 -D 11 
-tournament -M USA.map Europe.map -P Human Cheater -G 3 -D 11
-tournament -M USA.map -P Benevolent Cheater -G 2 -D 11
-tournament -M USA.map -P Aggressive Cheater -G 3 -D 11 
+Game state changed to: win
+Tournament Mode:
+M: USA.map 
+P: Benevolent,Cheater 
+G: 2
+D: 17
+Map Name                 Game 1         Game 2         
+USA.map          Cheater          Cheater    
+
 

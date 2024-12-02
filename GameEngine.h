@@ -140,8 +140,12 @@ public:
     string displayTournamentResults() const;
     bool isTournamentMode() const;
     void setTournamentMode(bool mode);
-    void updateTournamentResults(const vector<vector<string>>& newResults) ;
+    // void updateTournamentResults(const vector<vector<string>>& newResults) ;
     void initializeTournamentPlayers(const vector<string>& strategies);
     void setupTournament(const TournamentParameters& params) ;
+// std::vector<std::string> getMapResults(const std::string& mapFile) const;
+ vector<vector<string>>& getMapResults(){
+        return tournamentResults;
+    }
 };
 #endif // GAMEENGINE_H

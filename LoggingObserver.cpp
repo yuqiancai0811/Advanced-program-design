@@ -29,26 +29,6 @@ void LogObserver::Update(ILoggable* loggable) {
         logFile << loggable->stringToLog() << std::endl;
     }
 }
-// //TournamentLogger methods
-// TournamentLogger::TournamentLogger(const std::string& filename) {
-//     logFile.open(filename, std::ios::out | std::ios::app);
-//     if (!logFile.is_open()) {
-//         std::cerr << "Error opening log file!" << std::endl;
-//     }
-// }
-
-// TournamentLogger::~TournamentLogger() {
-//     if (logFile.is_open()) {
-//         logFile.close();
-//     }
-// }
-
-// void TournamentLogger::Update(ILoggable *loggable) {
-//     const GameEngine* engine = dynamic_cast<const GameEngine*>(loggable);
-//     if (engine && engine->isTournamentMode()) {
-//         logFile << engine->stringToLog() << std::endl;
-//     }
-// }
 
 // Subject class methods
 Subject::Subject(){
