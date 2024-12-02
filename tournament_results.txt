@@ -6,8 +6,8 @@ Map2 Loss Draw Win
 
 tournament -M USA.map Europe.map -P Aggressive Benevolent Neutral Cheater -G 3 -D 11
 tournament -M USA.map Europe.map -P Benevolent Neutral Cheater -G 3 -D 11
-tournament -M USA.map Europe.map -P Neutral Cheater -G 3 -D 11
+tournament -M USA.map Europe.map -P Neutral Cheater -G 3 -D 11 
 tournament -M USA.map Europe.map -P Human Cheater -G 3 -D 11
-tournament -M USA.map -P Neutral Benevolent -G 2 -D 11
 tournament -M USA.map -P Benevolent Cheater -G 2 -D 11
+tournament -M USA.map -P Aggressive Cheater -G 3 -D 11 
 

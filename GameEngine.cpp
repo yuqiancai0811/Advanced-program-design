@@ -463,30 +463,30 @@ void GameEngine::resetGame()
     // Reset the winner
     winner = nullptr;
 
-    // Clear player list
-    for (Player *player : playerList)
-    {
-        delete player; // Free dynamically allocated memory
-    }
-    playerList.clear();
+    // // Clear player list
+    // for (Player *player : playerList)
+    // {
+    //     delete player; // Free dynamically allocated memory
+    // }
+    // playerList.clear();
 
-    // Clear eliminated players
-    for (Player *player : eliminatedPlayers)
-    {
-        delete player; // Free dynamically allocated memory
-    }
-    eliminatedPlayers.clear();
+    // // Clear eliminated players
+    // for (Player *player : eliminatedPlayers)
+    // {
+    //     delete player; // Free dynamically allocated memory
+    // }
+    // eliminatedPlayers.clear();
 
-    // Reset the map
-    if (selectedMap != nullptr)
-    {
-        delete selectedMap; // Free dynamically allocated memory for the map
-        selectedMap = nullptr;
-    }
+    // // Reset the map
+    // if (selectedMap != nullptr)
+    // {
+    //     delete selectedMap; // Free dynamically allocated memory for the map
+    //     selectedMap = nullptr;
+    // }
 
     // Reset other game-related data
     playerOder.clear();   // Clear the player order vector
-    currentState = START; // Reset the state to START
+    // currentState = START; // Reset the state to START
 
     // Optionally reset the deck or other components if needed
     deck = Deck(); // Reinitialize the deck with default cards
@@ -601,8 +601,8 @@ void GameEngine::issueOrdersPhase()
                 player->issueOrder(); // Issue one order for the player
                 ordersPending = true; // Flag that there are still orders pending
             }
-            phaseTurn++; // Increment the turn counter each round
         }
+                    phaseTurn++; // Increment the turn counter each round
     } while (ordersPending);
     // /* For debug */
     // for (Player* player : playerList) {
@@ -727,14 +727,13 @@ void GameEngine::startTournament(const TournamentParameters &params)
         for (int i = 0; i < params.numberOfGames; ++i)
         {
             // Setup the game environment
-            cout << "------------------Game in : " << ++i <<"--------------------"<< endl;
+            cout << "------------------Game in : " << i <<"--------------------"<< endl;
             gamestart(*this);
-            displayTournamentResults();
-            // resetGame(); // Reset the game for the next run
-        }
+            cout<<displayTournamentResults();
+            resetGame(); // Reset the game for the next run
 
-        // Clean up after all games on this map are done
-        delete map;
+        }
+        resetGame();
     }
 
     cout << "Tournament completed." << endl;
