@@ -102,6 +102,9 @@ std::vector<Territory *> Human::toDefend() {
 
 void Human::issueOrder() {
     Hand playerHand=player->getHand();
+    std::vector<Territory*> attackList;
+    attackList=player->toAttack();
+
     std::cout << player->getName()<<", which order would you like to issue?" << std::endl;
     std::cout <<"The List of order:\n1.Deploy\n2.Advance\n3.Bomb\n4.Blockade\n5.Airlift\n6.Negotiate"<< std::endl;
     int choice;
@@ -172,25 +175,36 @@ void Human::issueOrder() {
                 //removed card, do the bomb order now
                 Territory* target;
                 //display all the valid target territory
-                for(int i=0;i< player->getOwnedTerritories().size();i++) {
-                    for(int j=0;j<player->getOwnedTerritories()[i]->getAdjacentTerritories().size();i++) {
-                        for(Territory* a:player->getOwnedTerritories()) {
-                            if(a!=player->getOwnedTerritories()[i]->getAdjacentTerritories()[j]) {
-                                std::cout << "Territory with two index " << i << " and " << j << "\n";
-                            }
-
-                        }
-                    }
-                }
-                std::cout<<"Please enter the two index:"<<endl;
-                int firstindex;
-                int secondindex;
-                std::cin>>firstindex;
-                std::cin>>secondindex;
-                bombOrder* bomb_order=new bombOrder(player->getOwnedTerritories()[firstindex]->getAdjacentTerritories()[secondindex],player);
+                // for(int i=0;i< player->getOwnedTerritories().size();i++) {
+                //     for(int j=0;j<player->getOwnedTerritories()[i]->getAdjacentTerritories().size();i++) {
+                //         for(Territory* a:player->getOwnedTerritories()) {
+                //             if(a!=player->getOwnedTerritories()[i]->getAdjacentTerritories()[j]) {
+                //                 std::cout << "Territory with two index " << i << " and " << j << "\n";
+                //             }
+                //
+                //         }
+                //     }
+                // }
+                //
+                // std::cout<<"Please enter the two index:"<<endl;
+                // int firstindex;
+                // int secondindex;
+                // std::cin>>firstindex;
+                // std::cin>>secondindex;
+                // bombOrder* bomb_order=new bombOrder(player->getOwnedTerritories()[firstindex]->getAdjacentTerritories()[secondindex],player);
                 // bomb_order->execute();
-                player->getOrders().addOrder(bomb_order);
+                //player->getOrders().addOrder(bomb_order);
 
+                //display the element in the toattack list
+                int account=0;
+                std::cout<<"Please select the territory you want to bomb:"<<endl;
+                for(Territory* a:attackList) {
+                    std::cout<<account<<"."<<a->getName()<<endl;
+                }
+                int indexOfTerritory;
+                std::cin>>indexOfTerritory;
+                bombOrder* bomb_order=new bombOrder(attackList[indexOfTerritory],player);
+                player->getOrders().addOrder(bomb_order);
 
 
             }
