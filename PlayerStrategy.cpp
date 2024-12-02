@@ -200,6 +200,7 @@ void Human::issueOrder() {
                 std::cout<<"Please select the territory you want to bomb:"<<endl;
                 for(Territory* a:attackList) {
                     std::cout<<account<<"."<<a->getName()<<endl;
+                    account++;
                 }
                 int indexOfTerritory;
                 std::cin>>indexOfTerritory;
@@ -343,9 +344,12 @@ void Aggressive::issueOrder() {
         for(Territory* a:player->getOwnedTerritories()) {
             std::cout<<"Territory "<<a->getName()<<"\n";
         }
-        deployOrder* deploy_order=new deployOrder(player->getNumberOfReinforcement(),player->getOwnedTerritories()[0],player);
+        if(!player->getOwnedTerritories().empty()) {
+            deployOrder* deploy_order=new deployOrder(player->getNumberOfReinforcement(),player->getOwnedTerritories()[0],player);
+            player->getOrders().addOrder(deploy_order);
+        }
         // deploy_order->execute();
-        player->getOrders().addOrder(deploy_order);
+
     }
     //attack all the adjacent territory that not belongs to player
     //if there is no place to attack, advance teh armies to another territory then do teh same thing until there is no armies left
