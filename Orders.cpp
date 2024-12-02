@@ -681,7 +681,8 @@ bool orderList::hasMoreOrders() const {
 }
 
 Order* orderList::getNextOrder() {
-    if (!orders.empty()) {
+    // if (!orders.empty()) {
+    if (!orders.empty() && orders.front() != nullptr) {
         Order* nextOrder = orders.front();
         orders.erase(orders.begin());
         return nextOrder;
