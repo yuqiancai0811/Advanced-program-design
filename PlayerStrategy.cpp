@@ -221,7 +221,7 @@ void Human::issueOrder() {
                 std::cout<<"Please enter number of armies :"<<endl;
                 std::cin>>numberOfArmies;
                 for(int i=0;i<player->getOwnedTerritories().size();i++) {
-                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i] << "\n";
+                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
                 }
                 std::cout<<"Please select the territory you want to blockade:"<<endl;
                 std::cin>>indexOfTerritory;
