@@ -105,7 +105,9 @@ void Human::issueOrder() {
     std::vector<Territory*> attackList;
     attackList=player->toAttack();
 
-    std::cout << player->getName()<<", which order would you like to issue?" << std::endl;
+    if(!player->getOwnedTerritories().empty()) {
+
+        std::cout << player->getName()<<", which order would you like to issue?" << std::endl;
     std::cout <<"The List of order:\n1.Deploy\n2.Advance\n3.Bomb\n4.Blockade\n5.Airlift\n6.Negotiate"<< std::endl;
     int choice;
     std::cin>>choice;
@@ -274,16 +276,21 @@ void Human::issueOrder() {
 
                 std::cout<<"Please enter number of armies you want to airlift:"<<endl;
                 std::cin>>numberOfArmies;
-                for(int i=0;i<player->getOwnedTerritories().size();i++) {
-                    std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
+                if(!player->getOwnedTerritories().empty()) {
+                    for(int i=0;i<player->getOwnedTerritories().size();i++) {
+                        std::cout << "Territory at index " << i << ": " << player->getOwnedTerritories()[i]->getName() << "\n";
+                    }
+                    std::cout<<"Please select the source territory you want to take armies out:"<<endl;
+                    std::cin>>indexOfTerritory1;
+                    std::cout<<"Please select the target territory you want to take armies to:"<<endl;
+                    std::cin>>indexOfTerritory2;
+                    airliftOrder* airlift_order=new airliftOrder(numberOfArmies,player->getOwnedTerritories()[indexOfTerritory1],player->getOwnedTerritories()[indexOfTerritory2],player);
+                    // airlift_order->execute();
+                    player->getOrders().addOrder(airlift_order);
                 }
-                std::cout<<"Please select the source territory you want to take armies out:"<<endl;
-                std::cin>>indexOfTerritory1;
-                std::cout<<"Please select the target territory you want to take armies to:"<<endl;
-                std::cin>>indexOfTerritory2;
-                airliftOrder* airlift_order=new airliftOrder(numberOfArmies,player->getOwnedTerritories()[indexOfTerritory1],player->getOwnedTerritories()[indexOfTerritory2],player);
-                // airlift_order->execute();
-                player->getOrders().addOrder(airlift_order);
+                else {
+                    std::cout<<"The player has no more territory"<<endl;
+                }
             }
             else {
                 std::cout<<"There is no airlift card in hand, you can not play airlift order"<<endl;
@@ -292,6 +299,7 @@ void Human::issueOrder() {
         }
 
 
+    }
     }
 
 }
