@@ -340,6 +340,9 @@ void Aggressive::issueOrder() {
     if(player->getNumberOfReinforcement()>0) {
         //do the deploy order if there is reinforcement left in the pool
         //add all the armies into first territory
+        for(Territory* a:player->getOwnedTerritories()) {
+            std::cout<<"Territory "<<a->getName()<<"\n";
+        }
         deployOrder* deploy_order=new deployOrder(player->getNumberOfReinforcement(),player->getOwnedTerritories()[0],player);
         // deploy_order->execute();
         player->getOrders().addOrder(deploy_order);
