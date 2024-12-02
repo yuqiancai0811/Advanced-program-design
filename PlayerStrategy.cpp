@@ -63,6 +63,9 @@ std::vector<Territory *> Human::toDefend() {
 
     std::vector<Territory*>ownedTerritories=player->getOwnedTerritories();
 
+    std::vector<Territory*> attackList;
+    attackList=player->toAttack();
+
     for (Territory* territory : ownedTerritories) {
         if (territory == nullptr) {
             std::cerr << "Error: Null territory pointer in ownedTerritories!" << std::endl;
@@ -296,6 +299,30 @@ void Human::issueOrder() {
                 std::cout<<"There is no airlift card in hand, you can not play airlift order"<<endl;
             }
             break;
+        }
+        case 6: {
+
+            bool haveOrNot=playerHand.hasCardType("Diplomacy");
+            if(haveOrNot) {
+                int count1=0;
+                int count2=0;
+                //int choice1;
+                int choice2;
+
+
+                std::cout<<"Please choose one of enemies territory that you want to negotiate to"<<endl;
+                for(Territory* b:attackList) {
+                    std::cout<<"Index : "<<count2<<"   Name:"<<b->getName()<<endl;
+                    count1++;
+                }
+                cin>>choice2;
+                negotiateOrder* negotiate_order=new negotiateOrder(player,attackList[choice2]->getOwnerPlayer());
+                player->getOrders().addOrder(negotiate_order);
+            }
+            else {
+                std::cout<<"There is no Diplomacy card in hand, you can not play Diplomacy order"<<endl;
+            }
+
         }
 
 
