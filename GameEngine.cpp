@@ -288,7 +288,7 @@ void GameEngine::transition(const string &newState)
     setcurrentState(newState);
     cout << "Game state changed to: " << getCurrentState() << endl;
     currentState = getCurrentState(); // added by Yuqian Cai
-    Notify(this);                     // Part 5: trigger the writing of the entry in the log file
+    // Notify(this);                     // Part 5: trigger the writing of the entry in the log file
 }
 
 // Part5: Implementing the stringToLog() function from ILoggable
@@ -316,6 +316,7 @@ void GameEngine::mainGameLoop()
     cout << "=== Main Game Loop ===" << endl;
     transition(ASSIGN_REINFORCEMENT); // Start from the reinforcement phase
     bool gameOver = false;
+    isDraw = false;
     int currentTurn = 0; // Initialize the turn counter
 
     cout << "Starting game loop with a max of " << params.maxTurns << " turns." << endl;
@@ -370,6 +371,8 @@ void GameEngine::mainGameLoop()
                 // If no win, go back to the reinforcement phase
                 if (!gameOver)
                 {
+                    cout << "[DRAW] This game is gonna take forever. Draw..";
+                    isDraw = true;
                     transition(ASSIGN_REINFORCEMENT);
                 }
             }
@@ -390,7 +393,9 @@ void GameEngine::mainGameLoop()
     }
     else
     {
-        cout << "[WARN] Exiting main loop without game over. Possible logic error." << endl;
+        // cout << "[WARN] Exiting main loop without game over. Possible logic error." << endl;
+        isDraw = true;
+        cout << "[DRAW] This game is gonna take forever. Draw..............\n";
     }
 }
 
@@ -585,7 +590,7 @@ void GameEngine::issueOrdersPhase()
     {
         if (phaseTurn >= params.maxTurns)
         { // Check if the max number of turns has been reached
-            cout << "[DRAW] Max turns reached for issuing orders. Ending phase.\n";
+            cout << "Max turns reached for issuing orders. Ending phase.\n";
             break; // Exit the loop if max turns limit is reached
         }
         cout << "\n--- Turn " << round++ << " ---\n";
@@ -678,7 +683,7 @@ void GameEngine::executeOrdersPhase()
 
 /*------------------------------- End of Methods for P3 ----------------------------------------*/
 
-/*----------------------TODO--------- Assignement3 _ part2 ----------------------------------------*/
+/*------------------------------ Assignement3 _ part2 ----------------------------------------*/
 void GameEngine::startTournament(const TournamentParameters &params)
 {
     cout << "Starting Tournament..." << endl;
@@ -721,7 +726,6 @@ void GameEngine::startTournament(const TournamentParameters &params)
         {
             cout << "Map validated successfully: " << mapFile << endl; // Confirm map validated
         }
-        vector<string> mapResults;
         mapResults.push_back(mapFile); // Store the map name
 
         // Simulate the specified number of games
@@ -730,24 +734,24 @@ void GameEngine::startTournament(const TournamentParameters &params)
             // Setup the game environment
             cout << "------------------------------------------------------Game in : " << i + 1 << "---------------------------------------------------" << endl;
             gamestart(*this);
-            string winner = this->winner->getName();
-            mapResults.push_back(winner); // Store the winner
-            resetGame();                  // Reset the game for the next run
-        }
-        getMapResults().push_back(mapResults);
 
-        for (const auto &results : getMapResults())
-        {
-            for (const auto &result : results)
+            if (isDraw)
             {
-                cout << result << "          ";
+                // mapResults.push_back("draw");
+                cout << "[DRAW]Game result 'draw' has been saved." << endl;
+                mapResults.push_back("Draw"); // add a new winner "Draw"
             }
-            cout << endl;
+            else if (winner != nullptr)
+            {
+                mapResults.push_back(winner->getName());
+                cout << "Winner '" << winner->getName() << "' has been saved." << endl;
+            }
+            resetGame(); // Reset the game for the next run
         }
-    }
 
+        cout << displayTournamentResults() << endl;
+    }
     cout << "Tournament completed." << endl;
-    displayTournamentResults();
     Notify(this);
 }
 
@@ -756,9 +760,9 @@ string GameEngine::displayTournamentResults() const
 {
     stringstream str;
     const char separator = ' ';
-    const int mapNameWidth = 25;
-    const int nameWidth = 15;
-
+    const int nameWidth = 25;
+    str << endl;
+    str << endl;
     str << "Tournament Mode:" << endl;
     str << "M: ";
     for (int i = 0; i < params.mapFiles.size(); i++)
@@ -774,11 +778,22 @@ string GameEngine::displayTournamentResults() const
     str << endl
         << "G: " << params.numberOfGames << endl
         << "D: " << params.maxTurns << endl;
-    str << left << setw(mapNameWidth) << setfill(separator) << "Map Name";
+    str << endl;
+    str << left << setw(nameWidth) << setfill(separator) << "Map Name";
 
     for (int s = 1; s <= params.numberOfGames; s++)
     {
         str << left << setw(nameWidth) << setfill(separator) << ("Game " + to_string(s));
+    }
+    str << endl;
+
+    int newline = 0;
+    for (int j = 0; j < mapResults.size(); j++)
+    {
+        newline++;
+        str << std::left << std::setw(nameWidth) << std::setfill(separator) << mapResults.at(j);
+        if (newline == params.numberOfGames + 1)
+            str << endl;
     }
     str << endl;
 

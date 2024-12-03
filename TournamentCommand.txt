@@ -1,0 +1,13 @@
+with cheater:
+tournament -M USA.map -P Aggressive Cheater -G 3 -D 11 
+tournament -M Europe.map -P Neutral Cheater -G 3 -D 15 
+tournament -M USA.map -P Neutral Cheater -G 3 -D 12 
+tournament -M USA.map Europe.map -P Aggressive Neutral Cheater -G 3 -D 11
+tournament -M USA.map Europe.map -P Aggressive Neutral Cheater -G 4 -D 30
+
+
+without cheater:
+tournament -M USA.map  -P Aggressive  Neutral  -G 3 -D 11
+
+tournament -M USA.map  -P Aggressive  Neutral  -G 5 -D 30
+

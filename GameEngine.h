@@ -53,7 +53,11 @@ public:
     /*---Assginment 3 Part 2 attributes---*/
     TournamentParameters params;
     vector<vector<string>> tournamentResults; // Simulated results data
+    vector<string> mapResults;
+
     bool tournamentMode = false;
+    bool isDraw = false;
+
 
 
 
@@ -143,9 +147,5 @@ public:
     // void updateTournamentResults(const vector<vector<string>>& newResults) ;
     void initializeTournamentPlayers(const vector<string>& strategies);
     void setupTournament(const TournamentParameters& params) ;
-// std::vector<std::string> getMapResults(const std::string& mapFile) const;
- vector<vector<string>>& getMapResults(){
-        return tournamentResults;
-    }
 };
 #endif // GAMEENGINE_H

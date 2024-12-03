@@ -14,16 +14,14 @@
 
 void testTournament() {
     GameEngine* gameEngine=new GameEngine;
-
-    LogObserver *logger = new LogObserver("Tournament_results.txt");
-    gameEngine->Attach(logger);
     
-     // Setup players and territories
-     gameEngine = gameEngine->startupPhase();  
+    LogObserver *logger = new LogObserver("Tournament_results.txt");
+
+     gameEngine = gameEngine->startupPhase(); 
+         gameEngine->Attach(logger);
     
      while(true){
         gameEngine->commandProcessor->getCommand();
-
      }
           
 }

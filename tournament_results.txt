@@ -1,19 +1,75 @@
+
 Tournament Mode:
-M: Europe.map 
-P: Neutral,Cheater 
+M: USA.map 
+P: Aggressive,Neutral 
+G: 3
+D: 11
+Map Name                 Game 1                   Game 2                   Game 3                   
+USA.map                  Draw                     Aggressive               Draw                     
+
+
+Tournament Mode:
+M: USA.map 
+P: Aggressive,Neutral 
+G: 3
+D: 11
+Map Name                 Game 1                   Game 2                   Game 3                   
+USA.map                  Draw                     Aggressive               Draw                     
+
+
+Tournament Mode:
+M: USA.map 
+P: Aggressive,Neutral 
+G: 3
+D: 11
+Map Name                 Game 1                   Game 2                   Game 3                   
+
+USA.map                  Draw                     Aggressive               Draw                     
+
+
+Tournament Mode:
+M: USA.map 
+P: Aggressive,Neutral 
 G: 3
 D: 11
 
-Map Name                 Game 1         Game 2         Game 3         
-Europe.map          Cheater          Cheater          Cheater     
+Map Name                 Game 1                   Game 2                   Game 3                   
+USA.map                  Draw                     Aggressive               Draw                     
 
-Game state changed to: win
+
+
+
 Tournament Mode:
 M: USA.map 
-P: Benevolent,Cheater 
-G: 2
-D: 12
-Map Name                 Game 1         Game 2         
-USA.map          Cheater          Cheater    
+P: Aggressive,Neutral 
+G: 3
+D: 11
 
+Map Name                 Game 1                   Game 2                   Game 3                   
+USA.map                  Draw                     Aggressive               Draw                     
+
+
+
+
+Tournament Mode:
+M: USA.map 
+P: Aggressive,Neutral 
+G: 5
+D: 30
+
+Map Name                 Game 1                   Game 2                   Game 3                   Game 4                   Game 5                   
+USA.map                  Draw                     Aggressive               Draw                     Draw                     Draw                     
+
+
+
+
+Tournament Mode:
+M: USA.map,Europe.map 
+P: Aggressive,Neutral,Cheater 
+G: 4
+D: 30
+
+Map Name                 Game 1                   Game 2                   Game 3                   Game 4                   
+USA.map                  Cheater                  Cheater                  Cheater                  Cheater                  
+Europe.map               Cheater                  Cheater                  Cheater                  Cheater                  
 
