@@ -35,18 +35,46 @@ Player::Player(const Player& other) {
 }
 
 // Assignment operator (deep copy)
+// Player& Player::operator=(const Player& other) {
+//     if (this != &other) {
+//         name = new (other.name);  
+//         ownedTerritories = other.ownedTerritories;  
+//         playerHand = other.playerHand; 
+//         delete playerOrders;  // Delete existing orderList to avoid memory leak
+//         playerOrders = new orderList(*other.playerOrders);  // Deep copy new orderList
+//         numberOfReinforcement = other.numberOfReinforcement; 
+//         negotiate = other.negotiate;  
+//     }
+//     return *this;
+// }
+
 Player& Player::operator=(const Player& other) {
     if (this != &other) {
-        name = other.name;  
-        ownedTerritories = other.ownedTerritories;  
-        playerHand = other.playerHand; 
-        delete playerOrders;  // Delete existing orderList to avoid memory leak
-        playerOrders = new orderList(*other.playerOrders);  // Deep copy new orderList
-        numberOfReinforcement = other.numberOfReinforcement; 
-        negotiate = other.negotiate;  
+        // Deep copy name (if dynamically allocated)
+        delete name;  // Free current memory
+        name = new std::string(*other.name);  // Deep copy string (or appropriate type)
+
+        // Deep copy ownedTerritories (if it's a container of pointers)
+        ownedTerritories.clear();
+        for (const auto& territory : other.ownedTerritories) {
+            ownedTerritories.push_back(territory);  // Example deep copy
+        }
+
+        // Deep copy playerHand (if necessary)
+        delete playerHand;
+        playerHand = new Hand(*other.playerHand);  // Assuming Hand has a copy constructor
+
+        // Deep copy playerOrders
+        delete playerOrders;
+        playerOrders = new orderList(*other.playerOrders);
+
+        // Directly copy simple data types
+        numberOfReinforcement = new int(other.numberOfReinforcement);
+        negotiate = other.negotiate;
     }
     return *this;
 }
+
 
 // Destructor
 Player::~Player() {

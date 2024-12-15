@@ -357,7 +357,7 @@ void Aggressive::issueOrder() {
     //issue order for attack
     std::vector<Territory*> attackList;
     // std::vector<Territory*> defendList;
-    attackList=player->toAttack();
+    attackList(player->toAttack());
     int temp=0;
     Territory* territoryTemp;
     int indexOfTerritory;
