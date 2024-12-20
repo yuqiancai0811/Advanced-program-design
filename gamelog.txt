@@ -1,0 +1,66 @@
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+
+CommandProcessor: Commands processed:
+ - Command: Loadmap
+Effect: Loaded map successfully
+
+ - Command: Validatemap
+Effect: Map validated successfully
+
+ - Command: Addplayer
+Effect: Player added successfully
+
+ - Command: Gamestart
+Effect: Game started
+
+
+OrderList: Total orders = 1
+ - Order 1: Order: deployOrder is not executed
+
+
+OrderList: Total orders = 2
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+
+OrderList: Total orders = 3
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is executed
+
+
+OrderList: Total orders = 4
+ - Order 1: Order: deployOrder is not executed
+
+ - Order 2: Order: Bomb Order is executed
+
+ - Order 3: Order: Blockade Order is executed
+
+ - Order 4: Order: Negotiate Order is executed
+
+
